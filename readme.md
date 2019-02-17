@@ -5,8 +5,10 @@
 所有している同人誌を管理するためのWebアプリケーション  
 複数購入を防止するために作成されました。  
 
-## 動作環境
-Ubuntu + Ruby  
+## 開発仕様
+Windows10 + WSL  
+Umi(CSS)  
+その他Gemfileに書いてあるもの
 
 ## 以下開発メモ
 ### ログイン方法
@@ -15,40 +17,94 @@ Twitter APIを使わない。
 
 ### DB設計
 #### Users
-id -> 一意なID(Google OAuthから引っ張る？)  
+```sql
+create table users (
+  id text primary key,
+  latest_at datetime,
+  daleted_at datetime,
+  name text
+);
+```
+id -> 一意なID(Google OAuthから引っ張る)  
 latest_at -> 最後にログインした日時  
 deleted_at -> 退会した日時  
 name -> 表示名  
 
 #### Books
+```sql
+create table books (
+  id integer primary key,
+  title text,
+  cover text,
+  date date,
+  event_id integer,
+  author_id integer,
+  circle_id integer,
+  foreign key(event_id) references events(id),
+  foreign key(author_id) references authors(id),
+  foreign key(circle_id) references circles(id)
+);
+```
 id -> 一意なID  
 title -> 書籍タイトル  
-event_id -> Events.id  
-date -> 発行日  
-author_id -> Authors.id  
-circle_id -> Circles.id  
 cover -> 表紙画像(ファイルパス)  
+date -> 発行日  
+event_id -> Events.id  
+author_id -> Authors.id  
+circle_id -> Circles.id
 
 #### Events
+```sql
+create table events (
+  id integer primary key,
+  name text
+);
+```
 id -> 一意なID  
 name -> イベント名  
 
 #### Authors
+```sql
+create table authors (
+  id integer primary key,
+  name text
+);
+```
 id -> 一意なID  
 name -> 作者名  
 
 #### Circles
+```sql
+create table circles (
+  id integer primary key,
+  name text
+);
+```
 id -> 一意なID  
 name -> サークル名  
 
 #### Owners
-user -> Users.id  
-book -> Books.id  
+```sql
+create table owners (
+  user_id text,
+  book_id integer,
+  memo text,
+  foreign key(user_id) references users(id),
+  foreign key(book_id) references books(id)
+);
+```
+user_id -> Users.id  
+book_id -> Books.id  
 memo -> 個別のメモ  
 
 ### ページ
+#### /
+トップ画面  
+ログイン状態のSessionがある場合は/listにリダイレクト  
+
 #### /login
-トップ・ログイン画面
+ログイン画面  
+GETで画面、POSTでログイン実行  
 
 #### /list
 所有している本の一覧  
@@ -60,7 +116,7 @@ GETで詳細画面、POSTで変更
 
 #### /search
 書籍の検索  
-POSTで検索  
+GETで検索  
 検索画面から自分の持っていない書籍を所持に変更出来るようにする。  
 
 #### /add

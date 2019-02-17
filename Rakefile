@@ -1,0 +1,8 @@
+require 'sinatra/activerecord'
+require 'sinatra/activerecord/rake'
+require './models/author.rb'
+require './models/book.rb'
+require './models/circle.rb'
+require './models/event.rb'
+require './models/owner.rb'
+require './models/user.rb'
