@@ -25,12 +25,6 @@ class App < Sinatra::Base
     erb :index
   end
 
-  get '/login' do
-  end
-
-  post '/login' do
-  end
-
   get '/list' do
   end
   
