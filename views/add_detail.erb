@@ -1,0 +1,74 @@
+<h2>書籍追加</h2>
+<h4>タイトル：<%= @title %></h4>
+<p>詳細情報を追加してください。</p>
+<form action="/add/done" method="POST" enctype="multipart/form-data">
+  <input type="hidden" name="title" value="<%= @title %>">
+  <div class="custom-control custom-checkbox">
+    <input type="checkbox" class="custom-control-input" id="is-adult" name="is-adult" value="true">
+    <label class="custom-control-label" for="is-adult" style="color: red;">18禁タイトル</label>
+  </div>
+  <br>
+  <div class="form-group row" aria-describedby="cover-help">
+    <label for="cover-img" class="col-sm-2 col-form-label">表紙画像：</label>
+    <div class="custom-file col-sm-10">
+      <input type="file" class="custom-file-input" id="cover-img" name="cover-img" required>
+      <label class="custom-file-label" for="cover-img">選択...</label>
+    </div>
+  </div>
+  <span id="cover-help" class="form-text text-muted">
+    対応形式：BMP,PNG,JPG　サイズ：3MB以下<br>
+    長い辺が1000px以上の場合、自動的に縮小されます。
+  </span>
+  <br>
+  <div class="form-group row">
+    <label for="author" class="col-sm-2 col-form-label">著者：</label>
+    <div class="col-sm-8">
+      <input type="text" id="author" name="author" class="form-control">
+    </div>
+    <button class="btn" onclick="">一覧から選択</button>
+  </div>
+  <br>
+  <div class="form-group row">
+    <label for="circle" class="col-sm-2 col-form-label">サークル名：</label>
+    <div class="col-sm-8">
+      <input type="text" id="circle" name="circle" class="form-control">
+    </div>
+    <button class="btn" onclick="">一覧から選択</button>
+  </div>
+  <br>
+  <div class="form-group row">
+    <label for="genre" class="col-sm-2 col-form-label">ジャンル：</label>
+    <div class="col-sm-8">
+      <input type="text" id="genre" name="genre" class="form-control">
+    </div>
+    <button class="btn" onclick="">一覧から選択</button>
+  </div>
+  <br>
+  <div class="form-group row">
+    <label for="event" class="col-sm-2 col-form-label">頒布イベント：</label>
+    <div class="col-sm-8">
+      <input type="text" id="event" name="event" class="form-control">
+    </div>
+    <button class="btn" onclick="">一覧から選択</button>
+  </div>
+  <br>
+  <div class="form-group row">
+    <label for="date" class="col-sm-2 col-form-label">発行日：</label>
+    <div class="col-sm-10">
+      <input type="text" id="date" name="date" class="form-control">
+    </div>
+  </div>
+  <br>
+  <div class="form-group row">
+    <label for="detail" class="col-sm-2 col-form-label">詳細,メモ：</label>
+    <div class="col-sm-10">
+      <textarea id="detail" name="detail" class="form-control"></textarea>
+    </div>
+  </div>
+  <input type="submit" class="btn" value="登録" />
+</form>
+<script>
+  $('.custom-file-input').on('change', function () {
+    $(this).next('.custom-file-label').html($(this)[0].files[0].name);
+  })
+</script>
