@@ -95,20 +95,9 @@ class App < Sinatra::Base
     if !["BMP","JPEG","PNG"].include?(image.format) then
       redirect to("/error")
     end
-    height = image.rows
-    width = image.columns
-    if height > 1000 || width > 1000 then
-      if height > width then
-        image.resize_to_fit!(width, 1000)
-      else
-        image.resize_to_fit!(1000, height)
-      end
-    end
-    thumb = image.resize_to_fit(300)
+    image.resize_to_fit!(300)
     image.write("./public/images/cover/"+filename)
-    thumb.write("./public/images/cover/thumb/"+filename)
     image.destroy!
-    thumb.destroy!
     # DB保存
     # ジャンル
     if Genre.exists?(name: params["genre"]) then
@@ -139,7 +128,7 @@ class App < Sinatra::Base
       event_id = event.id
     end
     # 書籍
-    is_adult = boolean_check(params["is_adult"])
+    is_adult = boolean_check(params["is-adult"])
     book = Book.create(title: params["title"], cover: filename, date: params["date"], is_adult: is_adult,
                       genre_id: genre_id, event_id: event_id, author_id: author_id, circle_id: circle_id, detail: params["detail"])
     # 所持状況更新
@@ -147,8 +136,14 @@ class App < Sinatra::Base
     redirect to('/list')
   end
 
-  get '/detail' do
+  get '/detail/:id' do
     login_check
+    @book_detail = Book.find(params["id"])
+    @genre = Genre.find(@book_detail.genre_id).name
+    @event = Event.find(@book_detail.event_id).name
+    @author = Author.find(@book_detail.author_id).name
+    @circle = Circle.find(@book_detail.circle_id).name
+    erb :detail
   end
 
   get '/modify' do

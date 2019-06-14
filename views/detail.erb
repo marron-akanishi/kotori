@@ -1,0 +1,42 @@
+<button type="button" class="btn btn-primary" onclick="location.href='/list'" style="margin-bottom: 5pt">
+  ← リストに戻る
+</button>
+<h2>書籍詳細</h2>
+<div style="text-align: center;">
+  <img src="/images/cover/<%= @book_detail.cover %>" />
+</div>
+<br>
+<table class="table">
+  <tr>
+    <td>タイトル</td>
+    <td><%= @book_detail.title %></td>
+  </tr>
+  <tr>
+    <td>R-18指定</td>
+    <td><%= @book_detail.is_adult ? "はい" : "いいえ" %></td>
+  </tr>
+  <tr>
+    <td>著者</td>
+    <td><%= @author %></td>
+  </tr>
+  <tr>
+    <td>サークル名</td>
+    <td><%= @circle %></td>
+  </tr>
+  <tr>
+    <td>ジャンル</td>
+    <td><%= @genre %></td>
+  </tr>
+  <tr>
+    <td>頒布イベント名</td>
+    <td><%= @event %></td>
+  </tr>
+  <tr>
+    <td>発行日</td>
+    <td><%= @book_detail.date %></td>
+  </tr>
+  <tr>
+    <td>詳細</td>
+    <td><%= @book_detail.detail %></td>
+  </tr>
+</table>

@@ -7,8 +7,10 @@
 </button>
 <br>
 <% @list.each do |book| %>
-<div style="height: 350px; text-align: center; display:inline-block; margin: 3px;">
-  <img src="/images/cover/thumb/<%= book.cover %>" />
-  <p><%= book.title %></p>
+<div class="col d-inline">
+  <button onclick="location.href='/detail/<%= book.id %>'" class="btn btn-link thum">
+    <img src="/images/cover/<%= book.cover %>" />
+    <p style="color: black;"><%= book.title %></p>
+  </button>
 </div>
 <% end %>
