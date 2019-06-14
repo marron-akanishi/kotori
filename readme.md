@@ -12,8 +12,7 @@ Umi(CSS)
 
 ## 以下開発メモ
 ### ログイン方法
-Twitter APIを使わない。  
-今有力なのはGoogle OAuth 2.0  
+Googleアカウントを利用   
 
 ### DB設計
 #### Users
@@ -37,9 +36,13 @@ create table books (
   title text,
   cover text,
   date date,
+  detail text,
+  is_adult boolean,
+  genre_id integer,
   event_id integer,
   author_id integer,
   circle_id integer,
+  foreign key(genre_id) references genres(id),
   foreign key(event_id) references events(id),
   foreign key(author_id) references authors(id),
   foreign key(circle_id) references circles(id)
@@ -47,47 +50,78 @@ create table books (
 ```
 id -> 一意なID  
 title -> 書籍タイトル  
-cover -> 表紙画像(ファイルパス)  
+cover -> 表紙画像(UUIDによるファイル名)  
 date -> 発行日  
+deteil -> 詳細・メモ  
+is_adult -> 18禁  
+genre_id -> Genres.id  
 event_id -> Events.id  
 author_id -> Authors.id  
 circle_id -> Circles.id
+
+#### Genres
+```sql
+create table genres (
+  id integer primary key,
+  name text
+);
+```
+id -> 一意なID  
+name -> ジャンル名  
 
 #### Events
 ```sql
 create table events (
   id integer primary key,
-  name text
+  name text,
+  date date
 );
 ```
 id -> 一意なID  
 name -> イベント名  
+date -> 開催日  
 
 #### Authors
 ```sql
 create table authors (
   id integer primary key,
-  name text
+  name text,
+  detail text,
+  twitter text,
+  pixiv text,
+  web text,
+  circle_id integer,
+  foreign key(circle_id) references circles(id)
 );
 ```
 id -> 一意なID  
-name -> 作者名  
+name -> 著者名  
+detail -> 詳細・メモ  
+twitter -> TwitterID  
+pixiv -> pixivID  
+web -> ウェブページURL  
+circle_id -> Circles.id  
 
 #### Circles
 ```sql
 create table circles (
   id integer primary key,
-  name text
+  name text,
+  detail text,
+  web text
 );
 ```
 id -> 一意なID  
 name -> サークル名  
+detail -> 詳細・メモ  
+web -> ウェブページURL  
 
 #### Owners
 ```sql
 create table owners (
   user_id text,
   book_id integer,
+  is_read boolean,
   memo text,
   foreign key(user_id) references users(id),
   foreign key(book_id) references books(id)
@@ -95,51 +129,5 @@ create table owners (
 ```
 user_id -> Users.id  
 book_id -> Books.id  
+is_read -> 未読管理  
 memo -> 個別のメモ  
-
-### ページ
-#### /
-トップ画面  
-ログイン状態のSessionがある場合は/listにリダイレクト  
-
-#### /login
-ログイン画面  
-GETで画面、POSTでログイン実行  
-
-#### /list
-所有している本の一覧  
-表紙・タイトルを一覧で表示  
-
-#### /mypage
-自分の情報の変更  
-GETで詳細画面、POSTで変更  
-
-#### /search
-書籍の検索  
-GETで検索  
-検索画面から自分の持っていない書籍を所持に変更出来るようにする。  
-
-#### /add
-書籍追加画面  
-GETで追加画面、POSTで追加  
-タイトル・作者・サークル名にはサジェスト機能を付ける。  
-タイトルがサジェストで見つかった場合はその書籍情報を利用する。  
-未定義の作者・サークルの場合は各DBに自動追加する。  
-
-#### /detail
-書籍詳細画面  
-
-#### /modify
-書籍情報編集画面  
-GETで変更画面、POSTで変更  
-
-### API
-ここのリンクはページを設けずに通信用に使用  
-#### /delete
-書籍情報の削除  
-
-#### /logout
-ログアウト  
-
-#### /quit
-退会  

@@ -7,17 +7,21 @@
     <title>Kotori</title>
     <!-- CSS -->
     <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="/css/open-iconic-bootstrap.min.css" rel="stylesheet" type="text/css" />
     <!-- JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="/js/bootstrap.min.js"></script>
   </head>
   <body style="padding-top: 90px;">
     <header>
-      <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark">
         <a class="navbar-brand" href="/">Kotori</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#link-list" aria-controls="link-list" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navmenu"
+            aria-controls="navmenu" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="link-list">
+        <div class="collapse navbar-collapse" id="navmenu">
+          <!-- 左寄せ -->
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
               <a class="nav-link" href="/help">Info/Help</a>
@@ -25,6 +29,16 @@
             <li class="nav-item">
               <a class="nav-link" href="https://github.com/marron-akanishi/kotori" target="_blank">GitHub</a>
             </li>
+          </ul>
+          <!-- 右寄せ -->
+          <ul class="navbar-nav">
+            <% if session[:id] != nil %>
+            <li class="nav-item">
+              <button type="button" class="btn btn-danger" onClick="location.href='/logout'">
+                <span class="oi oi-account-logout"> ログアウト</span>
+              </button>
+            </li>
+            <% end %>
           </ul>
         </div>
       </nav>
