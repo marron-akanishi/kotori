@@ -1,31 +1,24 @@
-<h2 style="text-align: center;">書籍追加</h2>
-<h4>タイトル：<%= @title %></h4>
-<% if @exists != nil %>
-  <div class="alert alert-warning">
-    タイトルが一致する書籍を見つけました。<br>このデータを利用する場合は書籍をクリックしてください。
-  </div>
-  <div class="border exists" onclick="location.href='/own/<%= @exists.id %>'";>
-    <div style="text-align: center;">
-      <img src="/images/cover/<%= @exists.cover %>" height="200px" />
-    </div>
-    <div>
-      <h5><%= @exists.title %></h5>
-      <%= @author %>
-    </div>
-  </div>
-<% end %>
-<p>詳細情報を追加してください。</p>
-<form action="/add/book/done" method="POST" enctype="multipart/form-data">
-  <input type="hidden" name="title" value="<%= @title %>">
+<h2 style="text-align: center;">書籍情報編集</h2>
+<h4>タイトル：<%= @book_detail.title %></h4>
+<form action="/book/<%= @book_detail.id %>/modify/done?from=<%= @from %>" method="POST" enctype="multipart/form-data">
   <div class="custom-control custom-checkbox">
+    <% if @book_detail.is_adult %>
+    <input type="checkbox" class="custom-control-input" id="is-adult" name="is-adult" value="true" checked>
+    <% else %>
     <input type="checkbox" class="custom-control-input" id="is-adult" name="is-adult" value="true">
+    <% end %>
     <label class="custom-control-label" for="is-adult" style="color: red;">18禁タイトル</label>
+  </div>
+  <br>
+  <div style="text-align: center;">
+    <img src="/images/cover/<%= @book_detail.cover %>" />
+    <input type="hidden" name="orig-cover" value="<%= @book_detail.cover %>" >
   </div>
   <br>
   <div class="form-group row" aria-describedby="cover-help">
     <label for="cover-img" class="col-sm-2 col-form-label">表紙画像：</label>
     <div class="custom-file col-sm-10">
-      <input type="file" class="custom-file-input" id="cover-img" name="cover-img" required>
+      <input type="file" class="custom-file-input" id="cover-img" name="cover-img">
       <label class="custom-file-label" for="cover-img">ファイルを選択</label>
     </div>
   </div>
@@ -36,7 +29,7 @@
   <div class="form-group row">
     <label for="author" class="col-sm-2 col-form-label">著者：</label>
     <div class="col-sm-8">
-      <input type="text" id="author" name="author" class="form-control" required>
+      <input type="text" id="author" name="author" class="form-control" value="<%= @author %>" required>
     </div>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#listModal" data-whatever="author">一覧から選択</button>
   </div>
@@ -44,7 +37,7 @@
   <div class="form-group row">
     <label for="circle" class="col-sm-2 col-form-label">サークル名：</label>
     <div class="col-sm-8">
-      <input type="text" id="circle" name="circle" class="form-control" required>
+      <input type="text" id="circle" name="circle" class="form-control" value="<%= @circle %>" required>
     </div>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#listModal" data-whatever="circle">一覧から選択</button>
   </div>
@@ -52,7 +45,7 @@
   <div class="form-group row">
     <label for="genre" class="col-sm-2 col-form-label">ジャンル：</label>
     <div class="col-sm-8">
-      <input type="text" id="genre" name="genre" class="form-control" required>
+      <input type="text" id="genre" name="genre" class="form-control" value="<%= @genre %>" required>
     </div>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#listModal" data-whatever="genre">一覧から選択</button>
   </div>
@@ -60,7 +53,7 @@
   <div class="form-group row">
     <label for="event" class="col-sm-2 col-form-label">頒布イベント：</label>
     <div class="col-sm-8">
-      <input type="text" id="event" name="event" class="form-control" required>
+      <input type="text" id="event" name="event" class="form-control" value="<%= @event %>" >
     </div>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#listModal" data-whatever="event">一覧から選択</button>
   </div>
@@ -68,14 +61,14 @@
   <div class="form-group row">
     <label for="date" class="col-sm-2 col-form-label">発行日：</label>
     <div class="col-sm-10">
-      <input type="text" id="date" name="date" class="form-control" required>
+      <input type="text" id="date" name="date" class="form-control" value="<%= @book_detail.date %>" >
     </div>
   </div>
   <br>
   <div class="form-group row">
     <label for="detail" class="col-sm-2 col-form-label">詳細,メモ：</label>
     <div class="col-sm-10">
-      <textarea id="detail" name="detail" class="form-control"></textarea>
+      <textarea id="detail" name="detail" class="form-control"><%= @book_detail.detail %></textarea>
     </div>
   </div>
   <input type="submit" class="btn btn-primary" value="登録" />

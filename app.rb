@@ -42,6 +42,17 @@ class App < Sinatra::Base
       return value == 'true' ? true : false
     end
   end
+
+  # error
+  error 404 do
+    redirect to("/error?code=404")
+  end
+
+  error 500 do
+    redirect to("/error?code=500")
+  end
+
+  @@error_msg = {"404" => "指定されたURLが見つかりません", "500" => "エラーが発生しました。"}
 end
 
 Dir[File.dirname(__FILE__) + "/routes/**"].each do |route|

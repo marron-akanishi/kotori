@@ -1,16 +1,16 @@
 <% if @from == "mypage" %>
-<button type="button" class="btn btn-primary" onclick="location.href='/mypage'" style="margin-bottom: 1rem; float: left;">
+<button type="button" class="btn btn-primary" onclick="location.href='/user/mypage'" style="margin-bottom: 1rem; float: left;">
 <% else %>
-<button type="button" class="btn btn-primary" onclick="location.href='/list/book'" style="margin-bottom: 1rem; float: left;">
+<button type="button" class="btn btn-primary" onclick="location.href='/book'" style="margin-bottom: 1rem; float: left;">
 <% end %>
   ← 戻る
 </button>
 <div style="float: right;">
   <% if @owned %>
-  <button class="btn btn-warning" style="margin-bottom: 1rem" disabled>編集</button>
+  <button class="btn btn-warning" style="margin-bottom: 1rem" onclick="location.href='/book/<%= @book_detail.id %>/modify?from=<%= @from %>'">編集</button>
   <button class="btn btn-danger" style="margin-bottom: 1rem" data-toggle="modal" data-target="#delModal">所持解除</button>
   <% elsif session[:id] != nil %>
-  <button class="btn btn-info" style="margin-bottom: 1rem" onclick="location.href='/own/<%= @book_detail.id %>?exist=true&from=<%= @from %>'">所持</button>
+  <button class="btn btn-info" style="margin-bottom: 1rem" onclick="location.href='/user/own/<%= @book_detail.id %>?exist=true&from=<%= @from %>'">所持</button>
   <% end %>
 </div>
 <h2 style="text-align: center;">書籍詳細</h2>
@@ -58,7 +58,7 @@
 </table>
 
 <% if @owned %>
-<form action="/memo/<%= @book_detail.id %>" method="POST">
+<form action="/user/memo/<%= @book_detail.id %>" method="POST">
   <div class="form-group">
     <input type="hidden" name="from" value="<%= @from %>">
     <label for="memoarea">メモ：</label>
@@ -85,7 +85,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">キャンセル</button>
-        <button type="button" class="btn btn-danger" onclick="location.href='/unown/<%= @book_detail.id %>?from=<%= @from %>'">削除</button>
+        <button type="button" class="btn btn-danger" onclick="location.href='/user/unown/<%= @book_detail.id %>?from=<%= @from %>'">削除</button>
       </div>
     </div>
   </div>

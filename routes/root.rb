@@ -1,12 +1,13 @@
 class App < Sinatra::Base
   get '/' do
     if session[:id] != nil then
-      redirect to('/mypage')
+      redirect to('/user/mypage')
     end
     erb :index
   end
 
   get '/error' do
+    @msg = @@error_msg[params['code']]
     erb :error
   end
 
@@ -24,7 +25,7 @@ class App < Sinatra::Base
       mail = result["info"]["email"]
       User.create(id: session[:id], name: name, mail: mail, latest_at: Time.now)
     end
-    redirect to('/mypage')
+    redirect to('/user/mypage')
   end
 
   get '/logout' do

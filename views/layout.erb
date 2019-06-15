@@ -32,11 +32,14 @@
                 登録一覧
               </a>
               <div class="dropdown-menu" aria-labelledby="listItem">
-                <a class="dropdown-item" href="/list/book">書籍</a>
-                <a class="dropdown-item" href="/list/author">著者</a>
-                <a class="dropdown-item" href="/list/circle">サークル</a>
-                <a class="dropdown-item" href="/list/event">イベント</a>
+                <a class="dropdown-item" href="/book">書籍</a>
+                <a class="dropdown-item" href="/author">著者</a>
+                <a class="dropdown-item" href="/circle">サークル</a>
+                <a class="dropdown-item" href="/event">イベント</a>
               </div>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/search">書籍検索</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/help">Info/Help</a>
@@ -46,7 +49,7 @@
           <ul class="navbar-nav">
             <% if session[:id] != nil %>
             <li class="nav-item">
-              <button type="button" class="btn btn-info" onClick="location.href='/setting'" style="margin-right: 5px">
+              <button type="button" class="btn btn-info" onClick="location.href='/user/setting'" style="margin-right: 5px">
                 <span class="oi oi-cog"> 設定</span>
               </button>
             </li>
