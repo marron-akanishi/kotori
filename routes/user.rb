@@ -7,7 +7,7 @@ class App < Sinatra::Base
 
   get '/user/setting' do
     login_check
-    @name = User.find(session[:id]).name
+    @user = User.find(session[:id])
     erb :setting
   end
 

@@ -1,9 +1,10 @@
 <h2 style="text-align: center;">設定</h2>
+<p>登録メールアドレス：<%= @user.mail %></p>
 <form action="/user/setting/done" method="POST">
   <div class="form-group row">
     <label for="dispName" class="col-sm-2 col-form-label">表示名：</label>
     <div class="col-sm-10">
-      <input type="text" id="dispName" name="dispName" class="form-control" value="<%= @name %>" required>
+      <input type="text" id="dispName" name="dispName" class="form-control" value="<%= @user.name %>" required>
     </div>
   </div>
   <input type="submit" class="btn btn-primary" value="保存" />
