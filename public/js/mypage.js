@@ -60,6 +60,7 @@ function viewChange(disp_mode) {
 // ページャーの生成
 function makePageNav(){
   $("#pagenav").empty();
+  if(disp_list.length == 0) return;
   var page_count = Math.floor(disp_list.length / LIMIT);
   if (disp_list.length % LIMIT != 0) page_count++;
   $("#pagenav").append(`
