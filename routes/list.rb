@@ -16,7 +16,7 @@ class App < Sinatra::Base
     erb :list
   end
   
-  get '/get/list' do
+  get '/api/get_list' do
     case params["type"]
     when "book" then
       Book.all.to_json

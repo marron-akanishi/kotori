@@ -2,11 +2,16 @@ class App < Sinatra::Base
   get '/mypage' do
     login_check
     @name = User.find(session[:id]).name
+    erb :mypage
+  end
+
+  get '/mypage/ownlist' do
+    login_check
     @list = []
     Owner.where(user_id: session[:id]).find_each do |book|
       @list << Book.find(book.book_id)
     end
-    erb :mypage
+    return @list.to_json
   end
 
   get '/setting' do

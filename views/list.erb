@@ -5,7 +5,7 @@
 
 <script>
   $(function () {
-      $.getJSON("/get/list?type=<%= @type %>", function(list){
+      $.getJSON("/api/get_list?type=<%= @type %>", function(list){
         for (var i in list) {
           <% if @type == "book" %>
           $("#list").append(`<tr><td><a href='/detail/book/${list[i].id}?from=list'>${list[i].title}</td></tr>`)

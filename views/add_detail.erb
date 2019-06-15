@@ -99,10 +99,10 @@
   var author_list, circle_list, genre_list, event_list;
   $(function() {
     $.ajaxSetup({ async: false });
-    $.getJSON("/get/list?type=author", data => author_list = data);
-    $.getJSON("/get/list?type=circle", data => circle_list = data);
-    $.getJSON("/get/list?type=genre", data => genre_list = data);
-    $.getJSON("/get/list?type=event", data => event_list = data);
+    $.getJSON("/api/get_list?type=author", data => author_list = data);
+    $.getJSON("/api/get_list?type=circle", data => circle_list = data);
+    $.getJSON("/api/get_list?type=genre", data => genre_list = data);
+    $.getJSON("/api/get_list?type=event", data => event_list = data);
     $.ajaxSetup({ async: true });
   })
   $('.custom-file-input').on('change', function () {
