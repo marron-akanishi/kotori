@@ -1,0 +1,16 @@
+<div class="alert alert-info">
+  ようこそ、<%= @name %>さん
+</div>
+<h2>所有書籍一覧</h2>
+<button type="button" class="btn btn-success" onclick="location.href='/add/book/title'" style="display: block;">
+  ＋ 追加
+</button>
+<br>
+<% @list.each do |book| %>
+<div class="col d-inline">
+  <button onclick="location.href='/detail/book/<%= book.id %>'" class="btn btn-link thum">
+    <img src="/images/cover/<%= book.cover %>" height="200px"/>
+    <p style="color: black;"><%= book.title %></p>
+  </button>
+</div>
+<% end %>

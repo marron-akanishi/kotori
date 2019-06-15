@@ -1,16 +1,18 @@
-<div class="alert alert-dismissible alert-info">
-  ようこそ、<%= @name %>さん
-</div>
-<span style="font-size: 2rem;">書籍一覧</span>
-<button type="button" class="btn btn-success" onclick="location.href='/add/title'" style="display: block;">
-  ＋ 追加
-</button>
-<br>
-<% @list.each do |book| %>
-<div class="col d-inline">
-  <button onclick="location.href='/detail/<%= book.id %>'" class="btn btn-link thum">
-    <img src="/images/cover/<%= book.cover %>" />
-    <p style="color: black;"><%= book.title %></p>
-  </button>
-</div>
-<% end %>
+<h2><%= @type_name %>一覧</h2>
+<table id="list" class="table">
+  <tr><th>名前</th></tr>
+</table>
+
+<script>
+  $(function () {
+      $.getJSON("/get/list?type=<%= @type %>", function(list){
+        for (var i in list) {
+          <% if @type == "book" %>
+          $("#list").append("<tr><td>" + list[i].title + "</td></tr>")
+          <% else %>
+          $("#list").append("<tr><td>" + list[i].name + "</td></tr>")
+          <% end %>
+        }
+      });
+    });
+</script>

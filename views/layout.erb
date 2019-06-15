@@ -10,7 +10,7 @@
     <link href="/css/open-iconic-bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="/css/original.css" rel="stylesheet" type="text/css" />
     <!-- JS -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
     <script src="/js/bootstrap.min.js"></script>
   </head>
   <body style="padding-top: 90px;">
@@ -24,11 +24,20 @@
         <div class="collapse navbar-collapse" id="navmenu">
           <!-- 左寄せ -->
           <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="/help">Info/Help</a>
+            <li class="nav-item dropdown show">
+              <a class="nav-link dropdown-toggle" href="#" id="listItem" role="button" data-toggle="dropdown" aria-haspopup="false"
+                aria-expanded="false">
+                登録一覧
+              </a>
+              <div class="dropdown-menu" aria-labelledby="listItem">
+                <a class="dropdown-item" href="/list/book">書籍</a>
+                <a class="dropdown-item" href="/list/author">著者</a>
+                <a class="dropdown-item" href="/list/circle">サークル</a>
+                <a class="dropdown-item" href="/list/event">イベント</a>
+              </div>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="https://github.com/marron-akanishi/kotori" target="_blank">GitHub</a>
+              <a class="nav-link" href="/help">Info/Help</a>
             </li>
           </ul>
           <!-- 右寄せ -->
