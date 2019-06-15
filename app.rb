@@ -47,3 +47,5 @@ end
 Dir[File.dirname(__FILE__) + "/routes/**"].each do |route|
   require route
 end
+
+App.run!

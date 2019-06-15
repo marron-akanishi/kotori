@@ -30,12 +30,14 @@ Googleアカウントを利用
 ```sql
 create table users (
   id text primary key,
+  mail text,
   latest_at datetime,
   daleted_at datetime,
   name text
 );
 ```
 id -> 一意なID(Google OAuthから引っ張る)  
+mail -> Googleのメールアドレス  
 latest_at -> 最後にログインした日時  
 deleted_at -> 退会した日時  
 name -> 表示名  
@@ -49,6 +51,7 @@ create table books (
   date date,
   detail text,
   is_adult boolean,
+  mod_user text,
   genre_id integer,
   event_id integer,
   author_id integer,
@@ -65,6 +68,7 @@ cover -> 表紙画像(UUIDによるファイル名)
 date -> 発行日  
 deteil -> 詳細・メモ  
 is_adult -> 18禁  
+mod_user -> 最終変更ユーザー  
 genre_id -> Genres.id  
 event_id -> Events.id  
 author_id -> Authors.id  

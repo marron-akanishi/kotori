@@ -26,6 +26,26 @@ class App < Sinatra::Base
     if !Owner.exists?(user_id: session[:id], book_id: params["id"]) then
       Owner.create(user_id: session[:id], book_id: params["id"])
     end
-    redirect to('/mypage')
+    if boolean_check(params["exist"]) then
+      redirect to('/detail/book/'+params["id"]+'?from='+params["from"])
+    else
+      redirect to('/mypage')
+    end
+  end
+
+  get '/unown/:id' do
+    login_check
+    if Owner.exists?(user_id: session[:id], book_id: params["id"]) then
+      Owner.where(user_id: session[:id], book_id: params["id"]).destroy_all
+    end
+    redirect to('/detail/book/'+params["id"]+'?from='+params["from"])
+  end
+
+  post '/memo/:id' do
+    login_check
+    if Owner.exists?(user_id: session[:id], book_id: params["id"]) then
+      Owner.where(user_id: session[:id], book_id: params["id"]).update_all(memo: params["memoText"])
+    end
+    redirect to('/detail/book/'+params["id"]+'?from='+params["from"])
   end
 end

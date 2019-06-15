@@ -1,7 +1,19 @@
-<button type="button" class="btn btn-primary" onclick="history.back()" style="margin-bottom: 5pt">
-  ← 前のページに戻る
+<% if @from == "mypage" %>
+<button type="button" class="btn btn-primary" onclick="location.href='/mypage'" style="margin-bottom: 1rem; float: left;">
+<% else %>
+<button type="button" class="btn btn-primary" onclick="location.href='/list/book'" style="margin-bottom: 1rem; float: left;">
+<% end %>
+  ← 戻る
 </button>
-<h2>書籍詳細</h2>
+<div style="float: right;">
+  <% if @owned %>
+  <button class="btn btn-warning" style="margin-bottom: 1rem" disabled>編集</button>
+  <button class="btn btn-danger" style="margin-bottom: 1rem" data-toggle="modal" data-target="#delModal">所持解除</button>
+  <% elsif session[:id] != nil %>
+  <button class="btn btn-info" style="margin-bottom: 1rem" onclick="location.href='/own/<%= @book_detail.id %>?exist=true&from=<%= @from %>'">所持</button>
+  <% end %>
+</div>
+<h2 style="text-align: center;">書籍詳細</h2>
 <div style="text-align: center;">
   <img src="/images/cover/<%= @book_detail.cover %>" />
 </div>
@@ -39,4 +51,43 @@
     <td>詳細</td>
     <td><%= @book_detail.detail %></td>
   </tr>
+  <tr>
+    <td>最終更新者</td>
+    <td><%= @user %></td>
+  </tr>
 </table>
+
+<% if @owned %>
+<form action="/memo/<%= @book_detail.id %>" method="POST">
+  <div class="form-group">
+    <input type="hidden" name="from" value="<%= @from %>">
+    <label for="memoarea">メモ：</label>
+    <textarea id="memoarea" name="memoText" class="form-control"><%= @memo %></textarea>
+  </div>
+  <button type="submit" class="btn btn-primary">保存</button>
+</form>
+<% elsif session[:id] == nil %>
+<div class="alert alert-info">
+  ログインすると自分専用のメモを登録できるようになります。
+</div>
+<% end %>
+
+<% if @owned %>
+<div class="modal fade" id="delModal" tabindex="-1" role="dialog" aria-labelledby="label1" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="label1">確認</h5>
+      </div>
+      <div class="modal-body">
+        所有状態を解除するとメモが削除されます。<br>
+        よろしいですか？
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">キャンセル</button>
+        <button type="button" class="btn btn-danger" onclick="location.href='/unown/<%= @book_detail.id %>?from=<%= @from %>'">削除</button>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>

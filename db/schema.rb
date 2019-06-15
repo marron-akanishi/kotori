@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_14_193341) do
+ActiveRecord::Schema.define(version: 2019_06_15_081504) do
 
   create_table "authors", force: :cascade do |t|
     t.text "name"
@@ -32,6 +32,7 @@ ActiveRecord::Schema.define(version: 2019_06_14_193341) do
     t.integer "event_id"
     t.integer "author_id"
     t.integer "circle_id"
+    t.text "mod_user"
     t.index ["author_id"], name: "index_books_on_author_id"
     t.index ["circle_id"], name: "index_books_on_circle_id"
     t.index ["event_id"], name: "index_books_on_event_id"
@@ -68,6 +69,7 @@ ActiveRecord::Schema.define(version: 2019_06_14_193341) do
     t.datetime "latest_at"
     t.datetime "deleted_at"
     t.text "name"
+    t.text "mail"
     t.index ["id"], name: "index_users_on_id", unique: true
   end
 

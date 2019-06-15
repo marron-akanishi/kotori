@@ -10,6 +10,10 @@ class App < Sinatra::Base
     erb :error
   end
 
+  get '/help' do
+    erb :help
+  end
+
   get "/auth/:provider/callback" do
     result = request.env["omniauth.auth"]
     session[:id] = result["uid"]
@@ -17,7 +21,8 @@ class App < Sinatra::Base
       User.find(session[:id]).update(latest_at: Time.now)
     else
       name = result["info"]["name"]
-      User.create(id: session[:id], name: name, latest_at: Time.now)
+      mail = result["info"]["email"]
+      User.create(id: session[:id], name: name, mail: mail, latest_at: Time.now)
     end
     redirect to('/mypage')
   end

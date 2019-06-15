@@ -11,6 +11,7 @@
     <link href="/css/original.css" rel="stylesheet" type="text/css" />
     <!-- JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" crossorigin="anonymous"></script>
     <script src="/js/bootstrap.min.js"></script>
   </head>
   <body style="padding-top: 90px;">
@@ -51,6 +52,12 @@
             <li class="nav-item">
               <button type="button" class="btn btn-danger" onClick="location.href='/logout'">
                 <span class="oi oi-account-logout"> ログアウト</span>
+              </button>
+            </li>
+            <% else %>
+            <li class="nav-item">
+              <button type="button" class="btn btn-info" onClick="location.href='/auth/google_oauth2'">
+                <span class="oi oi-account-login"> ログイン</span>
               </button>
             </li>
             <% end %>

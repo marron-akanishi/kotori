@@ -60,7 +60,7 @@ class App < Sinatra::Base
     end
     # 書籍
     is_adult = boolean_check(params["is-adult"])
-    book = Book.create(title: params["title"], cover: filename, date: params["date"], is_adult: is_adult,
+    book = Book.create(title: params["title"], cover: filename, date: params["date"], is_adult: is_adult, mod_user: session[:id],
                       genre_id: genre_id, event_id: event_id, author_id: author_id, circle_id: circle_id, detail: params["detail"])
     # 所持状況更新
     Owner.create(user_id: session[:id], book_id: book.id)
@@ -68,12 +68,17 @@ class App < Sinatra::Base
   end
 
   get '/detail/book/:id' do
-    login_check
+    @from = params["from"]
     @book_detail = Book.find(params["id"])
     @genre = Genre.find(@book_detail.genre_id).name
     @event = Event.find(@book_detail.event_id).name
     @author = Author.find(@book_detail.author_id).name
     @circle = Circle.find(@book_detail.circle_id).name
+    @user = User.find(@book_detail.mod_user).name
+    if session[:id] != nil && Owner.exists?(user_id: session[:id], book_id: params["id"])then
+      @owned = true;
+      @memo = Owner.find_by(user_id: session[:id], book_id: params["id"]).memo
+    end
     erb :detail
   end
 
