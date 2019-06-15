@@ -44,6 +44,11 @@
           <ul class="navbar-nav">
             <% if session[:id] != nil %>
             <li class="nav-item">
+              <button type="button" class="btn btn-info" onClick="location.href='/setting'" style="margin-right: 5px">
+                <span class="oi oi-cog"> 設定</span>
+              </button>
+            </li>
+            <li class="nav-item">
               <button type="button" class="btn btn-danger" onClick="location.href='/logout'">
                 <span class="oi oi-account-logout"> ログアウト</span>
               </button>

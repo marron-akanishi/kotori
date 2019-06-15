@@ -11,10 +11,14 @@ class App < Sinatra::Base
 
   get '/setting' do
     login_check
+    @name = User.find(session[:id]).name
+    erb :setting
   end
 
   post '/setting/done' do
     login_check
+    User.find(session[:id]).update(name: params["dispName"])
+    redirect to('/mypage')
   end
 
   get '/own/:id' do
@@ -22,6 +26,6 @@ class App < Sinatra::Base
     if !Owner.exists?(user_id: session[:id], book_id: params["id"]) then
       Owner.create(user_id: session[:id], book_id: params["id"])
     end
-    redirest to('/mypage')
+    redirect to('/mypage')
   end
 end

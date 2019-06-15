@@ -1,0 +1,10 @@
+<h2>設定</h2>
+<form action="/setting/done" method="POST">
+  <div class="form-group row">
+    <label for="dispName" class="col-sm-2 col-form-label">表示名：</label>
+    <div class="col-sm-10">
+      <input type="text" id="dispName" name="dispName" class="form-control" value="<%= @name %>" required>
+    </div>
+  </div>
+  <input type="submit" class="btn" value="保存" />
+</form>
