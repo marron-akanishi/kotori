@@ -5,6 +5,11 @@ class App < Sinatra::Base
     erb :list
   end
 
+  get '/book/add' do
+    login_check
+    erb :book_add
+  end
+
   get '/book/:id' do
     @from = params["from"]
     @book_detail = Book.find(params["id"])
@@ -18,11 +23,6 @@ class App < Sinatra::Base
       @memo = Owner.find_by(user_id: session[:id], book_id: params["id"]).memo
     end
     erb :book_detail
-  end
-
-  get '/book/add' do
-    login_check
-    erb :book_add
   end
 
   post '/book/add/detail' do
