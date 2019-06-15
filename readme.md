@@ -10,6 +10,17 @@ Windows10 + WSL
 Umi(CSS)  
 その他Gemfileに書いてあるもの
 
+## Unicornの操作
+起動  
+```
+bundler exec unicorn -c /usr/local/app/unicorn.rb -E development -D
+```  
+
+停止  
+```
+kill -QUIT `cat tmp/pids/unicorn.pid`
+```
+
 ## 以下開発メモ
 ### ログイン方法
 Googleアカウントを利用   

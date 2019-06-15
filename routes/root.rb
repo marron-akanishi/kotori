@@ -17,7 +17,7 @@ class App < Sinatra::Base
       User.find(session[:id]).update(latest_at: Time.now)
     else
       name = result["info"]["name"]
-      User.create(id: id, name: @name, latest_at: Time.now)
+      User.create(id: session[:id], name: name, latest_at: Time.now)
     end
     redirect to('/mypage')
   end
