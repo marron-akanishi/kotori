@@ -105,7 +105,11 @@ class App < Sinatra::Base
     @from = params["from"]
     @book_detail = Book.find(params["id"])
     @genre = Genre.find(@book_detail.genre_id).name
-    @event = Event.find(@book_detail.event_id).name
+    begin
+      @event = Event.find(@book_detail.event_id).name
+    rescue => exception
+      @event = ""
+    end
     @author = Author.find(@book_detail.author_id).name
     @circle = Circle.find(@book_detail.circle_id).name
     erb :book_modify
