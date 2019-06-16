@@ -32,35 +32,47 @@
   </span>
   <br>
   <div class="form-group row">
-    <label for="author" class="col-sm-2 col-form-label">著者(必須)：</label>
-    <div class="col-sm-8">
+    <label for="author" class="col-sm-3 col-form-label">著者(必須)：</label>
+    <div class="input-group col">
       <input type="text" id="author" name="author" class="form-control" value="<%= @author %>" required>
+      <div class="input-group-append">
+        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#listModal"
+          data-whatever="author">一覧</button>
+      </div>
     </div>
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#listModal" data-whatever="author">一覧から選択</button>
   </div>
   <br>
   <div class="form-group row">
-    <label for="circle" class="col-sm-2 col-form-label">サークル名(必須)：</label>
-    <div class="col-sm-8">
+    <label for="circle" class="col-sm-3 col-form-label">サークル名(必須)：</label>
+    <div class="input-group col">
       <input type="text" id="circle" name="circle" class="form-control" value="<%= @circle %>" required>
+      <div class="input-group-append">
+        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#listModal"
+          data-whatever="circle">一覧</button>
+      </div>
     </div>
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#listModal" data-whatever="circle">一覧から選択</button>
   </div>
   <br>
   <div class="form-group row">
-    <label for="genre" class="col-sm-2 col-form-label">ジャンル(必須)：</label>
-    <div class="col-sm-8">
+    <label for="genre" class="col-sm-3 col-form-label">ジャンル(必須)：</label>
+    <div class="input-group col">
       <input type="text" id="genre" name="genre" class="form-control" value="<%= @genre %>" required>
+      <div class="input-group-append">
+        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#listModal"
+          data-whatever="genre">一覧</button>
+      </div>
     </div>
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#listModal" data-whatever="genre">一覧から選択</button>
   </div>
   <br>
   <div class="form-group row">
-    <label for="event" class="col-sm-2 col-form-label">頒布イベント：</label>
-    <div class="col-sm-8">
-      <input type="text" id="event" name="event" class="form-control" value="<%= @event %>" >
+    <label for="event" class="col-sm-3 col-form-label">頒布イベント：</label>
+    <div class="input-group col">
+      <input type="text" id=event name="event" class="form-control" value="<%= @event %>">
+      <div class="input-group-append">
+        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#listModal"
+          data-whatever="event">一覧</button>
+      </div>
     </div>
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#listModal" data-whatever="event">一覧から選択</button>
   </div>
   <br>
   <div class="form-group row">
