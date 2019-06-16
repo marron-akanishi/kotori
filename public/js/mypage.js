@@ -34,12 +34,10 @@ function viewChange(disp_mode) {
       $("#owngrid").show();
       for (var i in disp_area) {
         $("#owngrid").append(`
-            <li style="display: inline;">
-              <button onclick="location.href='/book/${disp_area[i].id}?from=mypage'" class="btn btn-link thum">
-                <img src="/images/cover/${disp_area[i].cover}" height="200px" />
-                <p style="color: black;">${disp_area[i].title}</p>
-              </button>
-            </li>
+            <div class="cover">
+              <img src="/images/cover/${disp_area[i].cover}" onclick="location.href='/book/${disp_area[i].id}?from=mypage'" />
+              <p>${disp_area[i].title}</p>
+            </div>
           `)
       }
       break;

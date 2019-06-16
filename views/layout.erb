@@ -8,6 +8,7 @@
     <!-- CSS -->
     <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="/css/open-iconic-bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="/css/github-markdown.css" rel="stylesheet" type="text/css" />
     <link href="/css/original.css" rel="stylesheet" type="text/css" />
     <!-- JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
@@ -49,7 +50,7 @@
           <ul class="navbar-nav">
             <% if session[:id] != nil %>
             <li class="nav-item">
-              <button type="button" class="btn btn-info" onClick="location.href='/user/setting'" style="margin-right: 5px">
+              <button type="button" class="btn btn-info mb-2 mb-sm-0" onClick="location.href='/user/setting'" style="margin-right: 5px">
                 <span class="oi oi-cog"> 設定</span>
               </button>
             </li>

@@ -1,6 +1,11 @@
 <h2 style="text-align: center;">書籍情報編集</h2>
-<h4>タイトル：<%= @book_detail.title %></h4>
 <form action="/book/<%= @book_detail.id %>/modify/done?from=<%= @from %>" method="POST" enctype="multipart/form-data">
+  <div class="form-group row">
+    <label for="title" class="col-sm-2 col-form-label">タイトル(必須)：</label>
+    <div class="col-sm-8">
+      <input type="text" id=title name="title" class="form-control" value="<%= @book_detail.title %>" required>
+    </div>
+  </div>
   <div class="custom-control custom-checkbox">
     <% if @book_detail.is_adult %>
     <input type="checkbox" class="custom-control-input" id="is-adult" name="is-adult" value="true" checked>
@@ -27,7 +32,7 @@
   </span>
   <br>
   <div class="form-group row">
-    <label for="author" class="col-sm-2 col-form-label">著者：</label>
+    <label for="author" class="col-sm-2 col-form-label">著者(必須)：</label>
     <div class="col-sm-8">
       <input type="text" id="author" name="author" class="form-control" value="<%= @author %>" required>
     </div>
@@ -35,7 +40,7 @@
   </div>
   <br>
   <div class="form-group row">
-    <label for="circle" class="col-sm-2 col-form-label">サークル名：</label>
+    <label for="circle" class="col-sm-2 col-form-label">サークル名(必須)：</label>
     <div class="col-sm-8">
       <input type="text" id="circle" name="circle" class="form-control" value="<%= @circle %>" required>
     </div>
@@ -43,7 +48,7 @@
   </div>
   <br>
   <div class="form-group row">
-    <label for="genre" class="col-sm-2 col-form-label">ジャンル：</label>
+    <label for="genre" class="col-sm-2 col-form-label">ジャンル(必須)：</label>
     <div class="col-sm-8">
       <input type="text" id="genre" name="genre" class="form-control" value="<%= @genre %>" required>
     </div>

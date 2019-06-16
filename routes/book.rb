@@ -5,6 +5,7 @@ class App < Sinatra::Base
     erb :list
   end
 
+  # 詳細表示とURLがかぶるためこちらを上に持ってくる
   get '/book/add' do
     login_check
     erb :book_add
@@ -14,7 +15,11 @@ class App < Sinatra::Base
     @from = params["from"]
     @book_detail = Book.find(params["id"])
     @genre = Genre.find(@book_detail.genre_id).name
-    @event = Event.find(@book_detail.event_id).name
+    begin
+      @event = Event.find(@book_detail.event_id).name
+    rescue => exception
+      @event = ""
+    end
     @author = Author.find(@book_detail.author_id).name
     @circle = Circle.find(@book_detail.circle_id).name
     @user = User.find(@book_detail.mod_user).name
@@ -159,7 +164,7 @@ class App < Sinatra::Base
     end
     # 書籍
     is_adult = boolean_check(params["is-adult"])
-    Book.find(params[:id]).update(cover: filename, date: params["date"], is_adult: is_adult, mod_user: session[:id],
+    Book.find(params[:id]).update(title: params["title"], cover: filename, date: params["date"], is_adult: is_adult, mod_user: session[:id],
                                   genre_id: genre_id, event_id: event_id, author_id: author_id, circle_id: circle_id, detail: params["detail"])
     redirect to('/book/'+params["id"]+'?from='+params["from"])
   end
