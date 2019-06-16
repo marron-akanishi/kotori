@@ -1,5 +1,6 @@
 var own_list, author_list, disp_list, mode, current_page;
-const LIMIT = 50;
+const LIST_LIMIT = 50;
+const GRID_LIMIT = 30;
 
 // ロード時に書籍一覧と著者一覧取得
 $(function () {
@@ -7,29 +8,30 @@ $(function () {
   $.getJSON("/api/get_list?type=ownlist", data => own_list = data);
   $.getJSON("/api/get_list?type=author", data => author_list = data);
   $.ajaxSetup({ async: true });
-  mode = $.cookie("mypageListMode") || "grid"
-  $(`#${mode}button`).addClass("active")
+  mode = $.cookie("mypageListMode").toUpperCase() || "GRID"
+  $(`#${mode.toLowerCase()}button`).addClass("active")
   disp_list = own_list
   makePageNav();
   current_page = 1;
-  viewChange(mode);
+  viewChange();
 });
 
 // リストモードの切り替え
 $('input[name="listmode"]').change(function () {
   mode = $(this).val();
   $.cookie("mypageListMode", mode);
+  makePageNav();
   current_page = 1;
-  viewChange(mode);
+  viewChange();
 });
 
 // リストビューの更新
-function viewChange(disp_mode) {
+function viewChange() {
   $("#ownlist").empty();
   $("#owngrid").empty();
-  disp_area = disp_list.slice((current_page - 1) * LIMIT, current_page * LIMIT)
-  switch (disp_mode) {
-    case "grid":
+  disp_area = disp_list.slice((current_page - 1) * eval(mode + "_LIMIT"), current_page * eval(mode + "_LIMIT"))
+  switch (mode) {
+    case "GRID":
       $("#ownlist").hide();
       $("#owngrid").show();
       for (var i in disp_area) {
@@ -41,7 +43,7 @@ function viewChange(disp_mode) {
           `)
       }
       break;
-    case "list":
+    case "LIST":
       $("#owngrid").hide();
       $("#ownlist").show();
       $("#ownlist").append(`<tr><th>タイトル</th><th>著者</th></tr>`)
@@ -59,8 +61,8 @@ function viewChange(disp_mode) {
 function makePageNav(){
   $("#pagenav").empty();
   if(disp_list.length == 0) return;
-  var page_count = Math.floor(disp_list.length / LIMIT);
-  if (disp_list.length % LIMIT != 0) page_count++;
+  var page_count = Math.floor(disp_list.length / eval(mode + "_LIMIT"));
+  if (disp_list.length % eval(mode + "_LIMIT") != 0) page_count++;
   $("#pagenav").append(`
     <li class="page-item" id="prevpage">
       <a class="page-link" href="#" aria-label="Previous" onclick="setPage('prev')">
@@ -97,11 +99,11 @@ function setPage(page){
       break;
   }
   $('li[id$="page"]').removeClass("disabled");
-  if (current_page * LIMIT >= disp_list.length) $('#nextpage').addClass("disabled");
+  if (current_page * eval(mode + "_LIMIT") >= disp_list.length) $('#nextpage').addClass("disabled");
   if (current_page == 1) $('#prevpage').addClass("disabled");
   $('li[id^="selpage-"]').removeClass("active");
   $(`#selpage-${current_page}`).addClass("active");
-  viewChange(mode);
+  viewChange();
 }
 
 // タイトル検索
@@ -118,11 +120,11 @@ searchWord = function () {
           item.title.toUpperCase().indexOf(searchText.toUpperCase()) >= 0) return true;
     });
     makePageNav();
-    viewChange(mode)
+    viewChange()
   } else {
     disp_list = own_list
     makePageNav();
-    viewChange(mode)
+    viewChange()
   }
 };
 

@@ -3,4 +3,6 @@ ActiveRecord::Base.establish_connection(
   :database => 'db/db.sqlite3'
 )
 class Owner < ActiveRecord::Base 
+  belongs_to :user
+  belongs_to :book
 end

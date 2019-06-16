@@ -3,4 +3,5 @@ ActiveRecord::Base.establish_connection(
   :database => 'db/db.sqlite3'
 )
 class Circle < ActiveRecord::Base 
+  has_many :books
 end

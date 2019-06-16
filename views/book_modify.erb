@@ -1,8 +1,8 @@
 <h2 style="text-align: center;">書籍情報編集</h2>
 <form action="/book/<%= @book_detail.id %>/modify/done?from=<%= @from %>" method="POST" enctype="multipart/form-data">
   <div class="form-group row">
-    <label for="title" class="col-sm-2 col-form-label">タイトル(必須)：</label>
-    <div class="col-sm-8">
+    <label for="title" class="col-sm-3 col-form-label">タイトル(必須)：</label>
+    <div class="col">
       <input type="text" id=title name="title" class="form-control" value="<%= @book_detail.title %>" required>
     </div>
   </div>
@@ -21,8 +21,8 @@
   </div>
   <br>
   <div class="form-group row" aria-describedby="cover-help">
-    <label for="cover-img" class="col-sm-2 col-form-label">表紙画像：</label>
-    <div class="custom-file col-sm-10">
+    <label for="cover-img" class="col-sm-3 col-form-label">表紙画像：</label>
+    <div class="custom-file col">
       <input type="file" class="custom-file-input" id="cover-img" name="cover-img">
       <label class="custom-file-label" for="cover-img">ファイルを選択</label>
     </div>
@@ -76,15 +76,15 @@
   </div>
   <br>
   <div class="form-group row">
-    <label for="date" class="col-sm-2 col-form-label">発行日：</label>
-    <div class="col-sm-10">
-      <input type="text" id="date" name="date" class="form-control" value="<%= @book_detail.date %>" >
+    <label for="date" class="col-sm－3 col-form-label">発行日：</label>
+    <div class="col">
+      <input type="date" id="date" name="date" class="form-control" value="<%= @book_detail.date %>" >
     </div>
   </div>
   <br>
   <div class="form-group row">
-    <label for="detail" class="col-sm-2 col-form-label">詳細,メモ：</label>
-    <div class="col-sm-10">
+    <label for="detail" class="col-sm-3 col-form-label">詳細,メモ：</label>
+    <div class="col">
       <textarea id="detail" name="detail" class="form-control"><%= @book_detail.detail %></textarea>
     </div>
   </div>

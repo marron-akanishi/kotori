@@ -13,16 +13,16 @@ class App < Sinatra::Base
 
   get '/book/:id' do
     @from = params["from"]
-    @book_detail = Book.find(params["id"])
-    @genre = Genre.find(@book_detail.genre_id).name
-    begin
-      @event = Event.find(@book_detail.event_id).name
-    rescue => exception
+    @book_detail = Book.includes(:genre, :event, :author, :circle, :user).find(params["id"])
+    @genre = @book_detail.genre.name
+    if @book_detail.event != nil then
+      @event = @book_detail.event.name
+    else
       @event = ""
     end
-    @author = Author.find(@book_detail.author_id).name
-    @circle = Circle.find(@book_detail.circle_id).name
-    @user = User.find(@book_detail.mod_user).name
+    @author = @book_detail.author.name
+    @circle = @book_detail.circle.name
+    @user = @book_detail.user.name
     if session[:id] != nil && Owner.exists?(user_id: session[:id], book_id: params["id"])then
       @owned = true;
       @memo = Owner.find_by(user_id: session[:id], book_id: params["id"]).memo
@@ -103,15 +103,15 @@ class App < Sinatra::Base
   get '/book/:id/modify' do
     login_check
     @from = params["from"]
-    @book_detail = Book.find(params["id"])
-    @genre = Genre.find(@book_detail.genre_id).name
-    begin
-      @event = Event.find(@book_detail.event_id).name
-    rescue => exception
+    @book_detail = Book.includes(:genre, :event, :author, :circle).find(params["id"])
+    @genre = @book_detail.genre.name
+    if @book_detail.event != nil then
+      @event = @book_detail.event.name
+    else
       @event = ""
     end
-    @author = Author.find(@book_detail.author_id).name
-    @circle = Circle.find(@book_detail.circle_id).name
+    @author = @book_detail.author.name
+    @circle = @book_detail.circle.name
     erb :book_modify
   end
 
