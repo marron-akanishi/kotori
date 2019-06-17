@@ -5,12 +5,6 @@ class App < Sinatra::Base
     erb :list
   end
 
-  # 詳細表示とURLがかぶるためこちらを上に持ってくる
-  get '/book/add' do
-    login_check
-    erb :book_add
-  end
-
   get '/book/:id' do
     @from = params["from"]
     @book_detail = Book.includes(:genre, :event, :author, :circle, :user).find(params["id"])
@@ -28,6 +22,11 @@ class App < Sinatra::Base
       @memo = Owner.find_by(user_id: session[:id], book_id: params["id"]).memo
     end
     erb :book_detail
+  end
+
+  get '/book/add/title' do
+    login_check
+    erb :book_add_title
   end
 
   post '/book/add/detail' do

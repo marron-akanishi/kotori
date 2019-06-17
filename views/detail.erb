@@ -1,4 +1,5 @@
-<h2 style="text-align: center;"><%= @type_name %>一覧</h2>
+<h2 style="text-align: center;"><%= @type_name %>詳細</h2>
+<p><%= @type_name %>名：<%= @detail.name %></p>
 <div class="input-group mb-2">
   <div class="input-group-prepend">
     <span class="input-group-text">検索</span>
@@ -15,6 +16,7 @@
 </nav>
 
 <script>
-  var mode = "<%= @type %>";
+  var mode = "<%= @type %>"
+  var id = "<%= @detail.id %>"
 </script>
-<script src="/js/list.js"></script>
+<script src="/js/detail.js"></script>

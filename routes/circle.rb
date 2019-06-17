@@ -4,4 +4,11 @@ class App < Sinatra::Base
     @type = "circle"
     erb :list
   end
+
+  get '/circle/:id' do
+    @type = "circle"
+    @type_name = "サークル"
+    @detail = Circle.find(params["id"])
+    erb :detail
+  end
 end

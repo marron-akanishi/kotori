@@ -11,7 +11,7 @@ $(function () {
   mode = $.cookie("mypageListMode").toUpperCase() || "GRID"
   $(`#${mode.toLowerCase()}button`).addClass("active")
   disp_list = own_list
-  makePageNav();
+  makePageNav(eval(mode + "_LIMIT"));
   current_page = 1;
   viewChange();
 });
@@ -20,7 +20,7 @@ $(function () {
 $('input[name="listmode"]').change(function () {
   mode = $(this).val();
   $.cookie("mypageListMode", mode);
-  makePageNav();
+  makePageNav(eval(mode + "_LIMIT"));
   current_page = 1;
   viewChange();
 });
@@ -57,55 +57,6 @@ function viewChange() {
   }
 }
 
-// ページャーの生成
-function makePageNav(){
-  $("#pagenav").empty();
-  if(disp_list.length == 0) return;
-  var page_count = Math.floor(disp_list.length / eval(mode + "_LIMIT"));
-  if (disp_list.length % eval(mode + "_LIMIT") != 0) page_count++;
-  $("#pagenav").append(`
-    <li class="page-item" id="prevpage">
-      <a class="page-link" href="#" aria-label="Previous" onclick="setPage('prev')">
-        <span aria-hidden="true">&laquo;</span>
-      </a>
-    </li>
-  `)
-  for (var i = 1; i <= page_count; i++) {
-    $("#pagenav").append(`<li class="page-item" id="selpage-${i}"><a class="page-link" href="#" onclick="setPage(${i})">${i}</a></li>`)
-  }
-  $("#pagenav").append(`
-    <li class="page-item" id="nextpage">
-      <a class="page-link" href="#" aria-label="Next" onclick="setPage('next')">
-        <span aria-hidden="true">&raquo;</span>
-      </a>
-    </li>
-  `)
-  $('#prevpage').addClass("disabled");
-  $('#selpage-1').addClass("active");
-  if (page_count == 1) $('#nextpage').addClass("disabled");
-}
-
-// ページネーション
-function setPage(page){
-  switch(page){
-    case "prev":
-      current_page--;
-      break;
-    case "next":
-      current_page++;
-      break;
-    default:
-      current_page = page
-      break;
-  }
-  $('li[id$="page"]').removeClass("disabled");
-  if (current_page * eval(mode + "_LIMIT") >= disp_list.length) $('#nextpage').addClass("disabled");
-  if (current_page == 1) $('#prevpage').addClass("disabled");
-  $('li[id^="selpage-"]').removeClass("active");
-  $(`#selpage-${current_page}`).addClass("active");
-  viewChange();
-}
-
 // タイトル検索
 searchWord = function () {
   var searchText = $(this).val() // 検索ボックスに入力された値
@@ -119,30 +70,14 @@ searchWord = function () {
           item.title.toLowerCase().indexOf(searchText.toLowerCase()) >= 0 ||
           item.title.toUpperCase().indexOf(searchText.toUpperCase()) >= 0) return true;
     });
-    makePageNav();
+    makePageNav(eval(mode + "_LIMIT"));
     viewChange()
   } else {
     disp_list = own_list
-    makePageNav();
+    makePageNav(eval(mode + "_LIMIT"));
     viewChange()
   }
 };
-
-// カナ→ひら
-function kanaToHira(str) {
-  return str.replace(/[\u30a1-\u30f6]/g, function (match) {
-    var chr = match.charCodeAt(0) - 0x60;
-    return String.fromCharCode(chr);
-  });
-}
-
-// ひら→カナ
-function hiraToKana(str) {
-  return str.replace(/[\u3041-\u3096]/g, function (match) {
-    var chr = match.charCodeAt(0) + 0x60;
-    return String.fromCharCode(chr);
-  });
-}
 
 // searchWordの実行
 $('#search').on('input', searchWord);

@@ -1,18 +1,11 @@
-<% if @from == "mypage" %>
-<button type="button" class="btn btn-primary" onclick="location.href='/user/mypage'" style="margin-bottom: 1rem; float: left;">
-<% else %>
-<button type="button" class="btn btn-primary" onclick="location.href='/book'" style="margin-bottom: 1rem; float: left;">
-<% end %>
-  ← 戻る
-</button>
-<div style="float: right;">
-  <% if @owned %>
-  <button class="btn btn-warning" style="margin-bottom: 1rem" onclick="location.href='/book/<%= @book_detail.id %>/modify?from=<%= @from %>'">編集</button>
-  <button class="btn btn-danger" style="margin-bottom: 1rem" data-toggle="modal" data-target="#delModal">所持解除</button>
-  <% elsif session[:id] != nil %>
-  <button class="btn btn-info" style="margin-bottom: 1rem" onclick="location.href='/user/own/<%= @book_detail.id %>?exist=true&from=<%= @from %>'">所持</button>
-  <% end %>
-</div>
+<!-- 
+  <nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/user/mypage">マイページ</a></li>
+    <li class="breadcrumb-item active">書籍詳細</li>
+  </ol>
+-->
+</nav>
 <h2 style="text-align: center;">書籍詳細</h2>
 <div style="text-align: center;">
   <img src="/images/cover/<%= @book_detail.cover %>" />
@@ -29,19 +22,19 @@
   </tr>
   <tr>
     <td>著者</td>
-    <td><%= @author %></td>
+    <td><a href="/author/<%= @book_detail.author_id %>"><%= @author %></a></td>
   </tr>
   <tr>
     <td>サークル名</td>
-    <td><%= @circle %></td>
+    <td><a href="/circle/<%= @book_detail.circle_id %>"><%= @circle %></a></td>
   </tr>
   <tr>
     <td>ジャンル</td>
-    <td><%= @genre %></td>
+    <td><a href="/genre/<%= @book_detail.genre_id %>"><%= @genre %></a></td>
   </tr>
   <tr>
     <td>頒布イベント名</td>
-    <td><%= @event %></td>
+    <td><a href="/event/<%= @book_detail.event_id %>"><%= @event %></a></td>
   </tr>
   <tr>
     <td>発行日</td>
@@ -56,6 +49,17 @@
     <td><%= @user %></td>
   </tr>
 </table>
+
+<div class="d-flex justify-content-end">
+  <% if @owned %>
+  <button class="btn btn-warning" style="margin: 0 0.1rem"
+    onclick="location.href='/book/<%= @book_detail.id %>/modify?from=<%= @from %>'">情報編集</button>
+  <button class="btn btn-danger" style="margin: 0 0.1rem" data-toggle="modal" data-target="#delModal">所持解除</button>
+  <% elsif session[:id] != nil %>
+  <button class="btn btn-info" style="margin: 0 0.1rem"
+    onclick="location.href='/user/own/<%= @book_detail.id %>?exist=true&from=<%= @from %>'">所持</button>
+  <% end %>
+</div>
 
 <% if @owned %>
 <form action="/user/memo/<%= @book_detail.id %>" method="POST">
