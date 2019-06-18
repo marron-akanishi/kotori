@@ -13,7 +13,7 @@ Umi(CSS)
 ## Unicornの操作
 起動  
 ```
-bundler exec unicorn -c /usr/local/app/unicorn.rb -E development -D
+bundler exec unicorn -c unicorn.rb -E development -D
 ```  
 
 停止  

@@ -16,7 +16,7 @@
   </div>
   <br>
   <div style="text-align: center;">
-    <img src="/images/cover/<%= @book_detail.cover %>" />
+    <img id="cover-preview" src="/images/cover/<%= @book_detail.cover %>" height="300px" />
     <input type="hidden" name="orig-cover" value="<%= @book_detail.cover %>" >
   </div>
   <br>
@@ -76,7 +76,7 @@
   </div>
   <br>
   <div class="form-group row">
-    <label for="date" class="col-sm－3 col-form-label">発行日：</label>
+    <label for="date" class="col-sm-3 col-form-label">発行日：</label>
     <div class="col">
       <input type="date" id="date" name="date" class="form-control" value="<%= @book_detail.date %>" >
     </div>
@@ -105,35 +105,4 @@
   </div>
 </div>
 
-<script>
-  var author_list, circle_list, genre_list, event_list;
-  $(function() {
-    $.ajaxSetup({ async: false });
-    $.getJSON("/api/get_list?type=author", data => author_list = data);
-    $.getJSON("/api/get_list?type=circle", data => circle_list = data);
-    $.getJSON("/api/get_list?type=genre", data => genre_list = data);
-    $.getJSON("/api/get_list?type=event", data => event_list = data);
-    $.ajaxSetup({ async: true });
-  })
-  $('.custom-file-input').on('change', function () {
-    $(this).next('.custom-file-label').html($(this)[0].files[0].name);
-  })
-  $('#listModal').on('show.bs.modal', function (event) {
-    var button = $(event.relatedTarget) // モーダル切替えボタン
-    var target = button.data('whatever') // data-* 属性から情報を抽出
-    var modal = $(this)
-    nameLabel = {"author": "著者", "circle": "サークル", "genre": "ジャンル", "event": "イベント"}
-    modal.find('.modal-title').text(nameLabel[target] + "リストから選択")
-    modal.find('.modal-body').empty()
-    list = eval(target + "_list")
-    for (var i in list) {
-      modal.find('.modal-body').append(
-        `<button type="button" class="btn btn-outline-primary" onclick="setVal('${target}', '${list[i].name}')" style="margin: 2px">${list[i].name}</button>`
-      )
-    }
-  })
-  function setVal(target, value){
-    document.getElementById(target).value = value
-    $('#listModal').modal('hide')
-  }
-</script>
+<script src="/js/modify_form.js?ver=<%= $version %>"></script>
