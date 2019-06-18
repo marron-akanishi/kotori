@@ -9,7 +9,7 @@ $(function () {
   $.getJSON("/api/get_list?type=ownlist", data => own_list = data);
   $.getJSON("/api/get_list?type=author", data => author_list = data);
   $.ajaxSetup({ async: true });
-  mode = $.cookie("mypageListMode").toUpperCase() || "GRID"
+  mode = ($.cookie("mypageListMode") || "GRID").toUpperCase()
   $(`#${mode.toLowerCase()}button`).addClass("active")
   disp_list = own_list
   makePageNav(eval(mode + "_LIMIT"));
@@ -35,9 +35,10 @@ function viewChange() {
     case "GRID":
       $("#ownlist").hide();
       $("#owngrid").show();
-      $("#loading-gif").show();
       load_num = disp_area.length;
       load_count = 0;
+      if(load_num != 0) $("#loading-gif").show();
+      else $("#loading-gif").hide();
       for (var i in disp_area) {
         $("#owngrid").append(`
           <div class="cover">

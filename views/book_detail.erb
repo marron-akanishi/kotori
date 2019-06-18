@@ -54,10 +54,10 @@
   <% if @owned %>
   <button class="btn btn-warning" style="margin: 0 0.1rem"
     onclick="location.href='/book/<%= @book_detail.id %>/modify?from=<%= @from %>'">情報編集</button>
-  <button class="btn btn-danger" style="margin: 0 0.1rem" data-toggle="modal" data-target="#delModal">所持解除</button>
+  <button class="btn btn-danger" style="margin: 0 0.1rem" data-toggle="modal" data-target="#delModal">所有解除</button>
   <% elsif session[:id] != nil %>
   <button class="btn btn-info" style="margin: 0 0.1rem"
-    onclick="location.href='/user/own/<%= @book_detail.id %>?exist=true&from=<%= @from %>'">所持</button>
+    onclick="location.href='/user/own/<%= @book_detail.id %>?exist=true&from=<%= @from %>'">所有</button>
   <% end %>
 </div>
 

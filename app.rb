@@ -14,6 +14,7 @@ end
 
 class App < Sinatra::Base
   # setting
+  $version = Time.now.to_i
   @@env = open('setting.json') do |io|
     JSON.load(io)
   end

@@ -16,7 +16,7 @@
     ＋ 追加
   </button>
 </div>
-<h2 style="text-align: center;">所持書籍</h2>
+<h2 style="text-align: center;">所有書籍</h2>
 <div class="input-group mb-2">
   <div class="input-group-prepend">
     <span class="input-group-text">検索</span>
@@ -27,7 +27,7 @@
   </div>
 </div>
 <div id="loading-gif" style="text-align: center;">
-<img src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/source.gif" />
+<img src="/images/loading.gif" />
 </div>
 <div id="owngrid" class="row justify-content-around"></div>
 <table id="ownlist" class="table"></table>
@@ -37,4 +37,4 @@
   </ul>
 </nav>
 
-<script src="/js/mypage.js"></script>
+<script src="/js/mypage.js?ver=<%= $version %>"></script>
