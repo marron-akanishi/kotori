@@ -1,9 +1,5 @@
 require 'sinatra/activerecord'
 require 'sinatra/activerecord/rake'
-require './models/user.rb'
-require './models/book.rb'
-require './models/genre.rb'
-require './models/event.rb'
-require './models/author.rb'
-require './models/circle.rb'
-require './models/owner.rb'
+Dir[File.dirname(__FILE__) + "/models/**"].each do |model|
+  require model
+end

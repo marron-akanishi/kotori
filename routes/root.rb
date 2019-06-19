@@ -23,7 +23,7 @@ class App < Sinatra::Base
     else
       name = result["info"]["name"]
       mail = result["info"]["email"]
-      User.create(id: session[:id], name: name, mail: mail, latest_at: Time.now)
+      User.create(id: session[:id], name: name, mail: mail, latest_at: Time.now, is_adult: false)
     end
     redirect to('/user/mypage')
   end

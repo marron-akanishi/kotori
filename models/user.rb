@@ -3,7 +3,11 @@ ActiveRecord::Base.establish_connection(
   :database => 'db/db.sqlite3'
 )
 class User < ActiveRecord::Base
+  # 主キー設定
   self.primary_key = :id
-  has_many :owners
-  has_many :books, foreign_key: :id, primary_key: :mod_user
+  # 外部キー設定
+  has_many :books, through: :user_books
+  has_many :user_books
+  belongs_to :circle
+  belongs_to :author
 end

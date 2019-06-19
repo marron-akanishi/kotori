@@ -3,5 +3,6 @@ ActiveRecord::Base.establish_connection(
   :database => 'db/db.sqlite3'
 )
 class Genre < ActiveRecord::Base 
-  has_many :books
+  has_many :books, through: :book_genres
+  has_many :book_genres
 end

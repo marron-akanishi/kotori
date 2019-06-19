@@ -14,7 +14,7 @@ class App < Sinatra::Base
         Genre.all.to_json
       when "ownlist" then
         login_check
-        list = Book.where(id: Owner.where(user_id: session[:id]).select(:book_id))
+        list = Book.where(id: UserBooks.where(user_id: session[:id]).select(:book_id))
         list.to_json
       else
         redirect to('/error?code=500')
@@ -24,14 +24,14 @@ class App < Sinatra::Base
   # 指定された情報に対応する書籍を返す(条件1つ)
   get '/api/find' do
     case params["type"]
+      when "genre" then
+        Book.where(id: BookGenres.where(genre_id: params["id"]).select(:book_id)).to_json
       when "author" then
-        Book.where(author_id: params["id"]).to_json
-      when "circle" then
-        Book.where(circle_id: params["id"]).to_json
+        Book.where(id: BookAuthors.where(author_id: params["id"]).select(:book_id)).to_json
       when "event" then
         Book.where(event_id: params["id"]).to_json
-      when "genre" then
-        Book.where(genre_id: params["id"]).to_json
+      when "circle" then
+        Book.where(circle_id: params["id"]).to_json
       else
         redirect to('/error?code=500')
     end

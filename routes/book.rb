@@ -7,19 +7,19 @@ class App < Sinatra::Base
 
   get '/book/:id' do
     @from = params["from"]
-    @book_detail = Book.includes(:genre, :event, :author, :circle, :user).find(params["id"])
-    @genre = @book_detail.genre.name
-    if @book_detail.event != nil then
-      @event = @book_detail.event.name
+    @book = Book.includes(:event, :circle).find(params["id"])
+    @genre = Genre.find(BookGenres.find_by(book_id: @book.id, is_main:true).genre_id)
+    @author = Author.find(BookAuthors.find_by(book_id: @book.id, is_main:true).author_id)
+    if @book.event != nil then
+      @event = @book.event
     else
       @event = ""
     end
-    @author = @book_detail.author.name
-    @circle = @book_detail.circle.name
-    @user = @book_detail.user.name
-    if session[:id] != nil && Owner.exists?(user_id: session[:id], book_id: params["id"])then
+    @circle = @book.circle
+    @user = @book.user.name
+    if session[:id] != nil && UserBooks.exists?(user_id: session[:id], book_id: params["id"])then
       @owned = true;
-      @memo = Owner.find_by(user_id: session[:id], book_id: params["id"]).memo
+      @memo = UserBooks.find_by(user_id: session[:id], book_id: params["id"]).memo
     end
     erb :book_detail
   end
@@ -34,7 +34,7 @@ class App < Sinatra::Base
     @title = params["title"]
     if Book.exists?(title: @title) then
       @exists = Book.find_by(title: @title)
-      @author = Author.find(@exists.author_id).name
+      @author = Author.find(BookAuthors.where(book_id: @exists.id, is_main: true).select(:author_id)).name
     end
     erb :book_add_detail
   end
@@ -60,57 +60,58 @@ class App < Sinatra::Base
     end
     
     # DB保存
-    # ジャンル
+    # タグ(未対応)
+    # ジャンル(複数未対応)
     if Genre.exists?(name: params["genre"]) then
-      genre_id = Genre.find_by(name: params["genre"]).id
+      genre = Genre.find_by(name: params["genre"])
     else
       genre = Genre.create(name: params["genre"])
-      genre_id = genre.id
     end
-    # サークル
-    if Circle.exists?(name: params["circle"]) then
-      circle_id = Circle.find_by(name: params["circle"]).id
-    else
-      circle = Circle.create(name: params["circle"])
-      circle_id = circle.id
-    end
-    # 著者
+    # 著者(複数未対応)
     if Author.exists?(name: params["author"]) then
-      author_id = Author.find_by(name: params["author"]).id
+      author = Author.find_by(name: params["author"])
     else
       author = Author.create(name: params["author"])
-      author_id = author.id
     end
     # イベント
     if params["event"] != "" then
       if Event.exists?(name: params["event"]) then
-        event_id = Event.find_by(name: params["event"]).id
+        event = Event.find_by(name: params["event"])
       else
         event = Event.create(name: params["event"])
-        event_id = event.id
       end
     end
-    # 書籍
+    # サークル
+    if Circle.exists?(name: params["circle"]) then
+      circle = Circle.find_by(name: params["circle"])
+    else
+      circle = Circle.create(name: params["circle"])
+    end
+    # 18禁
     is_adult = boolean_check(params["is-adult"])
-    book = Book.create(title: params["title"], cover: filename, date: params["date"], is_adult: is_adult, mod_user: session[:id],
-                      genre_id: genre_id, event_id: event_id, author_id: author_id, circle_id: circle_id, detail: params["detail"])
+    # 書籍登録
+    # 順番に登録していく
+    book = Book.create(title: params["title"], cover: filename, published_at: params["date"], detail: params["detail"], is_adult: is_adult,
+                       mod_user: session[:id], event_id: event.id, circle_id: circle.id)
+    BookGenres.create(book_id: book.id, genre_id: genre.id, is_main: true)
+    BookAuthors.create(book_id: book.id, author_id: author.id, is_main: true)
     # 所持状況更新
-    Owner.create(user_id: session[:id], book_id: book.id)
+    UserBooks.create(user_id: session[:id], book_id: book.id)
     redirect to('/user/mypage')
   end
 
   get '/book/:id/modify' do
     login_check
     @from = params["from"]
-    @book_detail = Book.includes(:genre, :event, :author, :circle).find(params["id"])
-    @genre = @book_detail.genre.name
-    if @book_detail.event != nil then
-      @event = @book_detail.event.name
+    @book = Book.includes(:event, :circle).find(params["id"])
+    @genre = Genre.find(BookGenres.find_by(book_id: @book.id, is_main:true).genre_id).name
+    @author = Author.find(BookAuthors.find_by(book_id: @book.id, is_main:true).author_id).name
+    if @book.event != nil then
+      @event = @book.event.name
     else
       @event = ""
     end
-    @author = @book_detail.author.name
-    @circle = @book_detail.circle.name
+    @circle = @book.circle.name
     erb :book_modify
   end
 
@@ -134,41 +135,43 @@ class App < Sinatra::Base
       filename = params["orig-cover"]
     end
     
-    # DB保存
-    # ジャンル
+    # DB更新
+    # タグ(未対応)
+    # ジャンル(複数未対応)
     if Genre.exists?(name: params["genre"]) then
-      genre_id = Genre.find_by(name: params["genre"]).id
+      genre = Genre.find_by(name: params["genre"])
     else
       genre = Genre.create(name: params["genre"])
-      genre_id = genre.id
     end
-    # サークル
-    if Circle.exists?(name: params["circle"]) then
-      circle_id = Circle.find_by(name: params["circle"]).id
-    else
-      circle = Circle.create(name: params["circle"])
-      circle_id = circle.id
-    end
-    # 著者
+    # 著者(複数未対応)
     if Author.exists?(name: params["author"]) then
-      author_id = Author.find_by(name: params["author"]).id
+      author = Author.find_by(name: params["author"])
     else
       author = Author.create(name: params["author"])
-      author_id = author.id
     end
     # イベント
     if params["event"] != "" then
       if Event.exists?(name: params["event"]) then
-        event_id = Event.find_by(name: params["event"]).id
+        event = Event.find_by(name: params["event"])
       else
         event = Event.create(name: params["event"])
-        event_id = event.id
       end
     end
-    # 書籍
+    # サークル
+    if Circle.exists?(name: params["circle"]) then
+      circle = Circle.find_by(name: params["circle"])
+    else
+      circle = Circle.create(name: params["circle"])
+    end
+    # 18禁
     is_adult = boolean_check(params["is-adult"])
-    Book.find(params[:id]).update(title: params["title"], cover: filename, date: params["date"], is_adult: is_adult, mod_user: session[:id],
-                                  genre_id: genre_id, event_id: event_id, author_id: author_id, circle_id: circle_id, detail: params["detail"])
+    # 書籍登録
+    # 順番に登録していく
+    book = Book.find(params[:id]).update(title: params["title"], cover: filename, published_at: params["date"], detail: params["detail"], is_adult: is_adult,
+                                         mod_user: session[:id], event_id: event.id, circle_id: circle.id)
+    BookGenres.where(book_id: params[:id], is_main: true).first.update(genre_id: genre.id)
+    BookAuthors.where(book_id: params[:id], is_main: true).first.update(author_id: author.id)
+
     redirect to('/book/'+params["id"]+'?from='+params["from"])
   end
 end

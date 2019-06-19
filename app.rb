@@ -18,6 +18,8 @@ class App < Sinatra::Base
   @@env = open('setting.json') do |io|
     JSON.load(io)
   end
+  Time.zone = "Tokyo"
+  ActiveRecord::Base.default_timezone = :local
 
   # config
   configure do

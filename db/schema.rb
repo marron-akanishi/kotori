@@ -10,66 +10,116 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_15_081504) do
+ActiveRecord::Schema.define(version: 2019_06_19_115645) do
 
   create_table "authors", force: :cascade do |t|
-    t.text "name"
+    t.text "name", null: false
     t.text "detail"
     t.string "twitter"
     t.string "pixiv"
     t.text "web"
     t.integer "circle_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["circle_id"], name: "index_authors_on_circle_id"
   end
 
-  create_table "books", force: :cascade do |t|
-    t.text "title"
-    t.text "cover"
-    t.date "date"
-    t.text "detail"
-    t.boolean "is_adult"
-    t.integer "genre_id"
-    t.integer "event_id"
+  create_table "book_authors", force: :cascade do |t|
+    t.integer "book_id"
     t.integer "author_id"
-    t.integer "circle_id"
-    t.text "mod_user"
-    t.index ["author_id"], name: "index_books_on_author_id"
+    t.boolean "is_main"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["author_id"], name: "index_book_authors_on_author_id"
+    t.index ["book_id"], name: "index_book_authors_on_book_id"
+  end
+
+  create_table "book_genres", force: :cascade do |t|
+    t.integer "book_id"
+    t.integer "genre_id"
+    t.boolean "is_main"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["book_id"], name: "index_book_genres_on_book_id"
+    t.index ["genre_id"], name: "index_book_genres_on_genre_id"
+  end
+
+  create_table "book_tags", force: :cascade do |t|
+    t.integer "book_id"
+    t.integer "tag_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["book_id"], name: "index_book_tags_on_book_id"
+    t.index ["tag_id"], name: "index_book_tags_on_tag_id"
+  end
+
+  create_table "books", force: :cascade do |t|
+    t.text "title", null: false
+    t.text "cover", null: false
+    t.date "published_at"
+    t.text "detail"
+    t.boolean "is_adult", null: false
+    t.text "mod_user", null: false
+    t.integer "circle_id", null: false
+    t.integer "event_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["circle_id"], name: "index_books_on_circle_id"
     t.index ["event_id"], name: "index_books_on_event_id"
-    t.index ["genre_id"], name: "index_books_on_genre_id"
   end
 
   create_table "circles", force: :cascade do |t|
-    t.text "name"
+    t.text "name", null: false
     t.text "detail"
     t.text "web"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "events", force: :cascade do |t|
-    t.text "name"
-    t.date "start"
-    t.date "end"
+    t.text "name", null: false
+    t.date "start_at"
+    t.date "end_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "genres", force: :cascade do |t|
-    t.text "name"
+    t.text "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "owners", force: :cascade do |t|
+  create_table "tags", force: :cascade do |t|
+    t.text "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "user_books", force: :cascade do |t|
     t.text "user_id"
     t.integer "book_id"
     t.boolean "is_read"
     t.text "memo"
-    t.index ["book_id"], name: "index_owners_on_book_id"
-    t.index ["user_id"], name: "index_owners_on_user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["book_id"], name: "index_user_books_on_book_id"
+    t.index ["user_id"], name: "index_user_books_on_user_id"
   end
 
   create_table "users", id: false, force: :cascade do |t|
-    t.text "id"
-    t.datetime "latest_at"
+    t.text "id", null: false
+    t.text "mail", null: false
+    t.datetime "latest_at", null: false
     t.datetime "deleted_at"
-    t.text "name"
-    t.text "mail"
+    t.text "name", null: false
+    t.boolean "is_adult", null: false
+    t.integer "circle_id"
+    t.integer "author_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["author_id"], name: "index_users_on_author_id"
+    t.index ["circle_id"], name: "index_users_on_circle_id"
     t.index ["id"], name: "index_users_on_id", unique: true
   end
 

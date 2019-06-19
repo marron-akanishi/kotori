@@ -1,13 +1,13 @@
 <h2 style="text-align: center;">書籍情報編集</h2>
-<form action="/book/<%= @book_detail.id %>/modify/done?from=<%= @from %>" method="POST" enctype="multipart/form-data">
+<form action="/book/<%= @book.id %>/modify/done?from=<%= @from %>" method="POST" enctype="multipart/form-data">
   <div class="form-group row">
     <label for="title" class="col-sm-3 col-form-label">タイトル(必須)：</label>
     <div class="col">
-      <input type="text" id=title name="title" class="form-control" value="<%= @book_detail.title %>" required>
+      <input type="text" id=title name="title" class="form-control" value="<%= @book.title %>" required>
     </div>
   </div>
   <div class="custom-control custom-checkbox">
-    <% if @book_detail.is_adult %>
+    <% if @book.is_adult %>
     <input type="checkbox" class="custom-control-input" id="is-adult" name="is-adult" value="true" checked>
     <% else %>
     <input type="checkbox" class="custom-control-input" id="is-adult" name="is-adult" value="true">
@@ -16,8 +16,8 @@
   </div>
   <br>
   <div style="text-align: center;">
-    <img id="cover-preview" src="/images/cover/<%= @book_detail.cover %>" height="300px" />
-    <input type="hidden" name="orig-cover" value="<%= @book_detail.cover %>" >
+    <img id="cover-preview" src="/images/cover/<%= @book.cover %>" height="300px" />
+    <input type="hidden" name="orig-cover" value="<%= @book.cover %>" >
   </div>
   <br>
   <div class="form-group row" aria-describedby="cover-help">
@@ -78,14 +78,14 @@
   <div class="form-group row">
     <label for="date" class="col-sm-3 col-form-label">発行日：</label>
     <div class="col">
-      <input type="date" id="date" name="date" class="form-control" value="<%= @book_detail.date %>" >
+      <input type="date" id="date" name="date" class="form-control" value="<%= @book.published_at %>" >
     </div>
   </div>
   <br>
   <div class="form-group row">
     <label for="detail" class="col-sm-3 col-form-label">詳細,メモ：</label>
     <div class="col">
-      <textarea id="detail" name="detail" class="form-control"><%= @book_detail.detail %></textarea>
+      <textarea id="detail" name="detail" class="form-control"><%= @book.detail %></textarea>
     </div>
   </div>
   <input type="submit" class="btn btn-primary" value="登録" />
