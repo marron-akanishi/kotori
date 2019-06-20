@@ -6,16 +6,19 @@ class App < Sinatra::Base
         Book.all.to_json
       when "author" then
         Author.all.to_json
+      when "genre" then
+        Genre.all.to_json
+      when "book_authors" then
+        BookAuthors.all.to_json
+      when "book_genres" then
+        BookGenres.all.to_json
       when "circle" then
         Circle.all.to_json
       when "event" then
         Event.all.to_json
-      when "genre" then
-        Genre.all.to_json
       when "ownlist" then
         login_check
-        list = Book.where(id: UserBooks.where(user_id: session[:id]).select(:book_id))
-        list.to_json
+        Book.where(id: UserBooks.where(user_id: session[:id]).select(:book_id)).to_json
       else
         redirect to('/error?code=500')
     end

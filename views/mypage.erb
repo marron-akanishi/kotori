@@ -27,15 +27,15 @@
   </div>
 </div>
 <div class="d-flex justify-content-end form-inline mb-2">
-  <label for="dropdown1">表示順：</label>
+  <label for="sort-sel">表示順：</label>
   <div class="dropdown">
-    <button type="button" id="dropdown1" class="btn btn-outline-secondary dropdown-toggle"
-      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">タイトル(昇順)</button>
-    <div class="dropdown-menu" aria-labelledby="dropdown1">
-      <a class="dropdown-item" href="#">所有登録日(昇順)</a>
-      <a class="dropdown-item" href="#">所有登録日(降順)</a>
-      <a class="dropdown-item" href="#">タイトル(昇順)</a>
-      <a class="dropdown-item" href="#">タイトル(降順)</a>
+    <button type="button" id="sort-sel" class="btn btn-outline-secondary dropdown-toggle"
+      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+    <div class="dropdown-menu" aria-labelledby="sort-sel">
+      <a class="sort-item dropdown-item" onclick='selSortMode("所有登録日(昇順)", "created_at", false)'>所有登録日(昇順)</a>
+      <a class="sort-item dropdown-item" onclick='selSortMode("所有登録日(降順)", "created_at", true)'>所有登録日(降順)</a>
+      <a class="sort-item dropdown-item" onclick='selSortMode("タイトル(昇順)", "title", false)'>タイトル(昇順)</a>
+      <a class="sort-item dropdown-item" onclick='selSortMode("タイトル(降順)", "title", true)'>タイトル(降順)</a>
     </div>
   </div>
 </div>
