@@ -1,17 +1,35 @@
-var own_list, author_list, book_authors_list, disp_list, mode, current_page;
+var own_list = [], disp_list, mode, current_page;
 var load_count, load_num;
+var name, sortmode, reverse;
 const LIST_LIMIT = 50;
 const GRID_LIMIT = 30;
 
-// ロード時に書籍一覧と著者一覧取得
+// ロード
 $(function () {
+  // 所有書籍一覧作成
+  var books, authors, book_authors, user_books
   $.ajaxSetup({ async: false });
-  $.getJSON("/api/get_list?type=ownlist", data => own_list = data);
-  $.getJSON("/api/get_list?type=author", data => author_list = data);
-  $.getJSON("/api/get_list?type=book_authors", data => book_authors_list = data)
+  $.getJSON("/api/get_list?type=book", data => books = data);
+  $.getJSON("/api/get_list?type=author", data => authors = data);
+  $.getJSON("/api/get_list?type=book_authors", data => book_authors = data);
+  $.getJSON("/api/get_list?type=user_books", data => user_books = data);  
   $.ajaxSetup({ async: true });
+  for (var i in user_books) {
+    var book = books.filter(function (item, index) {
+      if (item.id == user_books[i].id) return true;
+    });
+    var author = authors.filter(function (item, index) {
+      var book_author = book_authors.filter(function (item, index) {
+        if (item.book_id == user_books[i].id) return true;
+      })
+      if (item.id == book_author[0].author_id) return true;
+    });
+    own_list.push({id: user_books[i].book_id, title: book[0].title, cover: book[0].cover, author: author[0].name, created_at: user_books[i].created_at})
+  }
+  // 表示モード切り替え
   mode = ($.cookie("mypageListMode") || "GRID").toUpperCase()
   $(`#${mode.toLowerCase()}button`).addClass("active")
+  disp_list = own_list
   selSortMode("所有登録日(昇順)", "created_at", false)
 });
 
@@ -53,13 +71,7 @@ function viewChange() {
       $("#ownlist").show();
       $("#ownlist").append(`<tr><th>タイトル</th><th>著者</th></tr>`)
       for (var i in disp_area) {
-        var author = author_list.filter(function (item, index) {
-          var book_author = book_authors_list.filter(function (item, index) {
-            if (item.book_id == disp_area[i].id) return true;
-          })
-          if (item.id == book_author[0].author_id) return true;
-        });
-        $("#ownlist").append(`<tr><td><a href='/book/${disp_area[i].id}?from=mypage'>${disp_area[i].title}</td><td>${author[0].name}</td></tr>`)
+        $("#ownlist").append(`<tr><td><a href='/book/${disp_area[i].id}?from=mypage'>${disp_area[i].title}</td><td>${disp_area[i].author}</td></tr>`)
       }
       break;
   }
@@ -87,22 +99,20 @@ searchWord = function () {
           item.title.toLowerCase().indexOf(searchText.toLowerCase()) >= 0 ||
           item.title.toUpperCase().indexOf(searchText.toUpperCase()) >= 0) return true;
     });
-    makePageNav(eval(mode + "_LIMIT"));
-    viewChange()
+    selSortMode(name, sortmode, reverse)
   } else {
     disp_list = own_list
-    makePageNav(eval(mode + "_LIMIT"));
-    viewChange()
+    selSortMode(name, sortmode, reverse)
   }
 };
 // searchWordの実行
 $('#search').on('input', searchWord);
 
 // 並び替え
-function selSortMode(name, sortmode, reverse){
+function selSortMode(_name, _sortmode, _reverse){
+  name = _name, sortmode = _sortmode, reverse = _reverse
   $("#sort-sel").html(name)
-  own_list.sort(sortJSON(sortmode, reverse))
-  disp_list = own_list
+  disp_list.sort(sortJSON(sortmode, reverse))
   makePageNav(eval(mode + "_LIMIT"));
   current_page = 1;
   viewChange();

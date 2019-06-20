@@ -1,4 +1,5 @@
 var orig_list, disp_list, current_page;
+var name, sortmode, reverse;
 const LIMIT = 100;
 
 // ロード時に一覧取得
@@ -7,9 +8,7 @@ $(function () {
   $.getJSON(`/api/get_list?type=${mode}`, data => orig_list = data);
   $.ajaxSetup({ async: true });
   disp_list = orig_list
-  makePageNav(LIMIT);
-  current_page = 1;
-  viewChange();
+  selSortMode("登録日(昇順)", "created_at", false)
 });
 
 // リストビューの更新
@@ -58,14 +57,21 @@ searchWord = function () {
         });
         break;
     }
-    makePageNav(LIMIT);
-    viewChange()
+    selSortMode(name, sortmode, reverse)
   } else {
     disp_list = orig_list
-    makePageNav();
-    viewChange(LIMIT)
+    selSortMode(name, sortmode, reverse)
   }
 };
-
 // searchWordの実行
 $('#search').on('input', searchWord);
+
+// 並び替え
+function selSortMode(_name, _sortmode, _reverse){
+  name = _name, sortmode = _sortmode, reverse = _reverse
+  $("#sort-sel").html(name)
+  disp_list.sort(sortJSON(sortmode, reverse))
+  makePageNav(LIMIT);
+  current_page = 1;
+  viewChange();
+}

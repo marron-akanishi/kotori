@@ -16,9 +16,9 @@ class App < Sinatra::Base
         Circle.all.to_json
       when "event" then
         Event.all.to_json
-      when "ownlist" then
+      when "user_books" then
         login_check
-        Book.where(id: UserBooks.where(user_id: session[:id]).select(:book_id)).to_json
+        UserBooks.where(user_id: session[:id]).to_json
       else
         redirect to('/error?code=500')
     end
