@@ -16,7 +16,7 @@ $(function () {
   $.ajaxSetup({ async: true });
   for (var i in user_books) {
     var book = books.filter(function (item, index) {
-      if (item.id == user_books[i].id) return true;
+      if (item.id == user_books[i].book_id) return true;
     });
     var author = authors.filter(function (item, index) {
       var book_author = book_authors.filter(function (item, index) {

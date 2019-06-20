@@ -31,21 +31,50 @@ class App < Sinatra::Base
 
   post '/book/add/detail' do
     login_check
-    @title = params["title"]
+    case params["mode"]
+      when "manual" then
+        @detail = {}
+        @title = params["title"]
+      when "melon" then
+        @detail = SiteParser.melon(params["url"])
+        @title = @detail[:title]
+      when "tora" then
+        @detail = SiteParser.tora(params["url"])
+        @title = @detail[:title]
+      when "lashin" then
+        @detail = SiteParser.lashin(params["url"])
+        @title = @detail[:title]
+    end
     if Book.exists?(title: @title) then
       @exists = Book.find_by(title: @title)
-      @author = Author.find(BookAuthors.where(book_id: @exists.id, is_main: true).select(:author_id)).name
+      @author = Author.where(id: BookAuthors.where(book_id: @exists.id, is_main: true).select(:author_id)).first.name
     end
     erb :book_add_detail
   end
 
   post '/book/add/done' do
     login_check
+    # 表紙画像保存
     if params["cover-img"] != nil then
-      # 表紙画像保存
       filename = SecureRandom.uuid + ".jpg"
       begin
         image = Magick::Image.read(params["cover-img"]["tempfile"].path)[0]
+      rescue => exception
+        redirect to("/error?code=500")
+      end
+      if !["BMP","JPEG","PNG"].include?(image.format) then
+        redirect to("/error?code=500")
+      end
+      image.resize_to_fit!(1000, 300)
+      image.write("./public/images/cover/"+filename)
+      image.destroy!
+    elsif params["image-url"] != "" then
+      filename = SecureRandom.uuid + ".jpg"
+      image = Magick::ImageList.new
+      image.from_blob(open(params["image-url"]).read)
+      begin
+        image = Magick::ImageList.new
+        image.from_blob(open(params["image-url"]).read)
       rescue => exception
         redirect to("/error?code=500")
       end

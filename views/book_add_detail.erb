@@ -26,17 +26,26 @@
 <form action="/book/add/done" method="POST" enctype="multipart/form-data">
   <input type="hidden" name="title" value="<%= @title %>">
   <div class="custom-control custom-checkbox">
+    <% if @detail[:is_adult] %>
+    <input type="checkbox" class="custom-control-input" id="is-adult" name="is-adult" value="true" checked>
+    <% else %>
     <input type="checkbox" class="custom-control-input" id="is-adult" name="is-adult" value="true">
+    <% end %>
     <label class="custom-control-label" for="is-adult" style="color: red;">18禁タイトル</label>
   </div>
   <br>
   <div style="text-align: center;">
+    <% if @detail != nil %>
+    <img id="cover-preview" src="<%= @detail[:cover] %>" height="300px">
+    <% else %>
     <img id="cover-preview" src="/images/cover/noimage.png" height="300px">
+    <% end %>
   </div>
   <br>
   <div class="form-group row" aria-describedby="cover-help">
     <label for="cover-img" class="col-sm-3 col-form-label">表紙画像：</label>
     <div class="custom-file col">
+      <input type="hidden" name="image-url" value="<%= @detail[:cover] %>">
       <input type="file" class="custom-file-input" id="cover-img" name="cover-img">
       <label class="custom-file-label" for="cover-img">ファイルを選択</label>
     </div>
@@ -48,7 +57,7 @@
   <div class="form-group row">
     <label for="author" class="col-sm-3 col-form-label">著者(必須)：</label>
     <div class="input-group col">
-      <input type="text" id="author" name="author" class="form-control" required>
+      <input type="text" id="author" name="author" class="form-control" value="<%= @detail[:author] %>" required>
       <div class="input-group-append">
         <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#listModal" data-whatever="author">一覧</button>
       </div>
@@ -58,7 +67,7 @@
   <div class="form-group row">
     <label for="circle" class="col-sm-3 col-form-label">サークル名(必須)：</label>
     <div class="input-group col">
-      <input type="text" id="circle" name="circle" class="form-control" required>
+      <input type="text" id="circle" name="circle" class="form-control" value="<%= @detail[:circle] %>" required>
       <div class="input-group-append">
         <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#listModal" data-whatever="circle">一覧</button>
       </div>
@@ -68,7 +77,7 @@
   <div class="form-group row">
     <label for="genre" class="col-sm-3 col-form-label">ジャンル(必須)：</label>
     <div class="input-group col">
-      <input type="text" id="genre" name="genre" class="form-control" required>
+      <input type="text" id="genre" name="genre" class="form-control" value="<%= @detail[:genre] %>" required>
       <div class="input-group-append">
         <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#listModal" data-whatever="genre">一覧</button>
       </div>
@@ -78,7 +87,7 @@
   <div class="form-group row">
     <label for="event" class="col-sm-3 col-form-label">頒布イベント：</label>
     <div class="input-group col">
-      <input type="text" id=event name="event" class="form-control">
+      <input type="text" id=event name="event" class="form-control" value="<%= @detail[:event] %>">
       <div class="input-group-append">
         <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#listModal" data-whatever="event">一覧</button>
       </div>
@@ -88,7 +97,7 @@
   <div class="form-group row">
     <label for="date" class="col-sm-3 col-form-label">発行日：</label>
     <div class="col">
-      <input type="date" id="date" name="date" class="form-control">
+      <input type="date" id="date" name="date" class="form-control" value="<%= @detail[:published_at] %>">
     </div>
   </div>
   <br>

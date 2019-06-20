@@ -1,15 +1,6 @@
-var orig_list, disp_list, current_page;
+var mode, orig_list, disp_list, current_page;
 var name, sortmode, reverse;
 const LIMIT = 100;
-
-// ロード時に一覧取得
-$(function () {
-  $.ajaxSetup({ async: false });
-  $.getJSON(`/api/get_list?type=${mode}`, data => orig_list = data);
-  $.ajaxSetup({ async: true });
-  disp_list = orig_list
-  selSortMode("登録日(昇順)", "created_at", false)
-});
 
 // リストビューの更新
 function viewChange() {

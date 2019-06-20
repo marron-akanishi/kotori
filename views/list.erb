@@ -32,7 +32,15 @@
   </ul>
 </nav>
 
-<script>
-  var mode = "<%= @type %>";
-</script>
 <script src="/js/list.js?ver=<%= $version %>"></script>
+<script>
+  mode = "<%= @type %>";
+  // ロード時に一覧取得
+  $(function () {
+    $.ajaxSetup({ async: false });
+    $.getJSON(`/api/get_list?type=${mode}`, data => orig_list = data);
+    $.ajaxSetup({ async: true });
+    disp_list = orig_list
+    selSortMode("登録日(昇順)", "created_at", false)
+  });
+</script>

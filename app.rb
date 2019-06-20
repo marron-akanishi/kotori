@@ -1,11 +1,13 @@
 require 'json'
 require 'time'
 require 'securerandom'
+require 'open-uri'
 require 'sinatra'
 require 'sinatra/reloader'
 require 'omniauth'
 require 'omniauth-google-oauth2'
 require 'rmagick'
+require './SiteParser'
 # DB
 require 'sinatra/activerecord'
 Dir[File.dirname(__FILE__) + "/models/**"].each do |model|
@@ -13,6 +15,8 @@ Dir[File.dirname(__FILE__) + "/models/**"].each do |model|
 end
 
 class App < Sinatra::Base
+  include SiteParser
+
   # setting
   $version = Time.now.to_i
   @@env = open('setting.json') do |io|
