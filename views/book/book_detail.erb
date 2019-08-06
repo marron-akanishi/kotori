@@ -34,7 +34,11 @@
   </tr>
   <tr>
     <td>頒布イベント名</td>
+    <% if @event == "" %>
+    <td></td>
+    <% else %>
     <td><a href="/event/<%= @event.id %>"><%= @event.name %></a></td>
+    <% end %>
   </tr>
   <tr>
     <td>発行日</td>
