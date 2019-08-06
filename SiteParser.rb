@@ -56,7 +56,11 @@ module SiteParser
     detail[:author] = detail_table[1].at('.//td//span//a//span').text
     detail[:genre] = detail_table[2].at('.//td//span//a//span').text
     detail[:published_at] = detail_table[3].at('.//td//span//a//span').text.tr("/","-")
-    detail[:event] = detail_table[5].at('.//td//span//a//span').text.split("　")[1]
+    if detail_table[5].at('.//td[1]').text == "初出イベント" then
+      detail[:event] = detail_table[5].at('.//td//span//a//span').text.split("　")[1]
+    else
+      detail[:event] = detail_table[6].at('.//td//span//a//span').text.split("　")[1]
+    end
     return detail
   end
 

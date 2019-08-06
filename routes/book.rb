@@ -21,12 +21,12 @@ class App < Sinatra::Base
       @owned = true;
       @memo = UserBooks.find_by(user_id: session[:id], book_id: params["id"]).memo
     end
-    erb :book_detail
+    erb :book_detail, :views => settings.views + '/book'
   end
 
   get '/book/add/title' do
     login_check
-    erb :book_add_title
+    erb :book_add_title, :views => settings.views + '/book'
   end
 
   post '/book/add/detail' do
@@ -49,7 +49,7 @@ class App < Sinatra::Base
       @exists = Book.find_by(title: @title)
       @author = Author.where(id: BookAuthors.where(book_id: @exists.id, is_main: true).select(:author_id)).first.name
     end
-    erb :book_add_detail
+    erb :book_add_detail, :views => settings.views + '/book'
   end
 
   post '/book/add/done' do
@@ -141,7 +141,7 @@ class App < Sinatra::Base
       @event = ""
     end
     @circle = @book.circle.name
-    erb :book_modify
+    erb :book_modify, :views => settings.views + '/book'
   end
 
   post '/book/:id/modify/done' do

@@ -1,0 +1,23 @@
+<h2 style="text-align: center;"><%= @type_name %>一覧</h2>
+<table id="list" class="table">
+  <% if @type == "book" %>
+  <tr>
+    <th>タイトル</th>
+  </tr>
+  <% else %>
+  <tr>
+    <th>名前</th>
+  </tr>
+  <% end %>
+  <% @list.each do |data| %>
+    <% if @type == "book" %>
+    <tr>
+      <td><a href='/admin/<%= @type %>/<%= data[:id] %>'><%= data[:title] %></a></td>
+    </tr>
+    <% else %>
+    <tr>
+      <td><a href='/admin/<%= @type %>/<%= data[:id] %>'><%= data[:name] %></a></td>
+    </tr>
+    <% end %>
+  <% end %>
+</table>

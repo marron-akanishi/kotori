@@ -10,21 +10,17 @@
 </div>
 <div class="d-flex justify-content-end form-inline mb-2">
   <label for="sort-sel">表示順：</label>
-  <div class="dropdown">
-    <button type="button" id="sort-sel" class="btn btn-outline-secondary dropdown-toggle"
-      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-    <div class="dropdown-menu" aria-labelledby="sort-sel">
-      <a class="sort-item dropdown-item" onclick='selSortMode("登録日(昇順)", "created_at", false)'>登録日(昇順)</a>
-      <a class="sort-item dropdown-item" onclick='selSortMode("登録日(降順)", "created_at", true)'>登録日(降順)</a>
-      <% if @type == "book" %>
-      <a class="sort-item dropdown-item" onclick='selSortMode("タイトル(昇順)", "title", false)'>タイトル(昇順)</a>
-      <a class="sort-item dropdown-item" onclick='selSortMode("タイトル(降順)", "title", true)'>タイトル(降順)</a>
-      <% else %>
-      <a class="sort-item dropdown-item" onclick='selSortMode("名前(昇順)", "name", false)'>名前(昇順)</a>
-      <a class="sort-item dropdown-item" onclick='selSortMode("名前(降順)", "name", true)'>名前(降順)</a>
-      <% end %>
-    </div>
-  </div>
+  <select id="sort-sel" class="form-control" onchange="setSort(this)">
+    <option value="created_at,desc" selected>登録日(降順)</option>
+    <option value="created_at,asc">登録日(昇順)</option>
+    <% if @type == "book" %>
+    <option value="title,desc">タイトル(降順)</option>
+    <option value="title,asc">タイトル(昇順)</option>
+    <% else %>
+    <option value="name,desc">名前(降順)</option>
+    <option value="name,asc">名前(昇順)</option>
+    <% end %>
+  </select>
 </div>
 <table id="list" class="table"></table>
 <nav aria-label="Page navigation">
@@ -41,6 +37,6 @@
     $.getJSON(`/api/get_list?type=${mode}`, data => orig_list = data);
     $.ajaxSetup({ async: true });
     disp_list = orig_list
-    selSortMode("登録日(昇順)", "created_at", false)
+    selSortMode("created_at", true)
   });
 </script>

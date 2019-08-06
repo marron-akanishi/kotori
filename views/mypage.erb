@@ -28,16 +28,12 @@
 </div>
 <div class="d-flex justify-content-end form-inline mb-2">
   <label for="sort-sel">表示順：</label>
-  <div class="dropdown">
-    <button type="button" id="sort-sel" class="btn btn-outline-secondary dropdown-toggle"
-      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-    <div class="dropdown-menu" aria-labelledby="sort-sel">
-      <a class="sort-item dropdown-item" onclick='selSortMode("所有登録日(昇順)", "created_at", false)'>所有登録日(昇順)</a>
-      <a class="sort-item dropdown-item" onclick='selSortMode("所有登録日(降順)", "created_at", true)'>所有登録日(降順)</a>
-      <a class="sort-item dropdown-item" onclick='selSortMode("タイトル(昇順)", "title", false)'>タイトル(昇順)</a>
-      <a class="sort-item dropdown-item" onclick='selSortMode("タイトル(降順)", "title", true)'>タイトル(降順)</a>
-    </div>
-  </div>
+  <select id="sort-sel" class="form-control" onchange="setSort(this)">
+    <option value="created_at,desc" selected>所有登録日(降順)</option>
+    <option value="created_at,asc">所有登録日(昇順)</option>
+    <option value="title,desc">タイトル(降順)</option>
+    <option value="title,asc">タイトル(昇順)</option>
+  </select>
 </div>
 <div id="loading-gif" style="text-align: center;">
 <img src="/images/loading.gif" />

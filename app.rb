@@ -45,6 +45,13 @@ class App < Sinatra::Base
       end
     end
 
+    def admin_check
+      login_check
+      if User.find(session[:id]).mail != @@env["ADMIN_EMAIL"] then
+        redirect to('/')
+      end
+    end
+
     def boolean_check(value)
       return value == 'true' ? true : false
     end

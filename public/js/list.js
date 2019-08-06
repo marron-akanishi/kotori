@@ -1,5 +1,5 @@
 var mode, orig_list, disp_list, current_page;
-var name, sortmode, reverse;
+var sortmode, reverse;
 const LIMIT = 100;
 
 // リストビューの更新
@@ -48,19 +48,27 @@ searchWord = function () {
         });
         break;
     }
-    selSortMode(name, sortmode, reverse)
+    selSortMode(sortmode, reverse)
   } else {
     disp_list = orig_list
-    selSortMode(name, sortmode, reverse)
+    selSortMode(sortmode, reverse)
   }
 };
 // searchWordの実行
 $('#search').on('input', searchWord);
 
-// 並び替え
-function selSortMode(_name, _sortmode, _reverse){
-  name = _name, sortmode = _sortmode, reverse = _reverse
-  $("#sort-sel").html(name)
+// 並び替え選択
+function setSort(obj){
+  var idx = obj.selectedIndex;
+  var value = obj.options[idx].value;
+  var option = value.split(",")
+  var reverse = option[1] == "desc" ? true : false
+  selSortMode(option[0], reverse)
+}
+
+// 並び替え実行
+function selSortMode(_sortmode, _reverse){
+  sortmode = _sortmode, reverse = _reverse
   disp_list.sort(sortJSON(sortmode, reverse))
   makePageNav(LIMIT);
   current_page = 1;
