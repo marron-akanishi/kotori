@@ -3,6 +3,14 @@
   border: solid thin;
 }
 
+body {
+  padding-top: 65px;
+}
+
+.navbar {
+  padding: 0.5rem 1rem;
+}
+
 .cover {
   position: relative;
   margin-bottom: 0.5rem;

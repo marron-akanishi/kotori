@@ -20,7 +20,7 @@ $(function () {
     });
     var author = authors.filter(function (item, index) {
       var book_author = book_authors.filter(function (item, index) {
-        if (item.book_id == user_books[i].id) return true;
+        if (item.book_id == user_books[i].book_id) return true;
       })
       if (item.id == book_author[0].author_id) return true;
     });

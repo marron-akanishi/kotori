@@ -17,61 +17,64 @@
     <script src="/js/jquery.cookie-1.4.1.min.js"></script>
     <script src="/js/utils.js?ver=<%= $version %>"></script>
   </head>
-  <body style="padding-top: 90px;">
+  <body>
     <header>
       <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark">
-        <a class="navbar-brand" href="/">Kotori</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navmenu"
-            aria-controls="navmenu" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navmenu">
-          <!-- 左寄せ -->
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item dropdown show">
-              <a class="nav-link dropdown-toggle" href="#" id="listItem" role="button" data-toggle="dropdown" aria-haspopup="false"
-                aria-expanded="false">
-                登録一覧
-              </a>
-              <div class="dropdown-menu" aria-labelledby="listItem">
-                <a class="dropdown-item" href="/book">書籍</a>
-                <a class="dropdown-item" href="/author">著者</a>
-                <a class="dropdown-item" href="/circle">サークル</a>
-                <a class="dropdown-item" href="/genre">ジャンル</a>
-                <a class="dropdown-item" href="/event">イベント</a>
-              </div>
-            </li>
-            <!--
-            <li class="nav-item">
-              <a class="nav-link" href="/search">書籍検索</a>
-            </li>
-            -->
-            <li class="nav-item">
-              <a class="nav-link" href="/help">Help</a>
-            </li>
-          </ul>
-          <!-- 右寄せ -->
-          <ul class="navbar-nav">
-            <% if session[:id] != nil %>
-            <li class="nav-item">
-              <button type="button" class="btn btn-info mb-2 mb-sm-0" onClick="location.href='/user/setting'" style="margin-right: 5px">
-                <span class="oi oi-cog"> 設定</span>
-              </button>
-            </li>
-            <li class="nav-item">
-              <button type="button" class="btn btn-danger" onClick="location.href='/logout'">
-                <span class="oi oi-account-logout"> ログアウト</span>
-              </button>
-            </li>
-            <% else %>
-            <li class="nav-item">
-              <button type="button" class="btn btn-info" onClick="location.href='/auth/google_oauth2'">
-                <span class="oi oi-account-login"> ログイン</span>
-              </button>
-            </li>
-            <% end %>
-          </ul>
+        <div class="container">
+          <a class="navbar-brand" href="/">Kotori</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navmenu"
+              aria-controls="navmenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navmenu">
+            <!-- 左寄せ -->
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item dropdown show">
+                <a class="nav-link dropdown-toggle" href="#" id="listItem" role="button" data-toggle="dropdown" aria-haspopup="false"
+                  aria-expanded="false">
+                  登録一覧
+                </a>
+                <div class="dropdown-menu" aria-labelledby="listItem">
+                  <a class="dropdown-item" href="/book">書籍</a>
+                  <a class="dropdown-item" href="/author">著者</a>
+                  <a class="dropdown-item" href="/circle">サークル</a>
+                  <a class="dropdown-item" href="/genre">ジャンル</a>
+                  <a class="dropdown-item" href="/event">イベント</a>
+                </div>
+              </li>
+              <!--
+              <li class="nav-item">
+                <a class="nav-link" href="/search">書籍検索</a>
+              </li>
+              -->
+              <li class="nav-item">
+                <a class="nav-link" href="/help">Help</a>
+              </li>
+            </ul>
+            <!-- 右寄せ -->
+            <ul class="navbar-nav">
+              <% if session[:id] != nil %>
+              <li class="nav-item">
+                <button type="button" class="btn btn-info mb-2 mb-sm-0" onClick="location.href='/user/setting'" style="margin-right: 5px">
+                  <span class="oi oi-cog"> 設定</span>
+                </button>
+              </li>
+              <li class="nav-item">
+                <button type="button" class="btn btn-danger" onClick="location.href='/logout'">
+                  <span class="oi oi-account-logout"> ログアウト</span>
+                </button>
+              </li>
+              <% else %>
+              <li class="nav-item">
+                <button type="button" class="btn btn-info" onClick="location.href='/auth/google_oauth2'">
+                  <span class="oi oi-account-login"> ログイン</span>
+                </button>
+              </li>
+              <% end %>
+            </ul>
+          </div>
         </div>
+        
       </nav>
     </header>
     <div class="container">
