@@ -1,5 +1,5 @@
 setting.json
-db.sqlite3
+*.sqlite3
 *.gem
 *.rbc
 /.config
