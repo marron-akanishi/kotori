@@ -2,8 +2,8 @@ ActiveRecord::Base.establish_connection(
   :adapter => 'sqlite3',
   :database => 'db/db.sqlite3'
 )
-class BookAuthors < ActiveRecord::Base
+class UserBook < ActiveRecord::Base
   # 外部キー設定
+  belongs_to :user
   belongs_to :book
-  belongs_to :author
 end

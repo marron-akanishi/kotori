@@ -20,8 +20,8 @@ class App < Sinatra::Base
 
   get '/user/own/:id' do
     login_check
-    if !UserBooks.exists?(user_id: session[:id], book_id: params["id"]) then
-      UserBooks.create(user_id: session[:id], book_id: params["id"])
+    if !UserBook.exists?(user_id: session[:id], book_id: params["id"]) then
+      UserBook.create(user_id: session[:id], book_id: params["id"])
     end
     if boolean_check(params["exist"]) then
       redirect to('/book/'+params["id"]+'?from='+params["from"])
@@ -32,16 +32,16 @@ class App < Sinatra::Base
 
   get '/user/unown/:id' do
     login_check
-    if UserBooks.exists?(user_id: session[:id], book_id: params["id"]) then
-      UserBooks.find_by(user_id: session[:id], book_id: params["id"]).destroy
+    if UserBook.exists?(user_id: session[:id], book_id: params["id"]) then
+      UserBook.find_by(user_id: session[:id], book_id: params["id"]).destroy
     end
     redirect to('/book/'+params["id"]+'?from='+params["from"])
   end
 
   post '/user/memo/:id' do
     login_check
-    if UserBooks.exists?(user_id: session[:id], book_id: params["id"]) then
-      UserBooks.where(user_id: session[:id], book_id: params["id"]).update(memo: params["memoText"])
+    if UserBook.exists?(user_id: session[:id], book_id: params["id"]) then
+      UserBook.where(user_id: session[:id], book_id: params["id"]).update(memo: params["memoText"])
     end
     redirect to('/book/'+params["id"]+'?from='+params["from"])
   end

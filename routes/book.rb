@@ -8,8 +8,8 @@ class App < Sinatra::Base
   get '/book/:id' do
     @from = params["from"]
     @book = Book.includes(:event, :circle).find(params["id"])
-    @genre = Genre.find(BookGenres.find_by(book_id: @book.id, is_main:true).genre_id)
-    @author = Author.find(BookAuthors.find_by(book_id: @book.id, is_main:true).author_id)
+    @genre = Genre.find(BookGenre.find_by(book_id: @book.id, is_main:true).genre_id)
+    @author = Author.find(BookAuthor.find_by(book_id: @book.id, is_main:true).author_id)
     if @book.event != nil then
       @event = @book.event
     else
@@ -17,9 +17,9 @@ class App < Sinatra::Base
     end
     @circle = @book.circle
     @user = @book.user.name
-    if session[:id] != nil && UserBooks.exists?(user_id: session[:id], book_id: params["id"])then
+    if session[:id] != nil && UserBook.exists?(user_id: session[:id], book_id: params["id"])then
       @owned = true;
-      @memo = UserBooks.find_by(user_id: session[:id], book_id: params["id"]).memo
+      @memo = UserBook.find_by(user_id: session[:id], book_id: params["id"]).memo
     end
     erb :book_detail, :views => settings.views + '/book'
   end
@@ -47,7 +47,7 @@ class App < Sinatra::Base
     end
     if Book.exists?(title: @title) then
       @exists = Book.find_by(title: @title)
-      @author = Author.where(id: BookAuthors.where(book_id: @exists.id, is_main: true).select(:author_id)).first.name
+      @author = Author.where(id: BookAuthor.where(book_id: @exists.id, is_main: true).select(:author_id)).first.name
     end
     erb :book_add_detail, :views => settings.views + '/book'
   end
@@ -122,10 +122,10 @@ class App < Sinatra::Base
     # 順番に登録していく
     book = Book.create(title: params["title"], cover: filename, published_at: params["date"], detail: params["detail"], is_adult: is_adult,
                        mod_user: session[:id], event_id: event.id, circle_id: circle.id)
-    BookGenres.create(book_id: book.id, genre_id: genre.id, is_main: true)
-    BookAuthors.create(book_id: book.id, author_id: author.id, is_main: true)
+    BookGenre.create(book_id: book.id, genre_id: genre.id, is_main: true)
+    BookAuthor.create(book_id: book.id, author_id: author.id, is_main: true)
     # 所持状況更新
-    UserBooks.create(user_id: session[:id], book_id: book.id)
+    UserBook.create(user_id: session[:id], book_id: book.id)
     redirect to('/user/mypage')
   end
 
@@ -133,8 +133,8 @@ class App < Sinatra::Base
     login_check
     @from = params["from"]
     @book = Book.includes(:event, :circle).find(params["id"])
-    @genre = Genre.find(BookGenres.find_by(book_id: @book.id, is_main:true).genre_id).name
-    @author = Author.find(BookAuthors.find_by(book_id: @book.id, is_main:true).author_id).name
+    @genre = Genre.find(BookGenre.find_by(book_id: @book.id, is_main:true).genre_id).name
+    @author = Author.find(BookAuthor.find_by(book_id: @book.id, is_main:true).author_id).name
     if @book.event != nil then
       @event = @book.event.name
     else
@@ -198,8 +198,8 @@ class App < Sinatra::Base
     # 順番に登録していく
     book = Book.find(params[:id]).update(title: params["title"], cover: filename, published_at: params["date"], detail: params["detail"], is_adult: is_adult,
                                          mod_user: session[:id], event_id: event.id, circle_id: circle.id)
-    BookGenres.where(book_id: params[:id], is_main: true).first.update(genre_id: genre.id)
-    BookAuthors.where(book_id: params[:id], is_main: true).first.update(author_id: author.id)
+    BookGenre.where(book_id: params[:id], is_main: true).first.update(genre_id: genre.id)
+    BookAuthor.where(book_id: params[:id], is_main: true).first.update(author_id: author.id)
 
     redirect to('/book/'+params["id"]+'?from='+params["from"])
   end

@@ -1,4 +1,4 @@
-var own_list = [], disp_list, mode, current_page;
+var own_list, disp_list, mode, current_page;
 var load_count, load_num;
 var sortmode, reverse;
 const LIST_LIMIT = 50;
@@ -7,25 +7,10 @@ const GRID_LIMIT = 30;
 // ロード
 $(function () {
   // 所有書籍一覧作成
-  var books, authors, book_authors, user_books
+  var user_books
   $.ajaxSetup({ async: false });
-  $.getJSON("/api/get_list?type=book", data => books = data);
-  $.getJSON("/api/get_list?type=author", data => authors = data);
-  $.getJSON("/api/get_list?type=book_authors", data => book_authors = data);
-  $.getJSON("/api/get_list?type=user_books", data => user_books = data);  
+  $.getJSON("/api/get_list?type=user_book", data => own_list = data);  
   $.ajaxSetup({ async: true });
-  for (var i in user_books) {
-    var book = books.filter(function (item, index) {
-      if (item.id == user_books[i].book_id) return true;
-    });
-    var author = authors.filter(function (item, index) {
-      var book_author = book_authors.filter(function (item, index) {
-        if (item.book_id == user_books[i].book_id) return true;
-      })
-      if (item.id == book_author[0].author_id) return true;
-    });
-    own_list.push({id: user_books[i].book_id, title: book[0].title, cover: book[0].cover, author: author[0].name, created_at: user_books[i].created_at})
-  }
   // 表示モード切り替え
   mode = ($.cookie("mypageListMode") || "GRID").toUpperCase()
   $(`#${mode.toLowerCase()}button`).addClass("active")
@@ -71,7 +56,7 @@ function viewChange() {
       $("#ownlist").show();
       $("#ownlist").append(`<tr><th>タイトル</th><th>著者</th></tr>`)
       for (var i in disp_area) {
-        $("#ownlist").append(`<tr><td><a href='/book/${disp_area[i].id}?from=mypage'>${disp_area[i].title}</td><td>${disp_area[i].author}</td></tr>`)
+        $("#ownlist").append(`<tr><td><a href='/book/${disp_area[i].id}?from=mypage'>${disp_area[i].title}</td><td>${disp_area[i].authors[0].name}</td></tr>`)
       }
       break;
   }

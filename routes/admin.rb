@@ -55,7 +55,7 @@ class App < Sinatra::Base
       Book.find(params["id"]).destroy
     when "author" then
       Author.all.each do |obj|
-        if !BookAuthors.exists?(author_id: obj.id) then
+        if !BookAuthor.exists?(author_id: obj.id) then
           Author.find(obj.id).destroy
         end
       end
@@ -67,7 +67,7 @@ class App < Sinatra::Base
       end
     when "genre" then
       Genre.all.each do |obj|
-        if !BookGenres.exists?(genre_id: obj.id) then
+        if !BookGenre.exists?(genre_id: obj.id) then
           Genre.find(obj.id).destroy
         end
       end
@@ -79,7 +79,7 @@ class App < Sinatra::Base
       end
     when "tag" then
       Tag.all.each do |obj|
-        if !BookTags.exists?(tag_id: obj.id) then
+        if !BookTag.exists?(tag_id: obj.id) then
           Tag.find(obj.id).destroy
         end
       end

@@ -8,29 +8,29 @@ class App < Sinatra::Base
         Author.all.to_json
       when "genre" then
         Genre.all.to_json
-      when "book_authors" then
-        BookAuthors.all.to_json
-      when "book_genres" then
-        BookGenres.all.to_json
+      when "book_author" then
+        BookAuthor.all.to_json
+      when "book_genre" then
+        BookGenre.all.to_json
       when "circle" then
         Circle.all.to_json
       when "event" then
         Event.all.to_json
-      when "user_books" then
+      when "user_book" then
         login_check
-        UserBooks.where(user_id: session[:id]).to_json
+        Book.where(id: UserBook.where(user_id: session[:id]).select(:book_id)).to_json(:include => [:authors])
       else
         redirect to('/error?code=500')
     end
   end
 
-  # 指定された情報に対応する書籍を返す(条件1つ)
+  # 指定されたIDに対応する書籍を返す
   get '/api/find' do
     case params["type"]
       when "genre" then
-        Book.where(id: BookGenres.where(genre_id: params["id"]).select(:book_id)).to_json
+        Book.where(id: BookGenre.where(genre_id: params["id"]).select(:book_id)).to_json
       when "author" then
-        Book.where(id: BookAuthors.where(author_id: params["id"]).select(:book_id)).to_json
+        Book.where(id: BookAuthor.where(author_id: params["id"]).select(:book_id)).to_json
       when "event" then
         Book.where(event_id: params["id"]).to_json
       when "circle" then
