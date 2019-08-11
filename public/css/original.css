@@ -9,6 +9,11 @@ body {
 
 .navbar {
   padding: 0.5rem 1rem;
+  background-color: #18bc9c;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+  color: #ffffff;
 }
 
 .cover {

@@ -19,6 +19,10 @@ class App < Sinatra::Base
     result = request.env["omniauth.auth"]
     session[:id] = result["uid"]
     if User.exists?(id: session[:id]) then
+      if User.find(session[:id]).deleted_at != nil then
+        session.clear
+        redirect to('/error?code=403')
+      end
       User.find(session[:id]).update(latest_at: Time.now)
     else
       name = result["info"]["name"]

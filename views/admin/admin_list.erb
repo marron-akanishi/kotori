@@ -1,3 +1,15 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/user/setting">設定</a></li>
+    <li class="breadcrumb-item"><a href="/admin">管理者メニュー</a></li>
+    <li class="breadcrumb-item active"><%= @type_name %>一覧</li>
+  </ol>
+</nav>
+<% if @type != "book" && @type != "user" %>
+<div style="float: right;">
+  <button class="btn btn-danger" style="margin-bottom: 1rem" data-toggle="modal" data-target="#delModal">一括削除</button>
+</div>
+<% end %>
 <h2 style="text-align: center;"><%= @type_name %>一覧</h2>
 <table id="list" class="table">
   <% if @type == "book" %>
@@ -21,3 +33,24 @@
     <% end %>
   <% end %>
 </table>
+
+<% if @type != "book" && @type != "user" %>
+<div class="modal fade" id="delModal" tabindex="-1" role="dialog" aria-labelledby="label1" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="label1">確認</h5>
+      </div>
+      <div class="modal-body">
+        利用されていない情報を一括削除します。<br>
+        よろしいですか？
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">キャンセル</button>
+        <button type="button" class="btn btn-danger"
+          onclick="location.href='/admin/<%= @type %>/0/delete'">削除</button>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>

@@ -1,0 +1,59 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/user/setting">設定</a></li>
+    <li class="breadcrumb-item"><a href="/admin">管理者メニュー</a></li>
+    <li class="breadcrumb-item"><a href="/admin/authors">著者一覧</a></li>
+    <li class="breadcrumb-item active">著者詳細</li>
+  </ol>
+</nav>
+<h2 style="text-align: center;">著者詳細</h2>
+<p>ID：<%= @detail[:id] %></p>
+<p>登録日時：<%= @detail[:created_at] %></p>
+<p>最終更新日時：<%= @detail[:updated_at] %></p>
+<br>
+<form action="/admin/author/<%= @detail[:id] %>/modify" method="POST">
+  <div class="form-group row">
+    <label for="name" class="col-sm-3 col-form-label">名前：</label>
+    <div class="input-group col">
+      <input type="text" id="name" name="name" class="form-control" value="<%= @detail[:name] %>" required>
+    </div>
+  </div>
+  <br>
+  <div class="form-group row">
+    <label for="detail" class="col-sm-3 col-form-label">詳細：</label>
+    <div class="input-group col">
+      <input type="text" id="detail" name="detail" class="form-control" value="<%= @detail[:detail] %>">
+    </div>
+  </div>
+  <br>
+  <div class="form-group row">
+    <label for="twitter" class="col-sm-3 col-form-label">Twitter ID：</label>
+    <div class="input-group col">
+      <input type="text" id="twitter" name="twitter" class="form-control" value="<%= @detail[:twitter] %>">
+    </div>
+  </div>
+  <br>
+  <div class="form-group row">
+    <label for="pixiv" class="col-sm-3 col-form-label">pixiv ID：</label>
+    <div class="input-group col">
+      <input type="text" id="pixiv" name="pixiv" class="form-control" value="<%= @detail[:pixiv] %>">
+    </div>
+  </div>
+  <br>
+  <div class="form-group row">
+    <label for="web" class="col-sm-3 col-form-label">Webページ：</label>
+    <div class="input-group col">
+      <input type="text" id="web" name="web" class="form-control" value="<%= @detail[:web] %>">
+    </div>
+  </div>
+  <br>
+  <div class="form-group row">
+    <label for="circle" class="col-sm-3 col-form-label">サークルID：</label>
+    <div class="input-group col">
+      <input type="text" id="circle" name="circle" class="form-control" value="<%= @detail[:circle_id] %>">
+    </div>
+  </div>
+  <div class="d-flex justify-content-center">
+    <input type="submit" class="btn btn-primary" value="保存" />
+  </div>
+</form>

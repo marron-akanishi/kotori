@@ -34,7 +34,7 @@ class App < Sinatra::Base
   end
 
   use OmniAuth::Builder do
-    provider :google_oauth2, @@env["GOOGLE_APP_ID"], @@env["GOOGLE_APP_SECRET"]
+    provider :google_oauth2, @@env["GOOGLE_APP_ID"], @@env["GOOGLE_APP_SECRET"], { :skip_jwt => true }
   end
 
   # helper
@@ -66,7 +66,12 @@ class App < Sinatra::Base
     redirect to("/error?code=500")
   end
 
-  @@error_msg = {"404" => "指定されたURLが見つかりません", "500" => "エラーが発生しました。"}
+  @@error_msg = {
+    "403" => "ログインが禁止されています",
+    "404" => "指定されたURLが見つかりません",
+    "422" => "DBとの整合性チェックに失敗しました",
+    "500" => "エラーが発生しました"
+  }
 end
 
 Dir[File.dirname(__FILE__) + "/routes/**"].each do |route|

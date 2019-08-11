@@ -1,0 +1,43 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/user/setting">設定</a></li>
+    <li class="breadcrumb-item"><a href="/admin">管理者メニュー</a></li>
+    <li class="breadcrumb-item"><a href="/admin/books">登録書籍一覧</a></li>
+    <li class="breadcrumb-item active">書籍詳細</li>
+  </ol>
+</nav>
+<div style="float: right;">
+  <button class="btn btn-danger" style="margin-bottom: 1rem" data-toggle="modal" data-target="#delModal">削除</button>
+</div>
+<h2 style="text-align: center;">書籍詳細</h2>
+<p>ID：<%= @detail[:id] %></p>
+<p>登録日時：<%= @detail[:created_at] %></p>
+<p>最終更新日時：<%= @detail[:updated_at] %></p>
+<p>タイトル：<%= @detail[:title] %></p>
+<p>カバー：<%= @detail[:cover] %></p>
+<p>発行日：<%= @detail[:published_at] %></p>
+<p>詳細：<%= @detail[:detail] %></p>
+<p>18禁：<%= @detail[:is_adult] %></p>
+<p>最終更新者ID：<%= @detail[:mod_user] %></p>
+<p>頒布イベントID：<%= @detail[:event_id] %></p>
+<p>サークルID：<%= @detail[:circle_id] %></p>
+<h5>編集を行うには<a href="/book/<%= @detail[:id] %>/modify">書籍編集画面</a>に移動してください。</h5>
+
+<div class="modal fade" id="delModal" tabindex="-1" role="dialog" aria-labelledby="label1" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="label1">確認</h5>
+      </div>
+      <div class="modal-body">
+        この書籍情報を削除します。<br>
+        よろしいですか？
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">キャンセル</button>
+        <button type="button" class="btn btn-danger"
+          onclick="location.href='/admin/user/<%= @detail.id %>/delete'">削除</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -12,14 +12,15 @@
     <link href="/css/original.css?ver=<%= $version %>" rel="stylesheet" type="text/css" />
     <!-- JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+      crossorigin="anonymous"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/jquery.cookie-1.4.1.min.js"></script>
     <script src="/js/utils.js?ver=<%= $version %>"></script>
   </head>
   <body>
     <header>
-      <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark">
+      <nav class="navbar navbar-expand-sm navbar-dark fixed-top">
         <div class="container">
           <a class="navbar-brand" href="/">Kotori</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navmenu"
@@ -55,7 +56,7 @@
             <ul class="navbar-nav">
               <% if session[:id] != nil %>
               <li class="nav-item">
-                <button type="button" class="btn btn-info mb-2 mb-sm-0" onClick="location.href='/user/setting'" style="margin-right: 5px">
+                <button type="button" class="btn btn-primary mb-2 mb-sm-0" onClick="location.href='/user/setting'" style="margin-right: 5px">
                   <span class="oi oi-cog"> 設定</span>
                 </button>
               </li>

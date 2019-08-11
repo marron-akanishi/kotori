@@ -2,16 +2,16 @@
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="/user/setting">設定</a></li>
     <li class="breadcrumb-item"><a href="/admin">管理者メニュー</a></li>
-    <li class="breadcrumb-item"><a href="/admin/genres">ジャンル一覧</a></li>
-    <li class="breadcrumb-item active">ジャンル詳細</li>
+    <li class="breadcrumb-item"><a href="/admin/tags">タグ一覧</a></li>
+    <li class="breadcrumb-item active">タグ詳細</li>
   </ol>
 </nav>
-<h2 style="text-align: center;">ジャンル詳細</h2>
+<h2 style="text-align: center;">タグ詳細</h2>
 <p>ID：<%= @detail[:id] %></p>
 <p>登録日時：<%= @detail[:created_at] %></p>
 <p>最終更新日時：<%= @detail[:updated_at] %></p>
 <br>
-<form action="/admin/genre/<%= @detail[:id] %>/modify" method="POST">
+<form action="/admin/tag/<%= @detail[:id] %>/modify" method="POST">
   <div class="form-group row">
     <label for="name" class="col-sm-3 col-form-label">名前：</label>
     <div class="input-group col">
