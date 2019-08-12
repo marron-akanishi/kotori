@@ -21,6 +21,7 @@
 <p>登録日時：<%= @detail[:created_at] %></p>
 <p>最終更新日時：<%= @detail[:updated_at] %></p>
 <p>最終ログイン日時：<%= @detail[:latest_at] %></p>
+<p>18禁アイテム表示：<%= @detail[:is_adult] %></p>
 <br>
 <form action="/admin/user/<%= @detail[:id] %>/modify" method="POST">
   <div class="form-group row">

@@ -1,3 +1,4 @@
+/* 全体 */
 .markdown-body img {
   margin: 0.5rem 0;
   border: solid thin;
@@ -15,6 +16,12 @@ body {
 .navbar-dark .navbar-nav .nav-link {
   color: #ffffff;
 }
+
+hr {
+  border: 0.5px dashed #aaaaaa;
+}
+
+/* 所有書籍一覧 */
 
 .cover {
   position: relative;
@@ -38,6 +45,8 @@ body {
   padding: 5px 10px;
   word-break: break-all;
 }
+
+/* 登録画面 */
 
 .exists {
   display: inline-block;
@@ -69,6 +78,7 @@ body {
   display: none;
 }
 
-hr {
-  border: 0.5px dashed #aaaaaa;
+/* 設定 */
+.tab-content .card-header {
+  padding: .25rem .5rem;
 }

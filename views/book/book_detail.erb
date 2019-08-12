@@ -82,15 +82,23 @@
   </tr>
 </table>
 
-<div class="d-flex justify-content-end">
-  <% if @owned %>
-  <button class="btn btn-warning" style="margin: 0 0.1rem"
-    onclick="location.href='/book/<%= @book.id %>/modify?from=<%= @from %>'">情報編集</button>
-  <button class="btn btn-danger" style="margin: 0 0.1rem" data-toggle="modal" data-target="#delModal">所有解除</button>
-  <% elsif session[:id] != nil %>
-  <button class="btn btn-info" style="margin: 0 0.1rem"
-    onclick="location.href='/user/own/<%= @book.id %>?exist=true&from=<%= @from %>'">所有</button>
-  <% end %>
+<div class="d-flex justify-content-between">
+  <div>
+    <a href="https://twitter.com/share" class="twitter-share-button" data-size="large" 
+    data-text="<%= @book.title %>" data-url="http://kotori.marron.work/book/<%= @book.id %>">ツイート</a>
+  </div>
+  <div>
+    <% if @owned %>
+    <button class="btn btn-warning" style="margin: 0 0.1rem"
+      onclick="location.href='/book/<%= @book.id %>/modify?from=<%= @from %>'">情報編集</button>
+    <button class="btn btn-danger" style="margin: 0 0.1rem" data-toggle="modal" data-target="#delModal">所有解除</button>
+    <% elsif session[:id] != nil %>
+    <button class="btn btn-info" style="margin: 0 0.1rem"
+      onclick="location.href='/user/own/<%= @book.id %>?exist=true&from=<%= @from %>'">所有</button>
+    <% else %>
+    　
+    <% end %>
+  </div>
 </div>
 
 <% if @owned %>
@@ -106,7 +114,7 @@
 </form>
 <% elsif session[:id] == nil %>
 <div class="alert alert-info">
-  ログインすると自分専用のメモを登録できるようになります。
+  ログインすると所有管理や自分専用のメモを登録できるようになります。
 </div>
 <% end %>
 
@@ -129,3 +137,5 @@
   </div>
 </div>
 <% end %>
+
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>

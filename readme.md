@@ -20,9 +20,10 @@ cd kakasi-2.3.6
 ./configure
 make
 sudo make install
+cd ..
 rm -fr kakasi*
 sudo nano /etc/ld.so.conf
-# /lib/local/libを追記
+# /usr/local/libを追記
 sudo ldconfig
 ```
 

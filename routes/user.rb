@@ -14,7 +14,8 @@ class App < Sinatra::Base
 
   post '/user/setting/done' do
     login_check
-    User.find(session[:id]).update(name: params["dispName"])
+    is_adult = boolean_check(params["is-adult"])
+    User.find(session[:id]).update(name: params["dispName"], is_adult: is_adult)
     redirect to('/user/mypage')
   end
 
