@@ -1,3 +1,6 @@
+# APIでBookのmod_userを連結したデータを返却しないこと！
+# IDとメールアドレスが一緒に連結されてしまいます。
+
 class App < Sinatra::Base
   # 単純に全項目返す
   get '/api/get_list' do
@@ -16,8 +19,11 @@ class App < Sinatra::Base
         Circle.all.to_json
       when "event" then
         Event.all.to_json
+      when "tag" then
+        Tag.all.to_json
       when "user_book" then
         login_check
+        # あまり結合するとものすごく時間がかかるので注意
         Book.where(id: UserBook.where(user_id: session[:id]).select(:book_id)).to_json(:include => [:authors])
       else
         redirect to('/error?code=500')

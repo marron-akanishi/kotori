@@ -51,20 +51,16 @@ function setPage(page) {
   viewChange();
 }
 
-// カナ→ひら
-function kanaToHira(str) {
-  return str.replace(/[\u30a1-\u30f6]/g, function (match) {
-    var chr = match.charCodeAt(0) - 0x60;
-    return String.fromCharCode(chr);
+// カナ→ひら、全角→半角、スペース削除、小文字→大文字
+function normalizeStr(str) {
+  str = str.replace(/[\u30a1-\u30f6]/g, function (match) {
+    return String.fromCharCode(match.charCodeAt(0) - 0x60);
   });
-}
-
-// ひら→カナ
-function hiraToKana(str) {
-  return str.replace(/[\u3041-\u3096]/g, function (match) {
-    var chr = match.charCodeAt(0) + 0x60;
-    return String.fromCharCode(chr);
+  str = str.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function (s) {
+    return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
   });
+  str = str.replace(/[\s 　]/g, "")
+  return str.toUpperCase()
 }
 
 // 並び替え

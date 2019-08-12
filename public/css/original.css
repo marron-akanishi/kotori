@@ -55,3 +55,20 @@ body {
 .form-inline label{
   margin-bottom: 0 !important;
 }
+
+.ui-autocomplete {
+  max-height: 100px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 5px;
+}
+
+#input-error {
+  color: red;
+  text-align: center;
+  display: none;
+}
+
+hr {
+  border: 0.5px dashed #aaaaaa;
+}

@@ -7,6 +7,7 @@ require 'sinatra/reloader'
 require 'omniauth'
 require 'omniauth-google-oauth2'
 require 'rmagick'
+require 'kakasi'
 require './SiteParser'
 # DB
 require 'sinatra/activerecord'

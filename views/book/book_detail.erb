@@ -22,22 +22,38 @@
   </tr>
   <tr>
     <td>著者</td>
-    <td><a href="/author/<%= @author.id %>"><%= @author.name %></a></td>
+    <td>
+      <% @book.authors.each_with_index do |x, i| %>
+      <% if i == 0 %>
+      <a href="/author/<%= x.id %>"><%= x.name %></a>
+      <% else %>
+       , <a href="/author/<%= x.id %>"><%= x.name %></a>
+      <% end %>
+      <% end %>
+    </td>
   </tr>
   <tr>
     <td>サークル名</td>
-    <td><a href="/circle/<%= @circle.id %>"><%= @circle.name %></a></td>
+    <td><a href="/circle/<%= @book.circle.id %>"><%= @book.circle.name %></a></td>
   </tr>
   <tr>
     <td>ジャンル</td>
-    <td><a href="/genre/<%= @genre.id %>"><%= @genre.name %></a></td>
+    <td>
+      <% @book.genres.each_with_index do |x, i| %>
+      <% if i == 0 %>
+      <a href="/genre/<%= x.id %>"><%= x.name %></a>
+      <% else %>
+      , <a href="/genre/<%= x.id %>"><%= x.name %></a>
+      <% end %>
+      <% end %>
+    </td>
   </tr>
   <tr>
     <td>頒布イベント名</td>
-    <% if @event == "" %>
+    <% if @book.event == nil %>
     <td></td>
     <% else %>
-    <td><a href="/event/<%= @event.id %>"><%= @event.name %></a></td>
+    <td><a href="/event/<%= @book.event.id %>"><%= @book.event.name %></a></td>
     <% end %>
   </tr>
   <tr>
@@ -45,12 +61,24 @@
     <td><%= @book.published_at %></td>
   </tr>
   <tr>
-    <td>詳細</td>
-    <td><%= @book.detail %></td>
+    <td>タグ</td>
+    <td>
+      <% if @book.event == nil %>
+      <td></td>
+      <% else %>
+      <% @book.tags.each_with_index do |x, i| %>
+      <% if i == 0 %>
+      <a href="/tag/<%= x.id %>"><%= x.name %></a>
+      <% else %>
+      , <a href="/tag/<%= x.id %>"><%= x.name %></a>
+      <% end %>
+      <% end %>
+      <% end %>
+    </td>
   </tr>
   <tr>
     <td>最終更新者</td>
-    <td><%= @user %></td>
+    <td><%= @book.user.name %></td>
   </tr>
 </table>
 

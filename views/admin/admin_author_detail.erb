@@ -20,6 +20,13 @@
   </div>
   <br>
   <div class="form-group row">
+    <label for="name" class="col-sm-3 col-form-label">読み方：</label>
+    <div class="input-group col">
+      <input type="text" id="name_yomi" name="name_yomi" class="form-control" value="<%= @detail[:name_yomi] %>" required>
+    </div>
+  </div>
+  <br>
+  <div class="form-group row">
     <label for="detail" class="col-sm-3 col-form-label">詳細：</label>
     <div class="input-group col">
       <input type="text" id="detail" name="detail" class="form-control" value="<%= @detail[:detail] %>">

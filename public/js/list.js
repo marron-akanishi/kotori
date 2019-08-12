@@ -31,22 +31,13 @@ searchWord = function () {
     switch(mode){
       case "book":
         disp_list = orig_list.filter(function (item, index) {
-          if (item.title.indexOf(searchText) >= 0 ||
-            item.title.indexOf(kanaToHira(searchText)) >= 0 ||
-            item.title.indexOf(hiraToKana(searchText)) >= 0 ||
-            item.title.toLowerCase().indexOf(searchText.toLowerCase()) >= 0 ||
-            item.title.toUpperCase().indexOf(searchText.toUpperCase()) >= 0) return true;
+          switch(mode){
+            case "book":
+              return normalizeStr(item.title).indexOf(normalizeStr(searchText)) >= 0
+            default:
+              return normalizeStr(item.name).indexOf(normalizeStr(searchText)) >= 0
+          }
         });
-        break;
-      default:
-        disp_list = orig_list.filter(function (item, index) {
-          if (item.name.indexOf(searchText) >= 0 ||
-            item.name.indexOf(kanaToHira(searchText)) >= 0 ||
-            item.name.indexOf(hiraToKana(searchText)) >= 0 ||
-            item.name.toLowerCase().indexOf(searchText.toLowerCase()) >= 0 ||
-            item.name.toUpperCase().indexOf(searchText.toUpperCase()) >= 0) return true;
-        });
-        break;
     }
     selSortMode(sortmode, reverse)
   } else {

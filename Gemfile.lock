@@ -26,6 +26,7 @@ GEM
     i18n (1.6.0)
       concurrent-ruby (~> 1.0)
     jwt (2.2.1)
+    kakasi (1.0.2)
     kgio (2.11.2)
     mechanize (2.7.6)
       domain_name (~> 0.5, >= 0.5.1)
@@ -106,6 +107,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord
+  kakasi
   mechanize
   nokogiri
   omniauth

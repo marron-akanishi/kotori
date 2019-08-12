@@ -20,6 +20,13 @@
   </div>
   <br>
   <div class="form-group row">
+    <label for="name" class="col-sm-3 col-form-label">読み方：</label>
+    <div class="input-group col">
+      <input type="text" id="name_yomi" name="name_yomi" class="form-control" value="<%= @detail[:name_yomi] %>" required>
+    </div>
+  </div>
+  <br>
+  <div class="form-group row">
     <label for="start" class="col-sm-3 col-form-label">開始日：</label>
     <div class="input-group col">
       <input type="date" id="start" name="start" class="form-control" value="<%= @detail[:start_at] %>">

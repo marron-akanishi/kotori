@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_19_115645) do
+ActiveRecord::Schema.define(version: 2019_08_12_173744) do
 
   create_table "authors", force: :cascade do |t|
     t.text "name", null: false
@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(version: 2019_06_19_115645) do
     t.integer "circle_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "name_yomi"
     t.index ["circle_id"], name: "index_authors_on_circle_id"
   end
 
@@ -64,6 +65,7 @@ ActiveRecord::Schema.define(version: 2019_06_19_115645) do
     t.integer "event_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "name_yomi"
     t.index ["circle_id"], name: "index_books_on_circle_id"
     t.index ["event_id"], name: "index_books_on_event_id"
   end
@@ -74,6 +76,7 @@ ActiveRecord::Schema.define(version: 2019_06_19_115645) do
     t.text "web"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "name_yomi"
   end
 
   create_table "events", force: :cascade do |t|
@@ -82,18 +85,21 @@ ActiveRecord::Schema.define(version: 2019_06_19_115645) do
     t.date "end_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "name_yomi"
   end
 
   create_table "genres", force: :cascade do |t|
     t.text "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "name_yomi"
   end
 
   create_table "tags", force: :cascade do |t|
     t.text "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "name_yomi"
   end
 
   create_table "user_books", force: :cascade do |t|

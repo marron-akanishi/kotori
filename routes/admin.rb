@@ -6,14 +6,48 @@ class App < Sinatra::Base
 
   get '/admin/setting' do
     admin_check
+    erb :admin_setting, :views => settings.views + '/admin'
   end
 
   post '/admin/setting/done' do
     admin_check
+    redirect to('/admin')
+  end
+
+  get '/admin/setting/done' do
+    admin_check
+    case params["type"]
+    when "yomi_update" then
+      begin
+        [Author, Circle, Genre, Event, Tag].each do |table|
+          table.all.each do |obj|
+            begin
+              yomi = Kakasi.kakasi('-JH -KH', obj.name)
+            rescue => e
+              yomi = obj.name
+            end
+            table.find(obj.id).update(name_yomi: yomi)
+          end
+        end
+      rescue => e
+        redirect to('/error?code=500')
+      end
+    end
+    redirect to('/admin')
   end
 
   get '/admin/status' do
     admin_check
+    @wakeup = Time.at($version)
+    @count = {}
+    @count["user"] = User.count
+    @count["book"] = Book.count
+    @count["author"] = Author.count
+    @count["circle"] = Circle.count
+    @count["genre"] = Genre.count
+    @count["event"] = Event.count
+    @count["tag"] = Tag.count
+    erb :admin_status, :views => settings.views + '/admin'
   end
 
   post '/admin/:type/:id/modify' do
@@ -28,19 +62,35 @@ class App < Sinatra::Base
     #when "book" then
     when "author" then
       begin
-        Author.find(params[:id]).update(name: params["name"], detail: params["detail"], twitter: params["twitter"],
-                                        pixiv: paramas["pixiv"], web: params["web"], circle_id: params["circle"])
+        Author.find(params[:id]).update(name: params["name"], name_yomi: params["name_yomi"], detail: params["detail"], twitter: params["twitter"],
+                                        pixiv: params["pixiv"], web: params["web"], circle_id: params["circle"])
       rescue => exception
         redirect to('/error?code=422')
       end
     when "circle" then
-      Circle.find(params["id"]).update(name: params["name"], detail: params["detail"], web: params["web"])
+      begin
+        Circle.find(params["id"]).update(name: params["name"], name_yomi: params["name_yomi"], detail: params["detail"], web: params["web"])
+      rescue => exception
+        redirect to('/error?code=422')
+      end
     when "genre" then
-      Genre.find(params["id"]).update(name: params["name"])
+      begin
+        Genre.find(params["id"]).update(name: params["name"], name_yomi: params["name_yomi"])
+      rescue => exception
+        redirect to('/error?code=422')
+      end
     when "event" then
-      Event.find(params["id"]).update(name: params["name"], start_at: params["start"], end_at: params["end"])
+      begin
+        Event.find(params["id"]).update(name: params["name"], name_yomi: params["name_yomi"], start_at: params["start"], end_at: params["end"])
+      rescue => exception
+        redirect to('/error?code=422')
+      end
     when "tag" then
-      Tag.find(params["id"]).update(name: params["name"])
+      begin
+        Tag.find(params["id"]).update(name: params["name"], name_yomi: params["name_yomi"])
+      rescue => exception
+        redirect to('/error?code=422')
+      end
     end
     redirect to('/admin/'+params["type"]+'s')
   end

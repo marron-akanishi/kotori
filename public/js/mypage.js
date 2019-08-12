@@ -78,11 +78,7 @@ searchWord = function () {
   // 検索ボックスに値が入ってる場合
   if (searchText != '') {
     disp_list = own_list.filter(function (item, index) {
-      if (item.title.indexOf(searchText) >= 0 ||
-          item.title.indexOf(kanaToHira(searchText)) >= 0 ||
-          item.title.indexOf(hiraToKana(searchText)) >= 0 ||
-          item.title.toLowerCase().indexOf(searchText.toLowerCase()) >= 0 ||
-          item.title.toUpperCase().indexOf(searchText.toUpperCase()) >= 0) return true;
+      return normalizeStr(item.title).indexOf(normalizeStr(searchText)) >= 0
     });
     selSortMode(sortmode, reverse)
   } else {

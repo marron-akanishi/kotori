@@ -1,0 +1,42 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/user/setting">設定</a></li>
+    <li class="breadcrumb-item"><a href="/admin">管理者メニュー</a></li>
+    <li class="breadcrumb-item active">ステータス</li>
+  </ol>
+</nav>
+<h2 style="text-align: center;">ステータス</h2>
+<table class="table">
+  <tr>
+    <td>サーバー起動日時</td>
+    <td><%= @wakeup %></td>
+  </tr>
+  <tr>
+    <td>登録ユーザー数</td>
+    <td><%= @count["user"] %></td>
+  </tr>
+  <tr>
+    <td>登録書籍数</td>
+    <td><%= @count["book"] %></td>
+  </tr>
+  <tr>
+    <td>登録著者数</td>
+    <td><%= @count["author"] %></td>
+  </tr>
+  <tr>
+    <td>登録サークル数</td>
+    <td><%= @count["circle"] %></td>
+  </tr>
+  <tr>
+    <td>登録ジャンル数</td>
+    <td><%= @count["genre"] %></td>
+  </tr>
+  <tr>
+    <td>登録イベント数</td>
+    <td><%= @count["event"] %></td>
+  </tr>
+  <tr>
+    <td>登録タグ数</td>
+    <td><%= @count["tag"] %></td>
+  </tr>
+</table>

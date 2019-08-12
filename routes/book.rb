@@ -7,16 +7,7 @@ class App < Sinatra::Base
 
   get '/book/:id' do
     @from = params["from"]
-    @book = Book.includes(:event, :circle).find(params["id"])
-    @genre = Genre.find(BookGenre.find_by(book_id: @book.id, is_main:true).genre_id)
-    @author = Author.find(BookAuthor.find_by(book_id: @book.id, is_main:true).author_id)
-    if @book.event != nil then
-      @event = @book.event
-    else
-      @event = ""
-    end
-    @circle = @book.circle
-    @user = @book.user.name
+    @book = Book.includes(:authors, :genres, :tags, :user, :event, :circle).find(params["id"])
     if session[:id] != nil && UserBook.exists?(user_id: session[:id], book_id: params["id"])then
       @owned = true;
       @memo = UserBook.find_by(user_id: session[:id], book_id: params["id"]).memo
@@ -45,9 +36,19 @@ class App < Sinatra::Base
         @detail = SiteParser.lashin(params["url"])
         @title = @detail[:title]
     end
-    if Book.exists?(title: @title) then
-      @exists = Book.find_by(title: @title)
-      @author = Author.where(id: BookAuthor.where(book_id: @exists.id, is_main: true).select(:author_id)).first.name
+    @exists = []
+    # タイトル存在チェック
+    Book.all.each do |obj|
+      # カナ→ひら、半角化、スペース削除、大文字小文字無視
+      target = @title.tr('ァ-ン','ぁ-ん')
+      check = obj.title.tr('ァ-ン','ぁ-ん')
+      target = target.tr('０-９ａ-ｚＡ-Ｚ','0-9a-zA-Z')
+      check = check.tr('０-９ａ-ｚＡ-Ｚ','0-9a-zA-Z')
+      target = target.gsub(/(\s|　)+/, '')
+      check = check.gsub(/(\s|　)+/, '')
+      if target.upcase == check.upcase then
+        @exists.push(Book.includes(:authors).find(obj.id))
+      end
     end
     erb :book_add_detail, :views => settings.views + '/book'
   end
@@ -89,32 +90,86 @@ class App < Sinatra::Base
     end
     
     # DB保存
-    # タグ(未対応)
-    # ジャンル(複数未対応)
-    if Genre.exists?(name: params["genre"]) then
-      genre = Genre.find_by(name: params["genre"])
-    else
-      genre = Genre.create(name: params["genre"])
+    # タグ
+    tag_list = params["tag"].split(",")
+    tags = []
+    tag_list.each do |value|
+      if value == "" then
+        next
+      end
+      if Tag.exists?(name: value) then
+        tag = Tag.find_by(name: value)
+      else
+        begin
+          yomi = Kakasi.kakasi('-JH -KH', value)
+        rescue => exception
+          yomi = value
+        end
+        tag = Tag.create(name: value, name_yomi: yomi)
+      end
+      tags.push(tag.id)
     end
-    # 著者(複数未対応)
-    if Author.exists?(name: params["author"]) then
-      author = Author.find_by(name: params["author"])
-    else
-      author = Author.create(name: params["author"])
+    # ジャンル
+    genre_list = params["genre"].split(",")
+    genres = []
+    genre_list.each do |value|
+      if value == "" then
+        next
+      end
+      if Genre.exists?(name: value) then
+        genre = Genre.find_by(name: value)
+      else
+        begin
+          yomi = Kakasi.kakasi('-JH -KH', value)
+        rescue => exception
+          yomi = value
+        end
+        genre = Genre.create(name: value, name_yomi: yomi)
+      end
+      genres.push(genre.id)
+    end
+    # 著者
+    author_list = params["author"].split(",")
+    authors = []
+    author_list.each do |value|
+      if value == "" then
+        next
+      end
+      if Author.exists?(name: value) then
+        author = Author.find_by(name: value)
+      else
+        begin
+          yomi = Kakasi.kakasi('-JH -KH', value)
+        rescue => exception
+          yomi = value
+        end
+        author = Author.create(name: value, name_yomi: yomi)
+      end
+      authors.push(author.id)
     end
     # イベント
     if params["event"] != "" then
       if Event.exists?(name: params["event"]) then
         event = Event.find_by(name: params["event"])
       else
-        event = Event.create(name: params["event"])
+        begin
+          yomi = Kakasi.kakasi('-JH -KH', params["event"])
+        rescue => exception
+          yomi = params["event"]
+        end
+        event = Event.create(name: params["event"], name_yomi: yomi)
       end
     end
     # サークル
     if Circle.exists?(name: params["circle"]) then
       circle = Circle.find_by(name: params["circle"])
     else
-      circle = Circle.create(name: params["circle"])
+      begin
+          yomi = Kakasi.kakasi('-JH -KH', params["circle"])
+        rescue => exception
+          yomi = params["circle"]
+        end
+      circle = Circle.create(name: params["circle"], name_yomi: yomi)
     end
     # 18禁
     is_adult = boolean_check(params["is-adult"])
@@ -122,8 +177,23 @@ class App < Sinatra::Base
     # 順番に登録していく
     book = Book.create(title: params["title"], cover: filename, published_at: params["date"], detail: params["detail"], is_adult: is_adult,
                        mod_user: session[:id], event_id: event.id, circle_id: circle.id)
-    BookGenre.create(book_id: book.id, genre_id: genre.id, is_main: true)
-    BookAuthor.create(book_id: book.id, author_id: author.id, is_main: true)
+    genres.each_index do |idx|
+      if idx == 0 then
+        BookGenre.create(book_id: book.id, genre_id: genres[idx], is_main: true)
+      else
+        BookGenre.create(book_id: book.id, genre_id: genres[idx], is_main: false)
+      end
+    end
+    authors.each_index do |idx|
+      if idx == 0 then
+        BookAuthor.create(book_id: book.id, author_id: authors[idx], is_main: true)
+      else
+        BookAuthor.create(book_id: book.id, author_id: authors[idx], is_main: false)
+      end
+    end
+    tags.each_index do |idx|
+      BookTag.create(book_id: book.id, tag_id: tags[idx])
+    end
     # 所持状況更新
     UserBook.create(user_id: session[:id], book_id: book.id)
     redirect to('/user/mypage')
@@ -132,15 +202,28 @@ class App < Sinatra::Base
   get '/book/:id/modify' do
     login_check
     @from = params["from"]
-    @book = Book.includes(:event, :circle).find(params["id"])
-    @genre = Genre.find(BookGenre.find_by(book_id: @book.id, is_main:true).genre_id).name
-    @author = Author.find(BookAuthor.find_by(book_id: @book.id, is_main:true).author_id).name
-    if @book.event != nil then
-      @event = @book.event.name
-    else
-      @event = ""
+    @book = Book.includes(:authors, :genres, :tags, :event, :circle).find(params["id"])
+    @book.authors.each_with_index do |obj, i|
+      if i == 0 then
+        @author = obj.name
+      else
+        @author += ","+obj.name
+      end
     end
-    @circle = @book.circle.name
+    @book.genres.each_with_index do |obj, i|
+      if i == 0 then
+        @genre = obj.name
+      else
+        @genre += ","+obj.name
+      end
+    end
+    @book.tags.each_with_index do |obj, i|
+      if i == 0 then
+        @tag = obj.name
+      else
+        @tag += ","+obj.name
+      end
+    end
     erb :book_modify, :views => settings.views + '/book'
   end
 
@@ -164,33 +247,86 @@ class App < Sinatra::Base
       filename = params["orig-cover"]
     end
     
-    # DB更新
-    # タグ(未対応)
-    # ジャンル(複数未対応)
-    if Genre.exists?(name: params["genre"]) then
-      genre = Genre.find_by(name: params["genre"])
-    else
-      genre = Genre.create(name: params["genre"])
+    # タグ
+    tag_list = params["tag"].split(",")
+    tags = []
+    tag_list.each do |value|
+      if value == "" then
+        next
+      end
+      if Tag.exists?(name: value) then
+        tag = Tag.find_by(name: value)
+      else
+        begin
+          yomi = Kakasi.kakasi('-JH -KH', value)
+        rescue => exception
+          yomi = value
+        end
+        tag = Tag.create(name: value, name_yomi: yomi)
+      end
+      tags.push(tag.id)
     end
-    # 著者(複数未対応)
-    if Author.exists?(name: params["author"]) then
-      author = Author.find_by(name: params["author"])
-    else
-      author = Author.create(name: params["author"])
+    # ジャンル
+    genre_list = params["genre"].split(",")
+    genres = []
+    genre_list.each do |value|
+      if value == "" then
+        next
+      end
+      if Genre.exists?(name: value) then
+        genre = Genre.find_by(name: value)
+      else
+        begin
+          yomi = Kakasi.kakasi('-JH -KH', value)
+        rescue => exception
+          yomi = value
+        end
+        genre = Genre.create(name: value, name_yomi: yomi)
+      end
+      genres.push(genre.id)
+    end
+    # 著者
+    author_list = params["author"].split(",")
+    authors = []
+    author_list.each do |value|
+      if value == "" then
+        next
+      end
+      if Author.exists?(name: value) then
+        author = Author.find_by(name: value)
+      else
+        begin
+          yomi = Kakasi.kakasi('-JH -KH', value)
+        rescue => exception
+          yomi = value
+        end
+        author = Author.create(name: value, name_yomi: yomi)
+      end
+      authors.push(author.id)
     end
     # イベント
     if params["event"] != "" then
       if Event.exists?(name: params["event"]) then
         event = Event.find_by(name: params["event"])
       else
-        event = Event.create(name: params["event"])
+        begin
+          yomi = Kakasi.kakasi('-JH -KH', params["event"])
+        rescue => exception
+          yomi = params["event"]
+        end
+        event = Event.create(name: params["event"], name_yomi: yomi)
       end
     end
     # サークル
     if Circle.exists?(name: params["circle"]) then
       circle = Circle.find_by(name: params["circle"])
     else
-      circle = Circle.create(name: params["circle"])
+      begin
+          yomi = Kakasi.kakasi('-JH -KH', params["circle"])
+        rescue => exception
+          yomi = params["circle"]
+        end
+      circle = Circle.create(name: params["circle"], name_yomi: yomi)
     end
     # 18禁
     is_adult = boolean_check(params["is-adult"])
@@ -198,9 +334,26 @@ class App < Sinatra::Base
     # 順番に登録していく
     book = Book.find(params[:id]).update(title: params["title"], cover: filename, published_at: params["date"], detail: params["detail"], is_adult: is_adult,
                                          mod_user: session[:id], event_id: event.id, circle_id: circle.id)
-    BookGenre.where(book_id: params[:id], is_main: true).first.update(genre_id: genre.id)
-    BookAuthor.where(book_id: params[:id], is_main: true).first.update(author_id: author.id)
-
+    BookGenre.where(book_id: params[:id]).delete_all
+    BookAuthor.where(book_id: params[:id]).delete_all
+    BookTag.where(book_id: params[:id]).delete_all
+    genres.each_index do |idx|
+      if idx == 0 then
+        BookGenre.create(book_id: params[:id], genre_id: genres[idx], is_main: true)
+      else
+        BookGenre.create(book_id: params[:id], genre_id: genres[idx], is_main: false)
+      end
+    end
+    authors.each_index do |idx|
+      if idx == 0 then
+        BookAuthor.create(book_id: params[:id], author_id: authors[idx], is_main: true)
+      else
+        BookAuthor.create(book_id: params[:id], author_id: authors[idx], is_main: false)
+      end
+    end
+    tags.each_index do |idx|
+      BookTag.create(book_id: params[:id], tag_id: tags[idx])
+    end
     redirect to('/book/'+params["id"]+'?from='+params["from"])
   end
 end

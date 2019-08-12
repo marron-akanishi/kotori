@@ -10,6 +10,22 @@ Windows10 + WSL
 Umi(CSS)  
 その他Gemfileに書いてあるもの
 
+## kakasiのインストール
+ふりがな用にkakasiを利用  
+Ubuntuでのインストールが面倒なのでメモ  
+```
+wget http://kakasi.namazu.org/stable/kakasi-2.3.6.tar.gz
+tar -xvf kakasi-2.3.6.tar.gz
+cd kakasi-2.3.6
+./configure
+make
+sudo make install
+rm -fr kakasi*
+sudo nano /etc/ld.so.conf
+# /lib/local/libを追記
+sudo ldconfig
+```
+
 ## Unicornの操作
 起動  
 ```
