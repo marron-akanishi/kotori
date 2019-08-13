@@ -1,3 +1,7 @@
+require 'securerandom'
+require 'open-uri'
+require 'rmagick'
+
 module Helper
   def login_check
     if session[:id] == nil then

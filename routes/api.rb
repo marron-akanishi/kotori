@@ -23,8 +23,7 @@ class App < Sinatra::Base
         Tag.all.to_json
       when "user_book" then
         login_check
-        # あまり結合するとものすごく時間がかかるので注意
-        Book.where(id: UserBook.where(user_id: session[:id]).select(:book_id)).to_json(:include => [:authors])
+        Book.includes(:authors, :genres, :tags, :event, :circle).where(id: UserBook.where(user_id: session[:id]).select(:book_id)).to_json(:include => [:authors, :genres, :tags, :event, :circle])
       else
         redirect to('/error?code=500')
     end
@@ -59,9 +58,9 @@ class App < Sinatra::Base
         end
       when "tag" then
         if session[:id] == nil || !User.find(session[:id]).is_adult then
-          Book.where(id: BookTag.where(genre_id: params["id"]).select(:book_id), is_adult: false).to_json
+          Book.where(id: BookTag.where(tag_id: params["id"]).select(:book_id), is_adult: false).to_json
         else
-          Book.where(id: BookTag.where(genre_id: params["id"]).select(:book_id)).to_json
+          Book.where(id: BookTag.where(tag_id: params["id"]).select(:book_id)).to_json
         end
       else
         redirect to('/error?code=500')

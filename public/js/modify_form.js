@@ -35,10 +35,8 @@ function submitCheck() {
   $('#input-error').css("display", 'none');
   ["author", "genre", "tag"].forEach((type) => {
     var list = document.querySelectorAll(`#${type}-list button`)
-    if (list.length > 0) {
-      document.getElementsByName(type)[0].value = ""
-      list.forEach((obj) => {document.getElementsByName(type)[0].value += obj.innerText + ","});
-    }
+    document.getElementsByName(type)[0].value = ""
+    list.forEach((obj) => {document.getElementsByName(type)[0].value += obj.innerText + ","});
   })
   if ($("#author").val() == "" || $("#genre").val() == "") {
     $('#input-error').css("display", 'block')
