@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_12_173744) do
+ActiveRecord::Schema.define(version: 2019_08_13_185008) do
 
   create_table "authors", force: :cascade do |t|
     t.text "name", null: false
@@ -124,6 +124,7 @@ ActiveRecord::Schema.define(version: 2019_08_12_173744) do
     t.integer "author_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "is_admin", default: false
     t.index ["author_id"], name: "index_users_on_author_id"
     t.index ["circle_id"], name: "index_users_on_circle_id"
     t.index ["id"], name: "index_users_on_id", unique: true

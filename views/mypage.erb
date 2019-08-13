@@ -26,14 +26,24 @@
     <span class="input-group-text" id="listcount"></span>
   </div>
 </div>
-<div class="d-flex justify-content-end form-inline mb-2">
-  <label for="sort-sel">表示順：</label>
-  <select id="sort-sel" class="form-control" onchange="setSort(this)">
-    <option value="created_at,desc" selected>所有登録日(降順)</option>
-    <option value="created_at,asc">所有登録日(昇順)</option>
-    <option value="title,desc">タイトル(降順)</option>
-    <option value="title,asc">タイトル(昇順)</option>
-  </select>
+<div class="d-flex justify-content-end mb-2">
+  <div class="form-inline mr-2">
+    <label for="limit-sel">表示件数：</label>
+    <select id="limit-sel" class="form-control" onchange="">
+      <option value="25" selected>25</option>
+      <option value="50">50</option>
+      <option value="100">100</option>
+    </select>
+  </div>
+  <div class="form-inline">
+    <label for="sort-sel">表示順：</label>
+    <select id="sort-sel" class="form-control" onchange="setSort(this)">
+      <option value="created_at,desc" selected>所有登録日(降順)</option>
+      <option value="created_at,asc">所有登録日(昇順)</option>
+      <option value="title,desc">タイトル(降順)</option>
+      <option value="title,asc">タイトル(昇順)</option>
+    </select>
+  </div>
 </div>
 <div id="loading-gif" style="text-align: center;">
 <img src="/images/loading.gif" />

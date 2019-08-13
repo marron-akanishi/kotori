@@ -1,14 +1,14 @@
 class App < Sinatra::Base
-  get '/author' do
-    @type = "author"
-    @type_name = "著者"
+  get '/tag' do
+    @type = "tag"
+    @type_name = "タグ"
     erb :list
   end
 
-  get '/author/:id' do
-    @type = "author"
-    @type_name = "著者"
-    @detail = Author.find(params["id"])
+  get '/tag/:id' do
+    @type = "tag"
+    @type_name = "タグ"
+    @detail = Tag.find(params["id"])
     if session[:id] == nil then
       @is_adult = false
     else

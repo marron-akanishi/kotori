@@ -46,6 +46,14 @@ hr {
   word-break: break-all;
 }
 
+.form-inline select{
+  width: auto !important;
+}
+
+.form-inline label{
+  margin-bottom: 0 !important;
+}
+
 /* 登録画面 */
 
 .exists {
@@ -55,14 +63,6 @@ hr {
 
 .exists:hover {
   background: #dddddd;
-}
-
-.form-inline select{
-  width: auto !important;
-}
-
-.form-inline label{
-  margin-bottom: 0 !important;
 }
 
 .ui-autocomplete {

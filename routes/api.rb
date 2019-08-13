@@ -34,13 +34,35 @@ class App < Sinatra::Base
   get '/api/find' do
     case params["type"]
       when "genre" then
-        Book.where(id: BookGenre.where(genre_id: params["id"]).select(:book_id)).to_json
+        if session[:id] == nil || !User.find(session[:id]).is_adult then
+          Book.where(id: BookGenre.where(genre_id: params["id"]).select(:book_id), is_adult: false).to_json
+        else
+          Book.where(id: BookGenre.where(genre_id: params["id"]).select(:book_id)).to_json
+        end
       when "author" then
-        Book.where(id: BookAuthor.where(author_id: params["id"]).select(:book_id)).to_json
+        if session[:id] == nil || !User.find(session[:id]).is_adult then
+          Book.where(id: BookAuthor.where(author_id: params["id"]).select(:book_id), is_adult: false).to_json
+        else
+          Book.where(id: BookAuthor.where(author_id: params["id"]).select(:book_id)).to_json
+        end
       when "event" then
-        Book.where(event_id: params["id"]).to_json
+        if session[:id] == nil || !User.find(session[:id]).is_adult then
+          Book.where(event_id: params["id"], is_adult: false).to_json
+        else
+          Book.where(event_id: params["id"]).to_json
+        end
       when "circle" then
-        Book.where(circle_id: params["id"]).to_json
+        if session[:id] == nil || !User.find(session[:id]).is_adult then
+          Book.where(circle_id: params["id"], is_adult: false).to_json
+        else
+          Book.where(circle_id: params["id"]).to_json
+        end
+      when "tag" then
+        if session[:id] == nil || !User.find(session[:id]).is_adult then
+          Book.where(id: BookTag.where(genre_id: params["id"]).select(:book_id), is_adult: false).to_json
+        else
+          Book.where(id: BookTag.where(genre_id: params["id"]).select(:book_id)).to_json
+        end
       else
         redirect to('/error?code=500')
     end

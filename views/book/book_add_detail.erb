@@ -37,7 +37,7 @@
   </div>
   <br>
   <div style="text-align: center;">
-    <% if @detail != nil %>
+    <% if @detail[:cover] %>
     <img id="cover-preview" src="<%= @detail[:cover] %>" height="300px">
     <% else %>
     <img id="cover-preview" src="/images/cover/noimage.png" height="300px">

@@ -8,7 +8,6 @@ class App < Sinatra::Base
   get '/user/setting' do
     login_check
     @user = User.find(session[:id])
-    @isAdmin = (@user[:mail] == @@env["ADMIN_EMAIL"])
     erb :setting
   end
 

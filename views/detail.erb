@@ -1,3 +1,16 @@
+<% if !@is_adult %>
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+  18禁アイテムは非表示です。
+  <% if session[:id] == nil %>
+  表示するにはログインしてください。
+  <% else %>
+  表示するには設定を行ってください。
+  <% end %>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<% end %>
 <h2 style="text-align: center;"><%= @type_name %>詳細</h2>
 <p><%= @type_name %>名：<%= @detail.name %></p>
 <div class="input-group mb-2">
@@ -24,9 +37,8 @@
   </ul>
 </nav>
 
-<script src="/js/list.js?ver=<%= $version %>"></script>
+<script src="/js/detail.js?ver=<%= $version %>"></script>
 <script>
-  mode = "book";
   // ロード時に一覧取得
   $(function () {
     $.ajaxSetup({ async: false });

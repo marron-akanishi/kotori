@@ -78,7 +78,11 @@
   <div class="form-group row">
     <label for="event" class="col-sm-3 col-form-label">頒布イベント：</label>
     <div class="input-group col-sm-9">
+      <% if @book.event %>
       <input type="text" id="event-input" name="event" class="form-control" value="<%= @book.event.name %>">
+      <% else %>
+      <input type="text" id="event-input" name="event" class="form-control" value="">
+      <% end %>
     </div>
   </div>
   <hr>

@@ -1,12 +1,12 @@
 class App < Sinatra::Base
   get '/admin' do
     admin_check
-    erb :admin, :views => settings.views + '/admin'
+    erb :admin, :layout_options => { :views => settings.views }, :views => settings.views + '/admin'
   end
 
   get '/admin/setting' do
     admin_check
-    erb :admin_setting, :views => settings.views + '/admin'
+    erb :admin_setting, :layout_options => { :views => settings.views }, :views => settings.views + '/admin'
   end
 
   post '/admin/setting/done' do
@@ -26,7 +26,9 @@ class App < Sinatra::Base
             rescue => e
               yomi = obj.name
             end
-            table.find(obj.id).update(name_yomi: yomi)
+            if table.find(obj.id).name_yomi == nil then
+              table.find(obj.id).update(name_yomi: yomi)
+            end
           end
         end
       rescue => e
@@ -47,7 +49,7 @@ class App < Sinatra::Base
     @count["genre"] = Genre.count
     @count["event"] = Event.count
     @count["tag"] = Tag.count
-    erb :admin_status, :views => settings.views + '/admin'
+    erb :admin_status, :layout_options => { :views => settings.views }, :views => settings.views + '/admin'
   end
 
   post '/admin/:type/:id/modify' do
@@ -142,25 +144,25 @@ class App < Sinatra::Base
     case params["type"]
     when "user" then
       @detail = User.find(params["id"])
-      erb :admin_user_detail, :views => settings.views + '/admin'
+      erb :admin_user_detail, :layout_options => { :views => settings.views }, :views => settings.views + '/admin'
     when "book" then
       @detail = Book.find(params["id"])
-      erb :admin_book_detail, :views => settings.views + '/admin'
+      erb :admin_book_detail, :layout_options => { :views => settings.views }, :views => settings.views + '/admin'
     when "author" then
       @detail = Author.find(params["id"])
-      erb :admin_author_detail, :views => settings.views + '/admin'
+      erb :admin_author_detail, :layout_options => { :views => settings.views }, :views => settings.views + '/admin'
     when "circle" then
       @detail = Circle.find(params["id"])
-      erb :admin_circle_detail, :views => settings.views + '/admin'
+      erb :admin_circle_detail, :layout_options => { :views => settings.views }, :views => settings.views + '/admin'
     when "genre" then
       @detail = Genre.find(params["id"])
-      erb :admin_genre_detail, :views => settings.views + '/admin'
+      erb :admin_genre_detail, :layout_options => { :views => settings.views }, :views => settings.views + '/admin'
     when "event" then
       @detail = Event.find(params["id"])
-      erb :admin_event_detail, :views => settings.views + '/admin'
+      erb :admin_event_detail, :layout_options => { :views => settings.views }, :views => settings.views + '/admin'
     when "tag" then
       @detail = Tag.find(params["id"])
-      erb :admin_tag_detail, :views => settings.views + '/admin'
+      erb :admin_tag_detail, :layout_options => { :views => settings.views }, :views => settings.views + '/admin'
     end
   end
 
@@ -196,6 +198,6 @@ class App < Sinatra::Base
       @type = "tag"
       @list = Tag.all
     end
-    erb :admin_list, :views => settings.views + '/admin'
+    erb :admin_list, :layout_options => { :views => settings.views }, :views => settings.views + '/admin'
   end
 end

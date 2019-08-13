@@ -9,6 +9,7 @@ require 'omniauth-google-oauth2'
 require 'rmagick'
 require 'kakasi'
 require './SiteParser'
+require './Helper'
 # DB
 require 'sinatra/activerecord'
 Dir[File.dirname(__FILE__) + "/models/**"].each do |model|
@@ -17,6 +18,7 @@ end
 
 class App < Sinatra::Base
   include SiteParser
+  include Helper
 
   # setting
   $version = Time.now.to_i
@@ -38,25 +40,7 @@ class App < Sinatra::Base
     provider :google_oauth2, @@env["GOOGLE_APP_ID"], @@env["GOOGLE_APP_SECRET"], { :skip_jwt => true }
   end
 
-  # helper
-  helpers do
-    def login_check
-      if session[:id] == nil then
-        redirect to('/')
-      end
-    end
-
-    def admin_check
-      login_check
-      if User.find(session[:id]).mail != @@env["ADMIN_EMAIL"] then
-        redirect to('/')
-      end
-    end
-
-    def boolean_check(value)
-      return value == 'true' ? true : false
-    end
-  end
+  helpers Helper
 
   # error
   error 404 do

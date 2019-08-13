@@ -1,4 +1,4 @@
-<% if @isAdmin %>
+<% if @user.is_admin %>
 <div style="float: right;">
   <button type="button" class="btn btn-outline-danger" onclick="location.href='/admin'">管理者メニュー</button>
 </div>
@@ -34,7 +34,7 @@
         <% end %>
         <label class="custom-control-label" for="is-adult" style="color: red;">18禁アイテムを表示する</label>
         <span class="form-text text-muted">
-          このチェックを解除すると書籍一覧で18禁アイテムが表示されなくなります。<br>
+          このチェックを解除すると各ページの書籍一覧で18禁アイテムが表示されなくなります。<br>
           所有書籍一覧には影響しません。
         </span>
       </div>

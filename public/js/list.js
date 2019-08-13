@@ -6,19 +6,9 @@ const LIMIT = 100;
 function viewChange() {
   $("#list").empty();
   disp_area = disp_list.slice((current_page - 1) * LIMIT, current_page * LIMIT)
-  switch (mode) {
-    case "book":
-      $("#list").append("<tr><th>タイトル</th></tr>");
-      for (var i in disp_area) {
-        $("#list").append(`<tr><td><a href='/book/${disp_area[i].id}?from=list'>${disp_area[i].title}</a></td></tr>`)
-      }
-      break;
-    default:
-      $("#list").append("<tr><th>名前</th></tr>");
-      for (var i in disp_area) {
-        $("#list").append(`<tr><td><a href='/${mode}/${disp_area[i].id}'>${disp_area[i].name}</a></td></tr>`)
-      }
-      break;
+  $("#list").append("<tr><th>名前</th></tr>");
+  for (var i in disp_area) {
+    $("#list").append(`<tr><td><a href='/${mode}/${disp_area[i].id}'>${disp_area[i].name}</a></td></tr>`)
   }
 }
 
@@ -28,17 +18,9 @@ searchWord = function () {
 
   // 検索ボックスに値が入ってる場合
   if (searchText != '') {
-    switch(mode){
-      case "book":
-        disp_list = orig_list.filter(function (item, index) {
-          switch(mode){
-            case "book":
-              return normalizeStr(item.title).indexOf(normalizeStr(searchText)) >= 0
-            default:
-              return normalizeStr(item.name).indexOf(normalizeStr(searchText)) >= 0
-          }
-        });
-    }
+    disp_list = orig_list.filter(function (item, index) {
+      return normalizeStr(item.name).indexOf(normalizeStr(searchText)) >= 0
+    });
     selSortMode(sortmode, reverse)
   } else {
     disp_list = orig_list

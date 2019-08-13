@@ -13,13 +13,8 @@
   <select id="sort-sel" class="form-control" onchange="setSort(this)">
     <option value="created_at,desc" selected>登録日(降順)</option>
     <option value="created_at,asc">登録日(昇順)</option>
-    <% if @type == "book" %>
-    <option value="title,desc">タイトル(降順)</option>
-    <option value="title,asc">タイトル(昇順)</option>
-    <% else %>
     <option value="name,desc">名前(降順)</option>
     <option value="name,asc">名前(昇順)</option>
-    <% end %>
   </select>
 </div>
 <table id="list" class="table"></table>
