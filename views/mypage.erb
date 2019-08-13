@@ -4,10 +4,10 @@
 <div style="float: left;">
   <div class="btn-group btn-group-toggle" data-toggle="buttons">
     <label id="gridbutton" class="btn btn-outline-primary">
-      <input type="radio" name="listmode" value="GRID" autocomplete="off" checked><span class="oi oi-grid-two-up"></span>
+      <input type="radio" name="listmode" value="grid" autocomplete="off" checked><span class="oi oi-grid-two-up"></span>
     </label>
     <label id="listbutton" class="btn btn-outline-primary">
-      <input type="radio" name="listmode" value="LIST" autocomplete="off"><span class="oi oi-list"></span>
+      <input type="radio" name="listmode" value="list" autocomplete="off"><span class="oi oi-list"></span>
     </label>
   </div>
 </div>
@@ -29,10 +29,7 @@
 <div class="d-flex justify-content-end mb-2">
   <div class="form-inline mr-2">
     <label for="limit-sel">表示件数：</label>
-    <select id="limit-sel" class="form-control" onchange="">
-      <option value="25" selected>25</option>
-      <option value="50">50</option>
-      <option value="100">100</option>
+    <select id="limit-sel" class="form-control" onchange="setLimit(this)">
     </select>
   </div>
   <div class="form-inline">
