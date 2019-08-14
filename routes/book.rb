@@ -19,8 +19,7 @@ class App < Sinatra::Base
     }
     @msg = message[params["msg"]]
     # パンくずリスト用にアクセス元を保存
-    #if request.referrer != nil && request.referrer.rindex("http://localhost:9292") then
-    if request.referrer.rindex("https://kotori.marron.work") then
+    if request.referrer != nil && request.referrer.rindex(@@env["DOMAIN"]) then
       prev = request.referrer.split('/')
       # マイページor詳細画面のみに絞る
       if prev[4] == "mypage" || (prev[3] != "book" && prev[4] =~ /\A[0-9]+\z/)  then
