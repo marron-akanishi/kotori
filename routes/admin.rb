@@ -18,21 +18,21 @@ class App < Sinatra::Base
     admin_check
     case params["type"]
     when "yomi_update" then
-      begin
-        [Author, Circle, Genre, Event, Tag].each do |table|
-          table.all.each do |obj|
+      [Author, Circle, Genre, Event, Tag].each do |table|
+        table.all.each do |obj|
+          begin
+            yomi = Kakasi.kakasi('-JH -KH', obj.name)
+          rescue => e
+            yomi = obj.name
+          end
+          if table.find(obj.id).name_yomi == nil then
             begin
-              yomi = Kakasi.kakasi('-JH -KH', obj.name)
-            rescue => e
-              yomi = obj.name
-            end
-            if table.find(obj.id).name_yomi == nil then
               table.find(obj.id).update(name_yomi: yomi)
+            rescue => e
+              redirect to("/error?code=512")
             end
           end
         end
-      rescue => e
-        redirect to('/error?code=500')
       end
     end
     redirect to('/admin')

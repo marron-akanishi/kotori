@@ -1,5 +1,5 @@
-# APIでBookのmod_userを連結したデータを返却しないこと！
-# IDとメールアドレスが一緒に連結されてしまいます。
+# APIでBookにuserをincludeしたデータを返却しないこと！
+# mod_userのメールアドレスが入ります。
 
 class App < Sinatra::Base
   # 単純に全項目返す
@@ -11,10 +11,6 @@ class App < Sinatra::Base
         Author.all.to_json
       when "genre" then
         Genre.all.to_json
-      when "book_author" then
-        BookAuthor.all.to_json
-      when "book_genre" then
-        BookGenre.all.to_json
       when "circle" then
         Circle.all.to_json
       when "event" then
@@ -23,7 +19,9 @@ class App < Sinatra::Base
         Tag.all.to_json
       when "user_book" then
         login_check
-        Book.includes(:authors, :genres, :tags, :event, :circle).where(id: UserBook.where(user_id: session[:id]).select(:book_id)).to_json(:include => [:authors, :genres, :tags, :event, :circle])
+        Book.includes(:authors, :genres, :circle)
+            .where(id: UserBook.where(user_id: session[:id]).select(:book_id))
+            .to_json(:include => [:authors, :genres, :circle])
       else
         redirect to('/error?code=500')
     end

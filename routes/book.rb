@@ -2,10 +2,23 @@ class App < Sinatra::Base
   get '/book/:id' do
     @from = params["from"]
     @book = Book.includes(:authors, :genres, :tags, :user, :event, :circle).find(params["id"])
+    if session[:id] == nil then
+      @is_adult = false
+    else
+      @is_adult = User.find(session[:id]).is_adult
+    end
     if session[:id] != nil && UserBook.exists?(user_id: session[:id], book_id: params["id"])then
       @owned = true;
+      @is_adult = true;
       @memo = UserBook.find_by(user_id: session[:id], book_id: params["id"]).memo
     end
+    message = {
+      "own" => "書籍を所有状態にしました",
+      "unown" => "書籍を未所有状態にしました",
+      "memo" => "メモを保存しました",
+      "modify" => "書籍情報を保存しました"
+    }
+    @msg = message[params["msg"]]
     erb :book_detail, :layout_options => { :views => settings.views }, :views => settings.views + '/book'
   end
 
@@ -52,7 +65,7 @@ class App < Sinatra::Base
     id = book_operate(params, false)
     # 所持状況更新
     UserBook.create(user_id: session[:id], book_id: id)
-    redirect to('/user/mypage')
+    redirect to('/user/mypage?msg=add_done')
   end
 
   get '/book/:id/modify' do
@@ -86,6 +99,6 @@ class App < Sinatra::Base
   post '/book/:id/modify/done' do
     login_check
     book_operate(params, true)
-    redirect to('/book/'+params["id"]+'?from='+params["from"])
+    redirect to("/book/#{params["id"]}?from=#{params["from"]}&msg=modify")
   end
 end

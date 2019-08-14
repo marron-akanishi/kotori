@@ -47,13 +47,6 @@ class App < Sinatra::Base
   error 500 do
     redirect to("/error?code=500")
   end
-
-  @@error_msg = {
-    "403" => "ログインが禁止されています",
-    "404" => "指定されたURLが見つかりません",
-    "422" => "DBとの整合性チェックに失敗しました",
-    "500" => "エラーが発生しました"
-  }
 end
 
 Dir[File.dirname(__FILE__) + "/routes/**"].each do |route|

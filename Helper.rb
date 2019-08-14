@@ -5,14 +5,15 @@ require 'rmagick'
 module Helper
   def login_check
     if session[:id] == nil then
-      redirect to('/')
+      session[:redirect] = request.path
+      redirect to('/?msg=login')
     end
   end
 
   def admin_check
     login_check
     if !User.find(session[:id]).is_admin then
-      redirect to('/')
+      redirect to('/?msg=admin')
     end
   end
 
@@ -75,7 +76,11 @@ module Helper
         rescue => exception
           yomi = value
         end
-        tag = Tag.create(name: value, name_yomi: yomi)
+        begin
+          tag = Tag.create(name: value, name_yomi: yomi)
+        rescue => e
+          redirect to("/error?code=512")
+        end
       end
       tags.push(tag.id)
     end
@@ -94,7 +99,11 @@ module Helper
         rescue => exception
           yomi = value
         end
-        genre = Genre.create(name: value, name_yomi: yomi)
+        begin
+          genre = Genre.create(name: value, name_yomi: yomi)
+        rescue => e
+          redirect to("/error?code=512")
+        end
       end
       genres.push(genre.id)
     end
@@ -113,7 +122,11 @@ module Helper
         rescue => exception
           yomi = value
         end
-        author = Author.create(name: value, name_yomi: yomi)
+        begin
+          author = Author.create(name: value, name_yomi: yomi)
+        rescue => e
+          redirect to("/error?code=512")
+        end
       end
       authors.push(author.id)
     end
@@ -127,7 +140,11 @@ module Helper
         rescue => exception
           yomi = params["event"]
         end
-        event = Event.create(name: params["event"], name_yomi: yomi)
+        begin
+          event = Event.create(name: params["event"], name_yomi: yomi)
+        rescue => e
+          redirect to("/error?code=512")
+        end
       end
     end
     # サークル
@@ -136,42 +153,66 @@ module Helper
     else
       begin
           yomi = Kakasi.kakasi('-JH -KH', params["circle"])
-        rescue => exception
-          yomi = params["circle"]
-        end
-      circle = Circle.create(name: params["circle"], name_yomi: yomi)
+      rescue => exception
+        yomi = params["circle"]
+      end
+      begin
+        circle = Circle.create(name: params["circle"], name_yomi: yomi)
+      rescue => e
+        redirect to("/error?code=512")
+      end
     end
     # 18禁
     is_adult = boolean_check(params["is-adult"])
     # 書籍登録
     # 順番に登録していく
     if is_mod then
-      book = Book.find(params[:id]).update(title: params["title"], cover: filename, published_at: params["date"], detail: params["detail"], is_adult: is_adult,
-                                         mod_user: session[:id], event_id: event.id, circle_id: circle.id)
-      BookGenre.where(book_id: params[:id]).delete_all
-      BookAuthor.where(book_id: params[:id]).delete_all
-      BookTag.where(book_id: params[:id]).delete_all
+      begin
+        book = Book.find(params[:id]).update(title: params["title"], cover: filename, published_at: params["date"], detail: params["detail"], is_adult: is_adult,
+                                          mod_user: session[:id], event_id: event.id, circle_id: circle.id)
+        BookGenre.where(book_id: params[:id]).delete_all
+        BookAuthor.where(book_id: params[:id]).delete_all
+        BookTag.where(book_id: params[:id]).delete_all
+      rescue => e
+        redirect to("/error?code=512")
+      end
       book = Book.find(params[:id])
     else
-      book = Book.create(title: params["title"], cover: filename, published_at: params["date"], detail: params["detail"], is_adult: is_adult,
+      begin
+        book = Book.create(title: params["title"], cover: filename, published_at: params["date"], detail: params["detail"], is_adult: is_adult,
                           mod_user: session[:id], event_id: event.id, circle_id: circle.id)
+      rescue => e
+        redirect to("/error?code=512")
+      end
     end
     genres.each_index do |idx|
-      if idx == 0 then
-        BookGenre.create(book_id: book.id, genre_id: genres[idx], is_main: true)
-      else
-        BookGenre.create(book_id: book.id, genre_id: genres[idx], is_main: false)
+      begin
+        if idx == 0 then
+          BookGenre.create(book_id: book.id, genre_id: genres[idx], is_main: true)
+        else
+          BookGenre.create(book_id: book.id, genre_id: genres[idx], is_main: false)
+        end
+      rescue => e
+        redirect to("/error?code=512")
       end
     end
     authors.each_index do |idx|
-      if idx == 0 then
-        BookAuthor.create(book_id: book.id, author_id: authors[idx], is_main: true)
-      else
-        BookAuthor.create(book_id: book.id, author_id: authors[idx], is_main: false)
+      begin
+        if idx == 0 then
+          BookAuthor.create(book_id: book.id, author_id: authors[idx], is_main: true)
+        else
+          BookAuthor.create(book_id: book.id, author_id: authors[idx], is_main: false)
+        end
+      rescue => e
+        redirect to("/error?code=512")
       end
     end
     tags.each_index do |idx|
-      BookTag.create(book_id: book.id, tag_id: tags[idx])
+      begin
+        BookTag.create(book_id: book.id, tag_id: tags[idx])
+      rescue => e
+        redirect to("/error?code=512")
+      end
     end
     return book.id
   end
