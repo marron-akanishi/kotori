@@ -20,7 +20,14 @@
 <h2 style="text-align: center;">所有書籍</h2>
 <div class="input-group mb-2">
   <div class="input-group-prepend">
-    <span class="input-group-text">検索</span>
+    <button id="search-type" class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
+      aria-expanded="false">タイトル</button>
+    <div class="dropdown-menu">
+      <a class="dropdown-item" onclick="setSearchType(this, 'title')">タイトル</a>
+      <a class="dropdown-item" onclick="setSearchType(this, 'author')">著者</a>
+      <a class="dropdown-item" onclick="setSearchType(this, 'circle')">サークル</a>
+      <a class="dropdown-item" onclick="setSearchType(this, 'genre')">ジャンル</a>
+    </div>
   </div>
   <input type="text" class="form-control" id="search">
   <div class="input-group-append">

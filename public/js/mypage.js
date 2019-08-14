@@ -1,5 +1,5 @@
 var own_list, disp_list, mode, current_page;
-var load_count, load_num;
+var search_type = "title", load_count, load_num;
 var sortmode, reverse;
 var limit_config = {grid: 0, list: 0};
 
@@ -38,15 +38,48 @@ function imgLoadEnd() {
   }
 }
 
-// タイトル検索
+function setSearchType(obj, type){
+  disp_list = own_list
+  selSortMode(sortmode, reverse)
+  $('#search').val("")
+  search_type = type;
+  document.getElementById("search-type").innerText = obj.innerText
+}
+
+// 検索
 searchWord = function () {
   var searchText = $(this).val() // 検索ボックスに入力された値
-
   // 検索ボックスに値が入ってる場合
   if (searchText != '') {
-    disp_list = own_list.filter(function (item, index) {
-      return normalizeStr(item.title).indexOf(normalizeStr(searchText)) >= 0
-    });
+    switch (search_type) {
+      case 'title':
+        disp_list = own_list.filter(function (item, index) {
+          return normalizeStr(item.title).indexOf(normalizeStr(searchText)) >= 0
+        });
+        break
+      case 'author':
+        disp_list = own_list.filter(function (item, index) {
+          return item.authors.filter(function (item, index) {
+            return normalizeStr(item.name_yomi).indexOf(normalizeStr(searchText)) >= 0 ||
+              normalizeStr(item.name).indexOf(normalizeStr(searchText)) >= 0
+          }).length >= 1
+        });
+        break;
+      case 'circle':
+        disp_list = own_list.filter(function (item, index) {
+          return normalizeStr(item.circle.name_yomi).indexOf(normalizeStr(searchText)) >= 0 ||
+            normalizeStr(item.circle.name).indexOf(normalizeStr(searchText)) >= 0
+        });
+        break;
+      case 'genre':
+        disp_list = own_list.filter(function (item, index) {
+          return item.genres.filter(function (item, index) {
+            return normalizeStr(item.name_yomi).indexOf(normalizeStr(searchText)) >= 0 ||
+              normalizeStr(item.name).indexOf(normalizeStr(searchText)) >= 0
+          }).length >= 1
+        });
+        break;
+    }
     selSortMode(sortmode, reverse)
   } else {
     disp_list = own_list
