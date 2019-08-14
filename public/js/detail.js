@@ -8,7 +8,7 @@ function viewChange() {
   disp_area = disp_list.slice((current_page - 1) * LIMIT, current_page * LIMIT)
   $("#list").append("<tr><th>タイトル</th></tr>");
   for (var i in disp_area) {
-    $("#list").append(`<tr><td><a href='/book/${disp_area[i].id}?from=list'>${disp_area[i].title}</a></td></tr>`)
+    $("#list").append(`<tr><td><a href='/book/${disp_area[i].id}'>${disp_area[i].title}</a></td></tr>`)
   }
 }
 

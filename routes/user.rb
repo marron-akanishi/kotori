@@ -37,7 +37,7 @@ class App < Sinatra::Base
       end
     end
     if boolean_check(params["exist"]) then
-      redirect to("/book/#{params["id"]}?from=#{params["from"]}&msg=own")
+      redirect to("/book/#{params["id"]}?msg=own")
     else
       redirect to('/user/mypage?msg=add_done')
     end
@@ -52,7 +52,7 @@ class App < Sinatra::Base
         redirect to("/error?code=512")
       end
     end
-    redirect to("/book/#{params["id"]}?from=#{params["from"]}&msg=unown")
+    redirect to("/book/#{params["id"]}?msg=unown")
   end
 
   post '/user/memo/:id' do
@@ -64,7 +64,7 @@ class App < Sinatra::Base
         redirect to("/error?code=512")
       end
     end
-    redirect to("/book/#{params["id"]}?from=#{params["from"]}&msg=memo")
+    redirect to("/book/#{params["id"]}?msg=memo")
   end
 
   post '/user/add_book' do

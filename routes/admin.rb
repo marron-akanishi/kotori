@@ -168,34 +168,22 @@ class App < Sinatra::Base
 
   get '/admin/:type' do
     admin_check
-    case params["type"]
-    when "users" then
-      @type_name = "ユーザー"
-      @type = "user"
+    @type = params["type"][0, params["type"].length-1]
+    @type_name = @@type_list[@type]
+    case @type
+    when "user" then
       @list = User.all
-    when "books" then
-      @type_name = "登録書籍"
-      @type = "book"
+    when "book" then
       @list = Book.all
-    when "authors" then
-      @type_name = "著者"
-      @type = "author"
+    when "author" then
       @list = Author.all
-    when "circles" then
-      @type_name = "サークル"
-      @type = "circle"
+    when "circle" then
       @list = Circle.all
-    when "genres" then
-      @type_name = "ジャンル"
-      @type = "genre"
+    when "genre" then
       @list = Genre.all
-    when "events" then
-      @type_name = "イベント"
-      @type = "event"
+    when "event" then
       @list = Event.all
-    when "tags" then
-      @type_name = "タグ"
-      @type = "tag"
+    when "tag" then
       @list = Tag.all
     end
     erb :admin_list, :layout_options => { :views => settings.views }, :views => settings.views + '/admin'

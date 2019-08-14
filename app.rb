@@ -47,6 +47,16 @@ class App < Sinatra::Base
   error 500 do
     redirect to("/error?code=500")
   end
+
+  # types
+  @@type_list = {
+    "book" => "登録書籍",
+    "author" => "著者",
+    "circle" => "サークル",
+    "genre" => "ジャンル",
+    "event" => "イベント",
+    "tag" => "タグ"
+  }
 end
 
 Dir[File.dirname(__FILE__) + "/routes/**"].each do |route|

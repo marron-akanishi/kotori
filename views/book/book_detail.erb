@@ -1,11 +1,16 @@
-<!-- 
-  <nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
+<nav aria-label="breadcrumb">
+<ol class="breadcrumb">
+  <% if session[:prev_type] %>
+    <% if session[:prev_type] == "user" %>
     <li class="breadcrumb-item"><a href="/user/mypage">マイページ</a></li>
-    <li class="breadcrumb-item active">書籍詳細</li>
-  </ol>
+    <% else %>
+    <li class="breadcrumb-item"><a href="/<%= session[:prev_type] %>"><%= @type %>一覧</a></li>
+    <li class="breadcrumb-item"><a href="/<%= session[:prev_type] %>/<%= session[:prev_id] %>"><%= @type %>詳細</a></li>
+    <% end %>
+  <% end %>
+  <li class="breadcrumb-item active">書籍詳細</li>
+</ol>
 </nav>
--->
 <% if @book.is_adult && !@is_adult %>
 <div class="alert alert-warning alert-dismissible fade show" role="alert">
   R-18指定のため、表紙画像が非表示です。
@@ -19,6 +24,7 @@
   </button>
 </div>
 <% end %>
+<script>document.title = "<%= @book.title %> - 書籍詳細 - Kotori"</script>
 <h2 style="text-align: center;">書籍詳細</h2>
 <div style="text-align: center;">
   <% if @book.is_adult && !@is_adult %>
@@ -102,16 +108,16 @@
 <div class="d-flex justify-content-between">
   <div>
     <a href="https://twitter.com/share" class="twitter-share-button" data-size="large" 
-    data-text="<%= @book.title %>" data-url="https://kotori.marron.work/book/<%= @book.id %>">ツイート</a>
+    data-text="<%= @book.title %>(<%= @book.circle.name %>) - Kotori" data-url="https://kotori.marron.work/book/<%= @book.id %>">ツイート</a>
   </div>
   <div>
     <% if @owned %>
     <button class="btn btn-warning" style="margin: 0 0.1rem"
-      onclick="location.href='/book/<%= @book.id %>/modify?from=<%= @from %>'">情報編集</button>
+      onclick="location.href='/book/<%= @book.id %>/modify'">情報編集</button>
     <button class="btn btn-danger" style="margin: 0 0.1rem" data-toggle="modal" data-target="#delModal">所有解除</button>
     <% elsif session[:id] != nil %>
     <button class="btn btn-info" style="margin: 0 0.1rem"
-      onclick="location.href='/user/own/<%= @book.id %>?exist=true&from=<%= @from %>'">所有</button>
+      onclick="location.href='/user/own/<%= @book.id %>?exist=true'">所有</button>
     <% else %>
     　
     <% end %>
@@ -148,7 +154,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">キャンセル</button>
-        <button type="button" class="btn btn-danger" onclick="location.href='/user/unown/<%= @book.id %>?from=<%= @from %>'">削除</button>
+        <button type="button" class="btn btn-danger" onclick="location.href='/user/unown/<%= @book.id %>'">削除</button>
       </div>
     </div>
   </div>

@@ -1,6 +1,5 @@
 class App < Sinatra::Base
   get '/book/:id' do
-    @from = params["from"]
     @book = Book.includes(:authors, :genres, :tags, :user, :event, :circle).find(params["id"])
     if session[:id] == nil then
       @is_adult = false
@@ -19,6 +18,20 @@ class App < Sinatra::Base
       "modify" => "書籍情報を保存しました"
     }
     @msg = message[params["msg"]]
+    # パンくずリスト用にアクセス元を保存
+    if request.referrer != nil && request.referrer.rindex("http://localhost:9292") then
+    #if request.referrer.rindex("https://kotori.marron.work") then
+      prev = request.referrer.split('/')
+      # マイページor詳細画面のみに絞る
+      if prev[4] == "mypage" || (prev[3] != "book" && prev[4] =~ /\A[0-9]+\z/)  then
+        session[:prev_type] = prev[3]
+        session[:prev_id] = prev[4]
+      end
+    else
+      session[:prev_type] = nil
+      session[:prev_id] = nil
+    end
+    @type = @@type_list[session[:prev_type]]
     erb :book_detail, :layout_options => { :views => settings.views }, :views => settings.views + '/book'
   end
 
@@ -99,6 +112,6 @@ class App < Sinatra::Base
   post '/book/:id/modify/done' do
     login_check
     book_operate(params, true)
-    redirect to("/book/#{params["id"]}?from=#{params["from"]}&msg=modify")
+    redirect to("/book/#{params["id"]}?msg=modify")
   end
 end

@@ -100,7 +100,7 @@ function viewChange() {
       for (var i in disp_area) {
         $("#owngrid").append(`
           <div class="cover">
-            <img src="/images/cover/${disp_area[i].cover}" onclick="location.href='/book/${disp_area[i].id}?from=mypage'" onload="imgLoadEnd()"/>
+            <img src="/images/cover/${disp_area[i].cover}" onclick="location.href='/book/${disp_area[i].id}'" onload="imgLoadEnd()"/>
             <p>${disp_area[i].title}</p>
           </div>
         `)
@@ -118,7 +118,7 @@ function viewChange() {
       $("#ownlist").show();
       $("#ownlist").append(`<tr><th>タイトル</th><th>著者</th></tr>`)
       for (var i in disp_area) {
-        $("#ownlist").append(`<tr><td><a href='/book/${disp_area[i].id}?from=mypage'>${disp_area[i].title}</td><td>${disp_area[i].authors[0].name}</td></tr>`)
+        $("#ownlist").append(`<tr><td><a href='/book/${disp_area[i].id}'>${disp_area[i].title}</td><td>${disp_area[i].authors[0].name}</td></tr>`)
       }
       $("#limit-sel").append(`
         <option value="50">50</option>

@@ -20,8 +20,6 @@ GEM
       unf (>= 0.0.5, < 1.0.0)
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
-    fast_jsonapi (1.5)
-      activesupport (>= 4.2)
     hashie (3.6.0)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
@@ -109,7 +107,6 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord
-  fast_jsonapi
   kakasi
   mechanize
   nokogiri
