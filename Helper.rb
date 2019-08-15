@@ -22,6 +22,7 @@ module Helper
   end
 
   def book_operate(params, is_mod)
+    params["detail"] = ""
     # 表紙画像保存
     if params["cover-img"] != nil then
       filename = SecureRandom.uuid + ".jpg"
@@ -68,6 +69,7 @@ module Helper
       if value == "" then
         next
       end
+      value = CGI.escapeHTML(value)
       if Tag.exists?(name: value) then
         tag = Tag.find_by(name: value)
       else
@@ -91,6 +93,7 @@ module Helper
       if value == "" then
         next
       end
+      value = CGI.escapeHTML(value)
       if Genre.exists?(name: value) then
         genre = Genre.find_by(name: value)
       else
@@ -114,6 +117,7 @@ module Helper
       if value == "" then
         next
       end
+      value = CGI.escapeHTML(value)
       if Author.exists?(name: value) then
         author = Author.find_by(name: value)
       else
@@ -130,34 +134,37 @@ module Helper
       end
       authors.push(author.id)
     end
-    # イベント
+    # イベント(必須ではない)
     if params["event"] != "" then
-      if Event.exists?(name: params["event"]) then
-        event = Event.find_by(name: params["event"])
+      value = CGI.escapeHTML(params["event"])
+      if Event.exists?(name: value) then
+        event = Event.find_by(name: value)
       else
         begin
-          yomi = Kakasi.kakasi('-JH -KH', params["event"])
+          yomi = Kakasi.kakasi('-JH -KH', value)
         rescue => exception
-          yomi = params["event"]
+          yomi = value
         end
         begin
-          event = Event.create(name: params["event"], name_yomi: yomi)
+          event = Event.create(name: value, name_yomi: yomi)
         rescue => e
           redirect to("/error?code=512")
         end
       end
     end
+    event_id = event == nil ? nil : event.id
     # サークル
-    if Circle.exists?(name: params["circle"]) then
-      circle = Circle.find_by(name: params["circle"])
+    value = CGI.escapeHTML(params["circle"])
+    if Circle.exists?(name: value) then
+      circle = Circle.find_by(name: value)
     else
       begin
-          yomi = Kakasi.kakasi('-JH -KH', params["circle"])
+          yomi = Kakasi.kakasi('-JH -KH', value)
       rescue => exception
-        yomi = params["circle"]
+        yomi = value
       end
       begin
-        circle = Circle.create(name: params["circle"], name_yomi: yomi)
+        circle = Circle.create(name: value, name_yomi: yomi)
       rescue => e
         redirect to("/error?code=512")
       end
@@ -168,8 +175,8 @@ module Helper
     # 順番に登録していく
     if is_mod then
       begin
-        book = Book.find(params[:id]).update(title: params["title"], cover: filename, published_at: params["date"], detail: params["detail"], is_adult: is_adult,
-                                          mod_user: session[:id], event_id: event.id, circle_id: circle.id)
+        book = Book.find(params[:id]).update(title: CGI.escapeHTML(params["title"]), cover: filename, published_at: CGI.escapeHTML(params["date"]), detail: CGI.escapeHTML(params["detail"]),
+                                             is_adult: is_adult, mod_user: session[:id], event_id: event_id, circle_id: circle.id)
         BookGenre.where(book_id: params[:id]).delete_all
         BookAuthor.where(book_id: params[:id]).delete_all
         BookTag.where(book_id: params[:id]).delete_all
@@ -179,9 +186,10 @@ module Helper
       book = Book.find(params[:id])
     else
       begin
-        book = Book.create(title: params["title"], cover: filename, published_at: params["date"], detail: params["detail"], is_adult: is_adult,
-                          mod_user: session[:id], event_id: event.id, circle_id: circle.id)
+        book = Book.create(title: CGI.escapeHTML(params["title"]), cover: filename, published_at: CGI.escapeHTML(params["date"]), detail: CGI.escapeHTML(params["detail"]),
+                           is_adult: is_adult, mod_user: session[:id], event_id: event_id, circle_id: circle.id)
       rescue => e
+        p e
         redirect to("/error?code=512")
       end
     end

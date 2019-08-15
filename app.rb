@@ -1,5 +1,6 @@
 require 'json'
 require 'time'
+require 'cgi/escape'
 require 'sinatra'
 require 'sinatra/reloader'
 require 'omniauth'

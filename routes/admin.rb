@@ -20,10 +20,11 @@ class App < Sinatra::Base
     when "yomi_update" then
       [Author, Circle, Genre, Event, Tag].each do |table|
         table.all.each do |obj|
+          value = CGI.escapeHTML(obj.name)
           begin
-            yomi = Kakasi.kakasi('-JH -KH', obj.name)
+            yomi = Kakasi.kakasi('-JH -KH', value)
           rescue => e
-            yomi = obj.name
+            yomi = value
           end
           if table.find(obj.id).name_yomi == nil then
             begin
@@ -57,39 +58,41 @@ class App < Sinatra::Base
     case params["type"]
     when "user" then
       begin
-        User.find(params[:id]).update(name: params["name"], circle_id: params["circle"], author_id: params["author"])
+        User.find(params[:id]).update(name: CGI.escapeHTML(params["name"]), circle_id: params["circle"], author_id: params["author"])
       rescue => exception
         redirect to('/error?code=422')
       end
     #when "book" then
     when "author" then
       begin
-        Author.find(params[:id]).update(name: params["name"], name_yomi: params["name_yomi"], detail: params["detail"], twitter: params["twitter"],
-                                        pixiv: params["pixiv"], web: params["web"], circle_id: params["circle"])
+        Author.find(params[:id]).update(name: CGI.escapeHTML(params["name"]), name_yomi: CGI.escapeHTML(params["name_yomi"]), detail: CGI.escapeHTML(params["detail"]),
+                                        twitter: CGI.escapeHTML(params["twitter"]), pixiv: CGI.escapeHTML(params["pixiv"]), web: CGI.escapeHTML(params["web"]), circle_id: params["circle"])
       rescue => exception
         redirect to('/error?code=422')
       end
     when "circle" then
       begin
-        Circle.find(params["id"]).update(name: params["name"], name_yomi: params["name_yomi"], detail: params["detail"], web: params["web"])
+        Circle.find(params["id"]).update(name: CGI.escapeHTML(params["name"]), name_yomi: CGI.escapeHTML(params["name_yomi"]),
+                                         detail: CGI.escapeHTML(params["detail"]), web: CGI.escapeHTML(params["web"]))
       rescue => exception
         redirect to('/error?code=422')
       end
     when "genre" then
       begin
-        Genre.find(params["id"]).update(name: params["name"], name_yomi: params["name_yomi"])
+        Genre.find(params["id"]).update(name: CGI.escapeHTML(params["name"]), name_yomi: CGI.escapeHTML(params["name_yomi"]))
       rescue => exception
         redirect to('/error?code=422')
       end
     when "event" then
       begin
-        Event.find(params["id"]).update(name: params["name"], name_yomi: params["name_yomi"], start_at: params["start"], end_at: params["end"])
+        Event.find(params["id"]).update(name: CGI.escapeHTML(params["name"]), name_yomi: CGI.escapeHTML(params["name_yomi"]),
+                                        start_at: CGI.escapeHTML(params["start"]), end_at: CGI.escapeHTML(params["end"]))
       rescue => exception
         redirect to('/error?code=422')
       end
     when "tag" then
       begin
-        Tag.find(params["id"]).update(name: params["name"], name_yomi: params["name_yomi"])
+        Tag.find(params["id"]).update(name: CGI.escapeHTML(params["name"]), name_yomi: CGI.escapeHTML(params["name_yomi"]))
       rescue => exception
         redirect to('/error?code=422')
       end

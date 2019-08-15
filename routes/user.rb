@@ -20,7 +20,7 @@ class App < Sinatra::Base
     login_check
     is_adult = boolean_check(params["is-adult"])
     begin
-      User.find(session[:id]).update(name: params["dispName"], is_adult: is_adult)
+      User.find(session[:id]).update(name: CGI.escapeHTML(params["dispName"]), is_adult: is_adult)
     rescue => e
       redirect to("/error?code=512")
     end
@@ -59,7 +59,7 @@ class App < Sinatra::Base
     login_check
     if UserBook.exists?(user_id: session[:id], book_id: params["id"]) then
       begin
-        UserBook.where(user_id: session[:id], book_id: params["id"]).update(memo: params["memoText"])
+        UserBook.where(user_id: session[:id], book_id: params["id"]).update(memo: CGI.escapeHTML(params["memoText"]))
       rescue => e
         redirect to("/error?code=512")
       end

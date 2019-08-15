@@ -52,7 +52,7 @@ class App < Sinatra::Base
       name = result["info"]["name"]
       mail = result["info"]["email"]
       begin
-        User.create(id: session[:id], name: name, mail: mail, latest_at: Time.now, is_adult: false)
+        User.create(id: session[:id], name: CGI.escapeHTML(name), mail: mail, latest_at: Time.now, is_adult: false)
       rescue => e
         redirect to("/error?code=512")
       end
