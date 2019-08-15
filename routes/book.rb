@@ -19,7 +19,7 @@ class App < Sinatra::Base
     }
     @msg = message[params["msg"]]
     # パンくずリスト用にアクセス元を保存
-    if request.referrer != nil && request.referrer.rindex(@@env["DOMAIN"]) then
+    if request.referrer != nil && request.referrer.index(@@env["DOMAIN"]) then
       prev = request.referrer.split('/')
       # マイページor詳細画面のみに絞る
       if prev[4] == "mypage" || (prev[3] != "book" && prev[4] =~ /\A[0-9]+\z/)  then
@@ -47,25 +47,106 @@ class App < Sinatra::Base
         @title = params["title"]
       when "melon" then
         @detail = SiteParser.melon(params["url"])
+        if @detail == nil then
+          redirect to("/error?code=404")
+        end
         @title = @detail[:title]
       when "tora" then
         @detail = SiteParser.tora(params["url"])
+        if @detail == nil then
+          redirect to("/error?code=404")
+        end
         @title = @detail[:title]
       when "lashin" then
         @detail = SiteParser.lashin(params["url"])
+        if @detail == nil then
+          redirect to("/error?code=404")
+        end
         @title = @detail[:title]
+    end
+    if @detail[:title] != nil then
+      # 著者存在チェック
+      author_list = @detail[:author].split(",")
+      author_list.each do |value|
+        if value == "" then
+          next
+        end
+        value = CGI.escapeHTML(value)
+        begin
+          yomi = Kakasi.kakasi('-JH -KH', value)
+        rescue => exception
+          yomi = value
+        end
+        if Author.exists?(name_yomi: normalize_str(yomi, true)) then
+          name = Author.find_by(name_yomi: normalize_str(yomi, true)).name
+          @detail[:author].gsub(value, name)
+        end
+      end
+      # サークル存在チェック
+      value = CGI.escapeHTML(@detail[:circle])
+      begin
+          yomi = Kakasi.kakasi('-JH -KH', value)
+      rescue => exception
+        yomi = value
+      end
+      if Circle.exists?(name_yomi: normalize_str(yomi, true)) then
+        name = Circle.find_by(name_yomi: normalize_str(yomi, true)).name
+        @detail[:circle] = name
+      end
+      # ジャンル存在チェック
+      genre_list = @detail[:genre].split(",")
+      genre_list.each do |value|
+        if value == "" then
+          next
+        end
+        value = CGI.escapeHTML(value)
+        begin
+          yomi = Kakasi.kakasi('-JH -KH', value)
+        rescue => exception
+          yomi = value
+        end
+        if Genre.exists?(name_yomi: normalize_str(yomi, true)) then
+          name = Genre.find_by(name_yomi: normalize_str(yomi, true)).name
+          @detail[:genre].gsub(value, name)
+        end
+      end
+      # イベント存在チェック
+      if @detail[:event] != nil then
+        value = CGI.escapeHTML(@detail[:event])
+        begin
+            yomi = Kakasi.kakasi('-JH -KH', value)
+        rescue => exception
+          yomi = value
+        end
+        if Circle.exists?(name_yomi: normalize_str(yomi, true)) then
+          name = Circle.find_by(name_yomi: normalize_str(yomi, true)).name
+          @detail[:circle] = name
+        end
+      end
+      # タグ存在チェック
+      if @detail[:tag] != nil then
+        tag_list = @detail[:tag].split(",")
+        tag_list.each do |value|
+          if value == "" then
+            next
+          end
+          value = CGI.escapeHTML(value)
+          begin
+            yomi = Kakasi.kakasi('-JH -KH', value)
+          rescue => exception
+            yomi = value
+          end
+          if Tag.exists?(name_yomi: normalize_str(yomi, true)) then
+            name = Tag.find_by(name_yomi: normalize_str(yomi, true)).name
+            @detail[:tag].gsub(value, name)
+          end
+        end
+      end
     end
     @exists = []
     # タイトル存在チェック
     Book.all.each do |obj|
-      # カナ→ひら、半角化、スペース削除、大文字小文字無視
-      target = @title.tr('ァ-ン','ぁ-ん')
-      check = obj.title.tr('ァ-ン','ぁ-ん')
-      target = target.tr('０-９ａ-ｚＡ-Ｚ','0-9a-zA-Z')
-      check = check.tr('０-９ａ-ｚＡ-Ｚ','0-9a-zA-Z')
-      target = target.gsub(/(\s|　)+/, '')
-      check = check.gsub(/(\s|　)+/, '')
-      if target.upcase == check.upcase then
+      if normalize_str(@title) == normalize_str(obj.title) then
         @exists.push(Book.includes(:authors).find(obj.id))
       end
     end
@@ -75,6 +156,9 @@ class App < Sinatra::Base
   post '/book/add/done' do
     login_check
     id = book_operate(params, false)
+    if id == nil then
+      redirect to('/error?code=512')
+    end
     # 所持状況更新
     UserBook.create(user_id: session[:id], book_id: id)
     redirect to('/user/mypage?msg=add_done')
@@ -110,7 +194,10 @@ class App < Sinatra::Base
 
   post '/book/:id/modify/done' do
     login_check
-    book_operate(params, true)
-    redirect to("/book/#{params["id"]}?msg=modify")
+    id = book_operate(params, true)
+    if id == nil then
+      redirect to('/error?code=512')
+    end
+    redirect to("/book/#{id}?msg=modify")
   end
 end

@@ -3,6 +3,10 @@ require 'mechanize'
 
 module SiteParser
   def melon(url)
+    # URLチェック
+    if url.index("https://www.melonbooks.co.jp/detail/detail.php?product_id=") != 0 then
+      return nil
+    end
     detail = {}
     # アクセス
     charset = nil
@@ -45,7 +49,7 @@ module SiteParser
         detail[:genre] += ","+obj.text
       end
     end
-    detail[:published_at] = detail_table[4].at('.//td').text.tr("/","-")
+    detail[:date] = detail_table[4].at('.//td').text.tr("/","-")
     if detail_table[6].at('.//th').text ==  "イベント" then
       detail[:event] = detail_table[6].at('.//td//a').text
       detail[:is_adult] = (detail_table[7].at('.//td').text == "18禁") ? true : false
@@ -58,6 +62,10 @@ module SiteParser
   end
 
   def tora(url)
+    # URLチェック
+    if url.index("https://ec.toranoana.shop/tora/ec/item/") != 0 && url.index("https://ec.toranoana.shop/tora_r/ec/item/") != 0 then
+      return nil
+    end
     detail = {}
     # アクセス
     charset = nil
@@ -75,7 +83,7 @@ module SiteParser
     detail[:author] = detail_table[1].at('.//td//span//a//span').text
     detail[:genre] = detail_table[2].at('.//td//span//a//span').text
     if detail_table[3].at('.//td[1]').text == "発行日" then
-      detail[:published_at] = detail_table[3].at('.//td//span//a//span').text.tr("/","-")
+      detail[:date] = detail_table[3].at('.//td//span//a//span').text.tr("/","-")
     else
       detail_table[3].xpath('.//td//span//a//span').each_with_index do |obj, i|
         if obj.attr("href") == "#" then
@@ -87,7 +95,7 @@ module SiteParser
           detail[:tag] += ","+obj.text
         end
       end
-      detail[:published_at] = detail_table[4].at('.//td//span//a//span').text.tr("/","-")
+      detail[:date] = detail_table[4].at('.//td//span//a//span').text.tr("/","-")
     end
     if detail_table[5].at('.//td[1]').text == "初出イベント" then
       detail[:event] = detail_table[5].at('.//td//span//a//span').text.split("　")[1].split("（")[0]
@@ -98,6 +106,10 @@ module SiteParser
   end
 
   def lashin(url)
+    # URLチェック
+    if url.index("https://shop.lashinbang.com/products/detail/") != 0 then
+      return nil
+    end
     detail = {}
     # アクセス
     agent = Mechanize.new
@@ -133,7 +145,7 @@ module SiteParser
     detail[:is_adult] = (title_area.at('.//span').text == "18禁") ? true : false
     detail[:title] = title_area.at('.//h1').text
     detail_table = doc.xpath('//*[@id="item_data"]//table//tr')
-    detail[:published_at] = detail_table[2].at('.//td').text.tr("年月","-").tr("日","")
+    detail[:date] = detail_table[2].at('.//td').text.tr("年月","-").tr("日","")
     detail[:event] = detail_table[6].at('.//td//a').text.split('/')[0]
     return detail
   end

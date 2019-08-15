@@ -67,7 +67,120 @@ class App < Sinatra::Base
     redirect to("/book/#{params["id"]}?msg=memo")
   end
 
-  post '/user/add_book' do
-    
+  post '/user/add_books' do
+    login_check
+    case params["mode"]
+      when "melon" then
+        @detail = SiteParser.melon(params["url"])
+        if @detail == nil then
+          return "error"
+        end
+      when "tora" then
+        @detail = SiteParser.tora(params["url"])
+        if @detail == nil then
+          return "error"
+        end
+      when "lashin" then
+        @detail = SiteParser.lashin(params["url"])
+        if @detail == nil then
+          return "error"
+        end
+      else
+        return "error"
+    end
+    # タイトル存在チェック
+    Book.all.each do |obj|
+      if normalize_str(@detail[:title]) == normalize_str(obj.title) then
+        return "duplicate"
+      end
+    end
+    # 著者存在チェック
+    author_list = @detail[:author].split(",")
+    author_list.each do |value|
+      if value == "" then
+        next
+      end
+      value = CGI.escapeHTML(value)
+      begin
+        yomi = Kakasi.kakasi('-JH -KH', value)
+      rescue => exception
+        yomi = value
+      end
+      if Author.exists?(name_yomi: normalize_str(yomi, true)) then
+        name = Author.find_by(name_yomi: normalize_str(yomi, true)).name
+        @detail[:author].gsub(value, name)
+      end
+    end
+    # サークル存在チェック
+    value = CGI.escapeHTML(@detail[:circle])
+    begin
+        yomi = Kakasi.kakasi('-JH -KH', value)
+    rescue => exception
+      yomi = value
+    end
+    if Circle.exists?(name_yomi: normalize_str(yomi, true)) then
+      name = Circle.find_by(name_yomi: normalize_str(yomi, true)).name
+      @detail[:circle] = name
+    end
+    # ジャンル存在チェック
+    genre_list = @detail[:genre].split(",")
+    genre_list.each do |value|
+      if value == "" then
+        next
+      end
+      value = CGI.escapeHTML(value)
+      begin
+        yomi = Kakasi.kakasi('-JH -KH', value)
+      rescue => exception
+        yomi = value
+      end
+      if Genre.exists?(name_yomi: normalize_str(yomi, true)) then
+        name = Genre.find_by(name_yomi: normalize_str(yomi, true)).name
+        @detail[:genre].gsub(value, name)
+      end
+    end
+    # イベント存在チェック
+    if @detail[:event] != nil then
+      value = CGI.escapeHTML(@detail[:event])
+      begin
+          yomi = Kakasi.kakasi('-JH -KH', value)
+      rescue => exception
+        yomi = value
+      end
+      if Circle.exists?(name_yomi: normalize_str(yomi, true)) then
+        name = Circle.find_by(name_yomi: normalize_str(yomi, true)).name
+        @detail[:circle] = name
+      end
+    end
+    # タグ存在チェック
+    if @detail[:tag] != nil then
+      tag_list = @detail[:tag].split(",")
+      tag_list.each do |value|
+        if value == "" then
+          next
+        end
+        value = CGI.escapeHTML(value)
+        begin
+          yomi = Kakasi.kakasi('-JH -KH', value)
+        rescue => exception
+          yomi = value
+        end
+        if Tag.exists?(name_yomi: normalize_str(yomi, true)) then
+          name = Tag.find_by(name_yomi: normalize_str(yomi, true)).name
+          @detail[:tag].gsub(value, name)
+        end
+      end
+    end
+    # 登録
+    @detail = @detail.stringify_keys
+    @detail["image-url"] = @detail["cover"]
+    @detail["is-adult"] = @detail["is_adult"]
+    id = book_operate(@detail, false)
+    if id == nil then
+      return "error"
+    end
+    # 所持状況更新
+    UserBook.create(user_id: session[:id], book_id: id)
+    return "ok"
   end
 end

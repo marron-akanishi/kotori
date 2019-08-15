@@ -57,7 +57,7 @@ function setupSuggest(type){
       suggests = suggests.map(data => data.name)
       res(suggests)
     },
-    autoFocus: true,
+    autoFocus: false,
     delay: 100
   })
 }

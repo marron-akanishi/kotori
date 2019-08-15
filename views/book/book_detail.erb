@@ -86,7 +86,7 @@
   <tr>
     <td class="row-name">タグ</td>
     <td>
-      <% if @book.event == nil %>
+      <% if @book.tags == nil %>
       <td></td>
       <% else %>
       <% @book.tags.each_with_index do |x, i| %>

@@ -28,7 +28,7 @@ class App < Sinatra::Base
           end
           if table.find(obj.id).name_yomi == nil then
             begin
-              table.find(obj.id).update(name_yomi: yomi)
+              table.find(obj.id).update(name_yomi: normalize_str(yomi, true))
             rescue => e
               redirect to("/error?code=512")
             end
@@ -64,37 +64,98 @@ class App < Sinatra::Base
       end
     #when "book" then
     when "author" then
-      begin
-        Author.find(params[:id]).update(name: CGI.escapeHTML(params["name"]), name_yomi: CGI.escapeHTML(params["name_yomi"]), detail: CGI.escapeHTML(params["detail"]),
-                                        twitter: CGI.escapeHTML(params["twitter"]), pixiv: CGI.escapeHTML(params["pixiv"]), web: CGI.escapeHTML(params["web"]), circle_id: params["circle"])
-      rescue => exception
-        redirect to('/error?code=422')
+      if Author.exists?(name: CGI.escapeHTML(params["name"])) then
+        author_id = Author.find_by(name: CGI.escapeHTML(params["name"])).id
+      elsif Author.exists?(name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true)) then
+        author_id = Author.find_by(name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true)).id
+      end
+      # 完全に新しいか全く同じか
+      if author_id == nil || author_id == params[:id].to_i then
+        begin
+          Author.find(params[:id]).update(name: CGI.escapeHTML(params["name"]), name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true), detail: CGI.escapeHTML(params["detail"]),
+                                          twitter: CGI.escapeHTML(params["twitter"]), pixiv: CGI.escapeHTML(params["pixiv"]), web: CGI.escapeHTML(params["web"]), circle_id: params["circle"])
+        rescue => exception
+          redirect to('/error?code=422')
+        end
+      else
+        BookAuthor.where(author_id: params[:id]).each do |obj|
+          obj.update(author_id: author_id)
+        end
+        Author.find(params[:id]).delete
       end
     when "circle" then
-      begin
-        Circle.find(params["id"]).update(name: CGI.escapeHTML(params["name"]), name_yomi: CGI.escapeHTML(params["name_yomi"]),
-                                         detail: CGI.escapeHTML(params["detail"]), web: CGI.escapeHTML(params["web"]))
-      rescue => exception
-        redirect to('/error?code=422')
+      if Circle.exists?(name: CGI.escapeHTML(params["name"])) then
+        circle_id = Circle.find_by(name: CGI.escapeHTML(params["name"])).id
+      elsif Circle.exists?(name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true)) then
+        circle_id = Circle.find_by(name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true)).id
+      end
+      if circle_id == nil || circle_id == params[:id].to_i then
+        begin
+          Circle.find(params["id"]).update(name: CGI.escapeHTML(params["name"]), name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true),
+                                            detail: CGI.escapeHTML(params["detail"]), web: CGI.escapeHTML(params["web"]))
+        rescue => exception
+          redirect to('/error?code=422')
+        end
+      else
+        Book.where(circle_id: params[:id]).each do |obj|
+          obj.update(circle_id: circle_id)
+        end
+        Circle.find(params[:id]).delete
       end
     when "genre" then
-      begin
-        Genre.find(params["id"]).update(name: CGI.escapeHTML(params["name"]), name_yomi: CGI.escapeHTML(params["name_yomi"]))
-      rescue => exception
-        redirect to('/error?code=422')
+      if Genre.exists?(name: CGI.escapeHTML(params["name"])) then
+        genre_id = Genre.find_by(name: CGI.escapeHTML(params["name"])).id
+      elsif Genre.exists?(name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true)) then
+        genre_id = Genre.find_by(name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true)).id
+      end
+      if genre_id == nil || genre_id == params[:id].to_i then
+        begin
+          Genre.find(params["id"]).update(name: CGI.escapeHTML(params["name"]), name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true))
+        rescue => exception
+          redirect to('/error?code=422')
+        end
+      else
+        BookGenre.where(genre_id: params[:id]).each do |obj|
+          obj.update(genre_id: genre_id)
+        end
+        Genre.find(params[:id]).delete 
       end
     when "event" then
-      begin
-        Event.find(params["id"]).update(name: CGI.escapeHTML(params["name"]), name_yomi: CGI.escapeHTML(params["name_yomi"]),
-                                        start_at: CGI.escapeHTML(params["start"]), end_at: CGI.escapeHTML(params["end"]))
-      rescue => exception
-        redirect to('/error?code=422')
+      if Event.exists?(name: CGI.escapeHTML(params["name"])) then
+        event_id = Event.find_by(name: CGI.escapeHTML(params["name"])).id
+      elsif Event.exists?(name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true)) then
+        event_id = Event.find_by(name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true)).id
+      end
+      if event_id == nil || event_id == params[:id].to_i then
+        begin
+          Event.find(params["id"]).update(name: CGI.escapeHTML(params["name"]), name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true),
+                                          start_at: CGI.escapeHTML(params["start"]), end_at: CGI.escapeHTML(params["end"]))
+        rescue => exception
+          redirect to('/error?code=422')
+        end
+      else
+        Book.where(event_id: params[:id]).each do |obj|
+          obj.update(event_id: event_id)
+        end
+        Event.find(params[:id]).delete
       end
     when "tag" then
-      begin
-        Tag.find(params["id"]).update(name: CGI.escapeHTML(params["name"]), name_yomi: CGI.escapeHTML(params["name_yomi"]))
-      rescue => exception
-        redirect to('/error?code=422')
+      if Tag.exists?(name: CGI.escapeHTML(params["name"])) then
+        tag_id = Tag.find_by(name: CGI.escape(params["name"])).id
+      elsif Tag.exists?(name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true)) then
+        tag_id = Tag.find_by(name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true)).id
+      end
+      if tag_id == nil || tag_id == params[:id].to_i then
+        begin
+          Tag.find(params["id"]).update(name: CGI.escapeHTML(params["name"]), name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true))
+        rescue => exception
+          redirect to('/error?code=422')
+        end
+      else
+        BookTag.where(ta_id: params[:id]).each do |obj|
+          obj.update(tag_id: tag_id)
+        end
+        Tag.find(params[:id]).delete
       end
     end
     redirect to('/admin/'+params["type"])
