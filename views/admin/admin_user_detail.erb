@@ -12,7 +12,7 @@
 </div>
 <% else %>
 <div style="float: right;">
-  <button class="btn btn-danger" style="margin-bottom: 1rem" data-toggle="modal" data-target="#delModal" disabled>退会解除</button>
+  <button class="btn btn-danger" style="margin-bottom: 1rem" data-toggle="modal" data-target="#returnModal">退会解除</button>
 </div>
 <% end %>
 <h2 style="text-align: center;">ユーザー詳細</h2>
@@ -65,6 +65,25 @@
         <button type="button" class="btn btn-secondary" data-dismiss="modal">キャンセル</button>
         <button type="button" class="btn btn-danger"
           onclick="location.href='/admin/user/<%= @detail.id %>/delete'">削除</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="returnModal" tabindex="-1" role="dialog" aria-labelledby="label1" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="label1">確認</h5>
+      </div>
+      <div class="modal-body">
+        このユーザーの退会状態を解除します。<br>
+        よろしいですか？
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">キャンセル</button>
+        <button type="button" class="btn btn-danger"
+          onclick="location.href='/admin/user/<%= @detail.id %>/delete'">解除</button>
       </div>
     </div>
   </div>

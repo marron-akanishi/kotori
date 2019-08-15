@@ -166,7 +166,11 @@ class App < Sinatra::Base
     admin_check
     case params["type"]
     when "user" then
-      User.find(params["id"]).update(deleted_at: Time.now)
+      if User.find(params["id"]).deleted_at == nil then
+        User.find(params["id"]).update(deleted_at: Time.now)
+      else
+        User.find(params["id"]).update(deleted_at: nil)
+      end
     when "book" then
       Book.find(params["id"]).destroy
     when "author" then

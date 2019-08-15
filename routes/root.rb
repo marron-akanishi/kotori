@@ -31,7 +31,9 @@ class App < Sinatra::Base
   end
 
   get '/login' do
-    session[:redirect] = request.referrer
+    if request.referrer.index(@@env["DOMAIN"]) == 0 then
+      session[:redirect] = request.referrer
+    end
     redirect to('/auth/google_oauth2')
   end
 
@@ -58,7 +60,7 @@ class App < Sinatra::Base
       end
     end
     p session[:redirect]
-    if session[:redirect] then
+    if session[:redirect] && session[:redirect].index(@@env["DOMAIN"]+"/error") != 0 then
       target = session[:redirect]
       session[:redirect] = nil
       redirect to(target)
