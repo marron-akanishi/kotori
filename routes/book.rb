@@ -34,6 +34,10 @@ class App < Sinatra::Base
     erb :book_detail, :layout_options => { :views => settings.views }, :views => settings.views + '/book'
   end
 
+  get '/book/search' do
+    erb :book_search, :layout_options => { :views => settings.views }, :views => settings.views + '/book'
+  end
+
   get '/book/add/title' do
     login_check
     erb :book_add_title, :layout_options => { :views => settings.views }, :views => settings.views + '/book'
