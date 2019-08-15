@@ -94,7 +94,7 @@ class App < Sinatra::Base
         redirect to('/error?code=422')
       end
     end
-    redirect to('/admin/'+params["type"]+'s')
+    redirect to('/admin/'+params["type"])
   end
   
   # userとbook以外は一括削除のみ対応(idは常時0)
@@ -136,7 +136,7 @@ class App < Sinatra::Base
         end
       end
     end
-    redirect to('/admin/'+params["type"]+'s')
+    redirect to('/admin/'+params["type"])
   end
 
   get '/admin/:type/:id' do
@@ -168,7 +168,7 @@ class App < Sinatra::Base
 
   get '/admin/:type' do
     admin_check
-    @type = params["type"][0, params["type"].length-1]
+    @type = params["type"]
     @type_name = @@type_list[@type]
     case @type
     when "user" then

@@ -50,6 +50,7 @@ class App < Sinatra::Base
 
   # types
   @@type_list = {
+    "user" => "ユーザー",
     "book" => "登録書籍",
     "author" => "著者",
     "circle" => "サークル",
