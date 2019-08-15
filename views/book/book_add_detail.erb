@@ -27,7 +27,7 @@
 <% end %>
 <p>詳細情報を追加してください。</p>
 <form action="/book/add/done" method="POST" enctype="multipart/form-data">
-  <input type="hidden" name="title" value="<%= @title %>">
+  <input type="hidden" id="title" name="title" value="<%= @title %>">
   <div class="custom-control custom-checkbox">
     <% if @detail[:is_adult] %>
     <input type="checkbox" class="custom-control-input" id="is-adult" name="is-adult" value="true" checked>
