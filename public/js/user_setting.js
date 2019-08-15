@@ -24,7 +24,7 @@ function url_list_add(){
           url_list[i]["status"] = "error"
           reloadTable(url_list)
         });
-      }, 3000)
+      }, 2000*i)
     });
   }
   reader.readAsText(document.getElementById("urllist").files[0]);

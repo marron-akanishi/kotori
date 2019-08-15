@@ -174,7 +174,7 @@ class App < Sinatra::Base
     # 登録
     @detail = @detail.stringify_keys
     @detail["image-url"] = @detail["cover"]
-    @detail["is-adult"] = @detail["is_adult"]
+    @detail["is-adult"] = @detail["is_adult"] ? "true" : "false"
     id = book_operate(@detail, false)
     if id == nil then
       return "error"

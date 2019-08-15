@@ -54,12 +54,12 @@ searchWord = function () {
     switch (search_type) {
       case 'title':
         disp_list = own_list.filter(function (item, index) {
-          return normalizeStr(item.title).indexOf(normalizeStr(searchText)) >= 0
+          return normalizeStr(item.book.title).indexOf(normalizeStr(searchText)) >= 0
         });
         break
       case 'author':
         disp_list = own_list.filter(function (item, index) {
-          return item.authors.filter(function (item, index) {
+          return item.book.authors.filter(function (item, index) {
             return normalizeStr(item.name_yomi).indexOf(normalizeStr(searchText)) >= 0 ||
               normalizeStr(item.name).indexOf(normalizeStr(searchText)) >= 0
           }).length >= 1
@@ -67,13 +67,13 @@ searchWord = function () {
         break;
       case 'circle':
         disp_list = own_list.filter(function (item, index) {
-          return normalizeStr(item.circle.name_yomi).indexOf(normalizeStr(searchText)) >= 0 ||
-            normalizeStr(item.circle.name).indexOf(normalizeStr(searchText)) >= 0
+          return normalizeStr(item.book.circle.name_yomi).indexOf(normalizeStr(searchText)) >= 0 ||
+            normalizeStr(item.book.circle.name).indexOf(normalizeStr(searchText)) >= 0
         });
         break;
       case 'genre':
         disp_list = own_list.filter(function (item, index) {
-          return item.genres.filter(function (item, index) {
+          return item.book.genres.filter(function (item, index) {
             return normalizeStr(item.name_yomi).indexOf(normalizeStr(searchText)) >= 0 ||
               normalizeStr(item.name).indexOf(normalizeStr(searchText)) >= 0
           }).length >= 1
@@ -110,7 +110,14 @@ function setLimit(obj){
 // 並び替え実行
 function selSortMode(_sortmode, _reverse){
   sortmode = _sortmode, reverse = _reverse
-  disp_list.sort(sortJSON(sortmode, reverse))
+  switch (sortmode) {
+    case "created_at":
+      disp_list.sort(sortJSON(sortmode, reverse))
+      break;
+    case "title":
+      disp_list.sort(sortJSON("book", reverse, "title"))
+      break;
+  }
   makePageNav(limit_config[mode]);
   current_page = 1;
   viewChange();
@@ -133,8 +140,8 @@ function viewChange() {
       for (var i in disp_area) {
         $("#owngrid").append(`
           <div class="cover">
-            <img src="/images/cover/${disp_area[i].cover}" onclick="location.href='/book/${disp_area[i].id}'" onload="imgLoadEnd()"/>
-            <p>${disp_area[i].title}</p>
+            <img src="/images/cover/${disp_area[i].book.cover}" onclick="location.href='/book/${disp_area[i].book.id}'" onload="imgLoadEnd()"/>
+            <p>${disp_area[i].book.title}</p>
           </div>
         `)
         $("#owngrid > .cover").hide();
@@ -151,7 +158,7 @@ function viewChange() {
       $("#ownlist").show();
       $("#ownlist").append(`<tr><th>タイトル</th><th>著者</th></tr>`)
       for (var i in disp_area) {
-        $("#ownlist").append(`<tr><td><a href='/book/${disp_area[i].id}'>${disp_area[i].title}</td><td>${disp_area[i].authors[0].name}</td></tr>`)
+        $("#ownlist").append(`<tr><td><a href='/book/${disp_area[i].book.id}'>${disp_area[i].book.title}</td><td>${disp_area[i].book.authors[0].name}</td></tr>`)
       }
       $("#limit-sel").append(`
         <option value="50">50</option>

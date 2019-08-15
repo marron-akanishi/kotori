@@ -64,14 +64,14 @@ function normalizeStr(str) {
 }
 
 // 並び替え
-function sortJSON(field, reverse, primer){
+function sortJSON(field, reverse, second_field){
   reverse = (reverse) ? -1 : 1;
   return function(a,b){
     a = a[field];
     b = b[field];
-    if (typeof(primer) != 'undefined'){
-        a = primer(a);
-        b = primer(b);
+    if (typeof(second_field) != 'undefined'){
+      a = a[second_field];
+      b = b[second_field];
     }
     if (a<b) return reverse * -1;
     if (a>b) return reverse * 1;

@@ -19,9 +19,9 @@ class App < Sinatra::Base
         Tag.all.to_json
       when "user_book" then
         login_check
-        Book.includes(:authors, :genres, :circle)
-            .where(id: UserBook.where(user_id: session[:id]).select(:book_id))
-            .to_json(:include => [:authors, :genres, :circle])
+        UserBook.includes(book: [:authors, :genres, :circle])
+                .where(user_id: session[:id])
+                .to_json(include: {book: {include: [:authors, :genres, :circle]}})
       else
         redirect to('/error?code=500')
     end
