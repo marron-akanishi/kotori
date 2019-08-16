@@ -64,10 +64,9 @@ class App < Sinatra::Base
       end
     #when "book" then
     when "author" then
-      if Author.exists?(name: CGI.escapeHTML(params["name"])) then
+      if Author.exists?(name: CGI.escapeHTML(params["name"])) &&
+        Author.exists?(name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true)) then
         author_id = Author.find_by(name: CGI.escapeHTML(params["name"])).id
-      elsif Author.exists?(name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true)) then
-        author_id = Author.find_by(name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true)).id
       end
       # 完全に新しいか全く同じか
       if author_id == nil || author_id == params[:id].to_i then
@@ -84,10 +83,9 @@ class App < Sinatra::Base
         Author.find(params[:id]).delete
       end
     when "circle" then
-      if Circle.exists?(name: CGI.escapeHTML(params["name"])) then
+      if Circle.exists?(name: CGI.escapeHTML(params["name"])) &&
+        Circle.exists?(name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true)) then
         circle_id = Circle.find_by(name: CGI.escapeHTML(params["name"])).id
-      elsif Circle.exists?(name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true)) then
-        circle_id = Circle.find_by(name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true)).id
       end
       if circle_id == nil || circle_id == params[:id].to_i then
         begin
@@ -103,10 +101,9 @@ class App < Sinatra::Base
         Circle.find(params[:id]).delete
       end
     when "genre" then
-      if Genre.exists?(name: CGI.escapeHTML(params["name"])) then
+      if Genre.exists?(name: CGI.escapeHTML(params["name"])) &&
+        Genre.exists?(name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true)) then
         genre_id = Genre.find_by(name: CGI.escapeHTML(params["name"])).id
-      elsif Genre.exists?(name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true)) then
-        genre_id = Genre.find_by(name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true)).id
       end
       if genre_id == nil || genre_id == params[:id].to_i then
         begin
@@ -121,10 +118,9 @@ class App < Sinatra::Base
         Genre.find(params[:id]).delete 
       end
     when "event" then
-      if Event.exists?(name: CGI.escapeHTML(params["name"])) then
+      if Event.exists?(name: CGI.escapeHTML(params["name"])) &&
+        Event.exists?(name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true)) then
         event_id = Event.find_by(name: CGI.escapeHTML(params["name"])).id
-      elsif Event.exists?(name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true)) then
-        event_id = Event.find_by(name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true)).id
       end
       if event_id == nil || event_id == params[:id].to_i then
         begin
@@ -140,10 +136,9 @@ class App < Sinatra::Base
         Event.find(params[:id]).delete
       end
     when "tag" then
-      if Tag.exists?(name: CGI.escapeHTML(params["name"])) then
+      if Tag.exists?(name: CGI.escapeHTML(params["name"])) &&
+        Tag.exists?(name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true)) then
         tag_id = Tag.find_by(name: CGI.escape(params["name"])).id
-      elsif Tag.exists?(name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true)) then
-        tag_id = Tag.find_by(name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true)).id
       end
       if tag_id == nil || tag_id == params[:id].to_i then
         begin

@@ -21,9 +21,17 @@
   <div class="tab-pane show active mt-2" id="basic" role="tabpanel" aria-labelledby="basic-tab">
     <p style="margin-top: 1rem;">登録メールアドレス：<%= @user.mail %></p>
     <hr>
+    <div class="form-group row">
+      <label for="apiKey" class="col-sm-2 col-form-label">APIキー：</label>
+      <div class="col-sm-5">
+        <input type="text" id="apiKey" name="apiKey" class="form-control" value="<%= @user.api %>" disabled>
+      </div>
+      <button type="button" class="btn btn-primary" onclick="api_key_update()">更新</button>
+    </div>
+    <hr>
     <form action="/user/setting/done" method="POST">
       <div class="form-group row">
-        <label for="dispName" class="col-sm-1 col-form-label">表示名：</label>
+        <label for="dispName" class="col-sm-2 col-form-label">表示名：</label>
         <div class="col-sm-5">
           <input type="text" id="dispName" name="dispName" class="form-control" value="<%= @user.name %>" required>
         </div>

@@ -1,4 +1,8 @@
 class App < Sinatra::Base
+  get '/book/search' do
+    erb :book_search, :layout_options => { :views => settings.views }, :views => settings.views + '/book'
+  end
+  
   get '/book/:id' do
     @book = Book.includes(:authors, :genres, :tags, :user, :event, :circle).find(params["id"])
     if session[:id] == nil then
@@ -32,10 +36,6 @@ class App < Sinatra::Base
     end
     @type = @@type_list[session[:prev_type]]
     erb :book_detail, :layout_options => { :views => settings.views }, :views => settings.views + '/book'
-  end
-
-  get '/book/search' do
-    erb :book_search, :layout_options => { :views => settings.views }, :views => settings.views + '/book'
   end
 
   get '/book/add/title' do

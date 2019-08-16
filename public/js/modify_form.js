@@ -38,7 +38,7 @@ function submitCheck() {
     document.getElementsByName(type)[0].value = ""
     list.forEach((obj) => {document.getElementsByName(type)[0].value += obj.innerText + ","});
   })
-  if ($("#author").val() == "" || $("#genre").val() == "" || $("#title").val() == "") {
+  if ($("#author").val() == "" || $("#genre").val() == "" || $("#title").val() == "" || $("#circle").val() == "") {
     $('#input-error').css("display", 'block')
     return false;
   } else {

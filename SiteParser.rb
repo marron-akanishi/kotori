@@ -58,6 +58,7 @@ module SiteParser
       detail[:is_adult] = (detail_table[8].at('.//td').text == "18禁") ? true : false
     end
     p detail
+    detail[:url] = url
     return detail
   end
 
@@ -102,6 +103,7 @@ module SiteParser
     else
       detail[:event] = detail_table[6].at('.//td//span//a//span').text.split("　")[1].split("（")[0]
     end
+    detail[:url] = url
     return detail
   end
 
@@ -147,6 +149,7 @@ module SiteParser
     detail_table = doc.xpath('//*[@id="item_data"]//table//tr')
     detail[:date] = detail_table[2].at('.//td').text.tr("年月","-").tr("日","")
     detail[:event] = detail_table[6].at('.//td//a').text.split('/')[0]
+    detail[:url] = url
     return detail
   end
 

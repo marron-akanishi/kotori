@@ -139,6 +139,13 @@
     </div>
   </div>
   <hr>
+  <div class="form-group row">
+    <label for="url" class="col-sm-3 col-form-label">URL：</label>
+    <div class="col-sm-9">
+      <input type="text" id="url-input" name="url" class="form-control" value="<%= @detail[:url] %>">
+    </div>
+  </div>
+  <hr>
   <div id="input-error">入力に不備があります</div>
   <div class="d-flex justify-content-center">
     <button type="button" class="btn btn-primary" onclick="submitCheck()">登録</button>

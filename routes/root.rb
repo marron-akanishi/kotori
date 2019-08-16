@@ -46,7 +46,7 @@ class App < Sinatra::Base
         redirect to('/error?code=403')
       end
       begin
-        User.find(session[:id]).update(latest_at: Time.now)
+        User.find(session[:id]).update(latest_at: Time.now, latest_ip: request.ip)
       rescue => e
         redirect to("/error?code=512")
       end

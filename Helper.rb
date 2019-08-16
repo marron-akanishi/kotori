@@ -170,14 +170,14 @@ module Helper
       # 順番に登録していく
       if is_mod then
         book = Book.find(params[:id]).update(title: CGI.escapeHTML(params["title"]), cover: filename, published_at: CGI.escapeHTML(params["date"]), detail: CGI.escapeHTML(params["detail"]),
-                                            is_adult: is_adult, mod_user: session[:id], event_id: event_id, circle_id: circle.id)
+                                            is_adult: is_adult, mod_user: session[:id], event_id: event_id, circle_id: circle.id, url: CGI.escapeHTML(params["url"]))
         BookGenre.where(book_id: params[:id]).delete_all
         BookAuthor.where(book_id: params[:id]).delete_all
         BookTag.where(book_id: params[:id]).delete_all
         book = Book.find(params[:id])
       else
         book = Book.create(title: CGI.escapeHTML(params["title"]), cover: filename, published_at: CGI.escapeHTML(params["date"]), detail: CGI.escapeHTML(params["detail"]),
-                          is_adult: is_adult, mod_user: session[:id], event_id: event_id, circle_id: circle.id)
+                          is_adult: is_adult, mod_user: session[:id], event_id: event_id, circle_id: circle.id, url: CGI.escapeHTML(params["url"]))
       end
       genres.each_index do |idx|
         if idx == 0 then

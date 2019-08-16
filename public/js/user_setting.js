@@ -6,6 +6,10 @@ $('.custom-file-input').on('change', function () {
   $(this).next('.custom-file-label').html($(this)[0].files[0].name);
 })
 
+function api_key_update(){
+  fetch("/user/api_update").then(res => res.text()).then(text => $("#apiKey").val(text));
+}
+
 function url_list_add(){
   if (document.getElementById("urllist").files.length == 0) return;
   // CSVロード

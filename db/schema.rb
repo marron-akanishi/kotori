@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_13_185008) do
+ActiveRecord::Schema.define(version: 2019_08_16_150149) do
 
   create_table "authors", force: :cascade do |t|
     t.text "name", null: false
@@ -66,6 +66,7 @@ ActiveRecord::Schema.define(version: 2019_08_13_185008) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "name_yomi"
+    t.text "url"
     t.index ["circle_id"], name: "index_books_on_circle_id"
     t.index ["event_id"], name: "index_books_on_event_id"
   end
@@ -125,9 +126,20 @@ ActiveRecord::Schema.define(version: 2019_08_13_185008) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "is_admin", default: false
+    t.string "latest_ip"
+    t.text "api"
     t.index ["author_id"], name: "index_users_on_author_id"
     t.index ["circle_id"], name: "index_users_on_circle_id"
     t.index ["id"], name: "index_users_on_id", unique: true
+  end
+
+  create_table "wants", force: :cascade do |t|
+    t.text "user_id"
+    t.text "title"
+    t.integer "book_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["book_id"], name: "index_wants_on_book_id"
   end
 
 end

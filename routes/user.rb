@@ -1,3 +1,7 @@
+require 'digest/md5'
+require 'encryptor'
+require 'securerandom'
+
 class App < Sinatra::Base
   get '/user/mypage' do
     login_check
@@ -65,6 +69,17 @@ class App < Sinatra::Base
       end
     end
     redirect to("/book/#{params["id"]}?msg=memo")
+  end
+
+  get '/user/api_update' do
+    login_check
+    secret_key = SecureRandom.random_bytes(32)
+    iv = SecureRandom.random_bytes(12)
+    user = User.find(session[:id])
+    key = Encryptor.encrypt(value: user.mail, key: secret_key, iv: iv)
+    key = Digest::MD5.hexdigest(key)
+    user.update(api: key)
+    return key
   end
 
   post '/user/add_books' do

@@ -18,6 +18,7 @@ GEM
     connection_pool (2.2.2)
     domain_name (0.5.20180417)
       unf (>= 0.0.5, < 1.0.0)
+    encryptor (3.0.0)
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
     hashie (3.6.0)
@@ -107,6 +108,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord
+  encryptor
   kakasi
   mechanize
   nokogiri

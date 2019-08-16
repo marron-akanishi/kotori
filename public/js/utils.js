@@ -1,4 +1,4 @@
-var limit;
+var limit, max_page;
 
 // ページャーの生成
 function makePageNav(page_limit) {
@@ -6,33 +6,52 @@ function makePageNav(page_limit) {
   $("#pagenav").empty();
   $("#listcount").text(`${disp_list.length}件`);
   if (disp_list.length == 0) return;
-  var page_count = Math.floor(disp_list.length / limit);
-  if (disp_list.length % limit != 0) page_count++;
+  max_page = Math.floor(disp_list.length / limit);
+  if (disp_list.length % limit != 0) max_page++;
   $("#pagenav").append(`
+    <li class="page-item" id="firstpage">
+      <a class="page-link" href="#" aria-label="First" onclick="setPage('first')">
+        <span aria-hidden="true">最初</span>
+      </a>
+    </li>
     <li class="page-item" id="prevpage">
       <a class="page-link" href="#" aria-label="Previous" onclick="setPage('prev')">
-        <span aria-hidden="true">&laquo;</span>
+        <span aria-hidden="true">&lt;</span>
       </a>
     </li>
   `)
-  for (var i = 1; i <= page_count; i++) {
-    $("#pagenav").append(`<li class="page-item" id="selpage-${i}"><a class="page-link" href="#" onclick="setPage(${i})">${i}</a></li>`)
-  }
+  $("#pagenav").append(`
+    <li class="page-item disabled"><a class="page-link" href="#" id="pagenum">1/${max_page}</a></li>
+  `)
   $("#pagenav").append(`
     <li class="page-item" id="nextpage">
       <a class="page-link" href="#" aria-label="Next" onclick="setPage('next')">
-        <span aria-hidden="true">&raquo;</span>
+        <span aria-hidden="true">&gt;</span>
+      </a>
+    </li>
+    <li class="page-item" id="lastpage">
+      <a class="page-link" href="#" aria-label="Last" onclick="setPage('last')">
+        <span aria-hidden="true">最後</span>
       </a>
     </li>
   `)
   $('#prevpage').addClass("disabled");
-  $('#selpage-1').addClass("active");
-  if (page_count == 1) $('#nextpage').addClass("disabled");
+  $('#firstpage').addClass("disabled");
+  if (max_page == 1) {
+    $('#nextpage').addClass("disabled");
+    $('#lastpage').addClass("disabled");
+  }
 }
 
 // ページネーション
 function setPage(page) {
   switch (page) {
+    case "first":
+      current_page = 1;
+      break;
+    case "last":
+      current_page = max_page;
+      break;
     case "prev":
       current_page--;
       break;
@@ -43,11 +62,22 @@ function setPage(page) {
       current_page = page
       break;
   }
-  $('li[id$="page"]').removeClass("disabled");
-  if (current_page * limit >= disp_list.length) $('#nextpage').addClass("disabled");
-  if (current_page == 1) $('#prevpage').addClass("disabled");
-  $('li[id^="selpage-"]').removeClass("active");
-  $(`#selpage-${current_page}`).addClass("active");
+  if (current_page >= max_page) {
+    $('#nextpage').addClass("disabled");
+    $('#lastpage').addClass("disabled");
+  } else {
+    $('#nextpage').removeClass("disabled");
+    $('#lastpage').removeClass("disabled");
+  }
+  if (current_page == 1) {
+    $('#prevpage').addClass("disabled");
+    $('#firstpage').addClass("disabled");
+  } else {
+    $('#prevpage').removeClass("disabled");
+    $('#firstpage').removeClass("disabled");
+  }
+  $(`#pagenum`).text(`${current_page}/${max_page}`)
+  //scrollTo(0,0)
   viewChange();
 }
 

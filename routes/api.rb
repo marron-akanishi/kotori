@@ -68,4 +68,14 @@ class App < Sinatra::Base
   # 指定された情報に対応する書籍を返す(条件複数)
   get '/api/search' do
   end
+
+  # APIキーを利用した所有書籍の取得
+  get '/api/get_booklist' do
+    if params["key"] == nil || !User.exists?(api: params["key"]) then
+      return "error"
+    else
+      user_id = User.find_by(api: params["key"]).id
+      Book.where(id: UserBook.where(user_id: user_id).select(:book_id)).to_json()
+    end
+  end
 end
