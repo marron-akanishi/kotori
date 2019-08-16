@@ -22,6 +22,9 @@ class App < Sinatra::Base
         UserBook.includes(book: [:authors, :genres, :circle])
                 .where(user_id: session[:id])
                 .to_json(include: {book: {include: [:authors, :genres, :circle]}})
+      when "wishlist" then
+        login_check
+        Want.where(user_id: session[:id]).to_json()
       else
         redirect to('/error?code=500')
     end

@@ -1,0 +1,41 @@
+<script>document.title = "ほしい物リスト - Kotori"</script>
+<h2 style="text-align: center;">ほしい物リスト</h2>
+<div class="input-group mb-2">
+  <div class="input-group-prepend">
+    <span class="input-group-text">検索</span>
+  </div>
+  <input type="text" class="form-control" id="search">
+  <div class="input-group-append">
+    <span class="input-group-text" id="listcount"></span>
+  </div>
+</div>
+<div class="d-flex justify-content-end mb-2">
+  <div class="form-inline">
+    <label for="sort-sel">表示順：</label>
+    <select id="sort-sel" class="form-control" onchange="setSort(this)">
+      <option value="created_at,desc" selected>登録日(降順)</option>
+      <option value="created_at,asc">登録日(昇順)</option>
+      <option value="title,desc">タイトル(降順)</option>
+      <option value="title,asc">タイトル(昇順)</option>
+    </select>
+  </div>
+</div>
+<table id="list" class="table"></table>
+<% if @can_add %>
+<form action="/user/wishlist/add" method="POST">
+  <div class="input-group">
+    <input type="text" name="title" class="form-control" required>
+    <div class="input-group-append">
+      <button type="submit" class="btn btn-success">追加</button>
+    </div>
+  </div>
+</form>
+<% else %>
+登録数が50件を超えているため、追加出来ません。
+<% end %>
+
+<div class="switch-button" onclick="location.href='/user/mypage'">
+  <p>マイページへ</p>
+</div>
+
+<script src="/js/wishlist.js?ver=<%= $version %>"></script>

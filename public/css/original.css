@@ -21,7 +21,7 @@ hr {
   border: 0.5px dashed #aaaaaa;
 }
 
-/* 所有書籍一覧 */
+/* マイページ */
 .cover {
   position: relative;
   margin: 0 .25rem .5rem 0;
@@ -51,6 +51,18 @@ hr {
 
 .form-inline label{
   margin-bottom: 0 !important;
+}
+
+.switch-button {
+  cursor: pointer;
+  position: fixed;
+  right: 10px;
+  bottom: 0px;
+  padding: 10px 10px 0px 10px;
+  font-size: 1rem;
+  color: white;
+  display: inline-block;
+  background-color: #18bc9c;
 }
 
 /* 登録画面 */

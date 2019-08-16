@@ -2,7 +2,7 @@ class App < Sinatra::Base
   get '/book/search' do
     erb :book_search, :layout_options => { :views => settings.views }, :views => settings.views + '/book'
   end
-  
+
   get '/book/:id' do
     @book = Book.includes(:authors, :genres, :tags, :user, :event, :circle).find(params["id"])
     if session[:id] == nil then
@@ -10,25 +10,32 @@ class App < Sinatra::Base
     else
       @is_adult = User.find(session[:id]).is_adult
     end
-    if session[:id] != nil && UserBook.exists?(user_id: session[:id], book_id: params["id"])then
-      @owned = true;
-      @is_adult = true;
-      @memo = UserBook.find_by(user_id: session[:id], book_id: params["id"]).memo
+    if session[:id] != nil then
+      if UserBook.exists?(user_id: session[:id], book_id: params["id"]) then
+        @owned = true;
+        @is_adult = true;
+        @memo = UserBook.find_by(user_id: session[:id], book_id: params["id"]).memo
+      else
+        @owned = false;
+        @is_want = Want.exists?(user_id: session[:id], book_id: params["id"])
+      end
     end
     message = {
       "own" => "書籍を所有状態にしました",
       "unown" => "書籍を未所有状態にしました",
       "memo" => "メモを保存しました",
-      "modify" => "書籍情報を保存しました"
+      "modify" => "書籍情報を保存しました",
+      "wishlist_add" => "ほしい物リストに追加しました",
+      "wishlist_max" => "ほしい物リストが50件を超えるため、追加できません"
     }
     @msg = message[params["msg"]]
     # パンくずリスト用にアクセス元を保存
     if request.referrer != nil && request.referrer.index(@@env["DOMAIN"]) then
       prev = request.referrer.split('/')
-      # マイページor詳細画面のみに絞る
-      if prev[4] == "mypage" || (prev[3] != "book" && prev[4] =~ /\A[0-9]+\z/)  then
+      # マイページorほしい物リストor詳細画面のみに絞る
+      if prev[4] == "mypage" || prev[4] == "wishlist" || (prev[3] != "book" && prev[4] =~ /\A[0-9]+\z/)  then
         session[:prev_type] = prev[3]
-        session[:prev_id] = prev[4]
+        session[:prev_detail] = prev[4]
       end
     else
       session[:prev_type] = nil

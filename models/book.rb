@@ -13,6 +13,7 @@ class Book < ActiveRecord::Base
   has_many :genres, through: :book_genres
   has_many :book_authors, dependent: :destroy
   has_many :authors, through: :book_authors
+  has_many :wants
   belongs_to :user, foreign_key: "mod_user"
   belongs_to :event
   belongs_to :circle

@@ -3,6 +3,7 @@ require 'encryptor'
 require 'securerandom'
 
 class App < Sinatra::Base
+  # マイページ
   get '/user/mypage' do
     login_check
     @name = User.find(session[:id]).name
@@ -14,23 +15,50 @@ class App < Sinatra::Base
     erb :mypage
   end
 
-  get '/user/setting' do
+  # ほしい物リスト
+  get '/user/wishlist' do
     login_check
-    @user = User.find(session[:id])
-    erb :setting
+    @can_add = Want.where(user_id: session[:id]).count < 50
+     message = {
+      "max" => "件数が50件を超えているため、追加出来ません",
+      "add" => "ほしい物リストに追加しました",
+      "del" => "ほしい物リストから削除しました"
+    }
+    @msg = message[params["msg"]]
+    erb :wishlist
   end
 
-  post '/user/setting/done' do
+  get '/user/wishlist/add' do
     login_check
-    is_adult = boolean_check(params["is-adult"])
-    begin
-      User.find(session[:id]).update(name: CGI.escapeHTML(params["dispName"]), is_adult: is_adult)
-    rescue => e
-      redirect to("/error?code=512")
+    if Want.where(user_id: session[:id]).count >= 50 then
+      redirect to("/book/#{params["id"]}?msg=wishlist_max")
     end
-    redirect to('/user/mypage?msg=setting_done')
+    book = Book.find(params["id"])
+    Want.create(user_id: session[:id], title: book.title, book_id: book.id)
+    redirect to("/book/#{params["id"]}?msg=wishlist_add")
   end
 
+  post '/user/wishlist/add' do
+    login_check
+    if Want.where(user_id: session[:id]).count >= 50 then
+      redirect to('/user/wishlist?msg=max')
+    end
+    Want.create(user_id: session[:id], title: params["title"])
+    redirect to('/user/wishlist?msg=add')
+  end
+
+  get '/user/wishlist/delete' do
+    login_check
+    want = Want.find(params["id"])
+    if want.user_id != session[:id] then
+      redirect to('/error?code=422')
+    else
+      want.delete
+    end
+    redirect to('/user/wishlist?msg=del')
+  end
+
+  # 書籍詳細
   get '/user/own/:id' do
     login_check
     if !UserBook.exists?(user_id: session[:id], book_id: params["id"]) then
@@ -69,6 +97,24 @@ class App < Sinatra::Base
       end
     end
     redirect to("/book/#{params["id"]}?msg=memo")
+  end
+
+  # 設定画面
+  get '/user/setting' do
+    login_check
+    @user = User.find(session[:id])
+    erb :setting
+  end
+
+  post '/user/setting/done' do
+    login_check
+    is_adult = boolean_check(params["is-adult"])
+    begin
+      User.find(session[:id]).update(name: CGI.escapeHTML(params["dispName"]), is_adult: is_adult)
+    rescue => e
+      redirect to("/error?code=512")
+    end
+    redirect to('/user/mypage?msg=setting_done')
   end
 
   get '/user/api_update' do

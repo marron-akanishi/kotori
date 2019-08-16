@@ -2,10 +2,14 @@
 <ol class="breadcrumb">
   <% if session[:prev_type] %>
     <% if session[:prev_type] == "user" %>
-    <li class="breadcrumb-item"><a href="/user/mypage">マイページ</a></li>
+      <% if session[:prev_detail] == "mypage" %>
+      <li class="breadcrumb-item"><a href="/user/mypage">マイページ</a></li>
+      <% elsif session[:prev_detail] == "wishlist" %>
+      <li class="breadcrumb-item"><a href="/user/wishlist">ほしい物リスト</a></li>
+      <% end %>
     <% else %>
     <li class="breadcrumb-item"><a href="/<%= session[:prev_type] %>"><%= @type %>一覧</a></li>
-    <li class="breadcrumb-item"><a href="/<%= session[:prev_type] %>/<%= session[:prev_id] %>"><%= @type %>詳細</a></li>
+    <li class="breadcrumb-item"><a href="/<%= session[:prev_type] %>/<%= session[:prev_detail] %>"><%= @type %>詳細</a></li>
     <% end %>
   <% end %>
   <li class="breadcrumb-item active">書籍詳細</li>
@@ -120,6 +124,10 @@
       onclick="location.href='/book/<%= @book.id %>/modify'">情報編集</button>
     <button class="btn btn-danger" style="margin: 0 0.1rem" data-toggle="modal" data-target="#delModal">所有解除</button>
     <% elsif session[:id] != nil %>
+      <% if !@is_want %>
+      <button class="btn btn-warning" style="margin: 0 0.1rem"
+        onclick="location.href='/user/wishlist/add?id=<%= @book.id %>'">欲しい！</button>
+      <% end %>
     <button class="btn btn-info" style="margin: 0 0.1rem"
       onclick="location.href='/user/own/<%= @book.id %>?exist=true'">所有</button>
     <% else %>
