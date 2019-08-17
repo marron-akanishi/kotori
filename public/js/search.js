@@ -20,6 +20,7 @@ function viewChange() {
   $("#list").empty();
   disp_area = disp_list.slice((current_page - 1) * LIMIT, current_page * LIMIT)
   disp_area.forEach(data => {
+    if(data.is_adult) data.cover = "r18.png"
     $("#list").append(`
       <div class="media border p-2 result-row" onclick="location.href='/book/${data.id}'">
         <div class="media-body">

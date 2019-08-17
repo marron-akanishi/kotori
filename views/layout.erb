@@ -25,7 +25,11 @@
     <meta name="twitter:url" content="https://kotori.marron.work/book/<%= @book.id %>">
     <meta name="twitter:title" content="<%= @book.title %>">
     <meta name="twitter:description" content="<%= @book.circle.name %>">
+    <% if @book.is_adult %>
+    <meta name="twitter:image" content="https://kotori.marron.work/images/cover/r18.png">
+    <% else %>
     <meta name="twitter:image" content="https://kotori.marron.work/images/cover/<%= @book.cover %>">
+    <% end %>
     <% end %>
   </head>
   <body>

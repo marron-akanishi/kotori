@@ -1,6 +1,6 @@
 var mode, orig_list, disp_list, current_page;
 var sortmode, reverse;
-const LIMIT = 100;
+const LIMIT = 50;
 
 // リストビューの更新
 function viewChange() {
