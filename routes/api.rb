@@ -188,14 +188,12 @@ class App < Sinatra::Base
      tag_ids = all_ids
     end
     # 書籍
-    p title_ids
-    p author_ids
-    p circle_ids
-    p genre_ids
-    p event_ids
-    p tag_ids
     if words.length == 1 then
-      book_ids = (all_ids & (title_ids | author_ids | circle_ids | genre_ids | event_ids | tag_ids)) - (title_del | author_del | circle_del | genre_del | event_del | tag_del)
+      if words[0][0] == "-" then
+        book_ids = all_ids - (title_del | author_del | circle_del | genre_del | event_del | tag_del)
+      else
+        book_ids = (title_ids | author_ids | circle_ids | genre_ids | event_ids | tag_ids)
+      end 
     else
       book_ids = (title_ids & author_ids & circle_ids & genre_ids & event_ids & tag_ids) - (title_del | author_del | circle_del | genre_del | event_del | tag_del)
     end
