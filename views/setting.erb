@@ -5,18 +5,16 @@
 <% end %>
 <script>document.title = "設定 - Kotori"</script>
 <h2 style="text-align: center;">設定</h2>
-<div class="d-none d-md-block">
-  <ul class="nav nav-tabs" role="tablist">
-    <li class="nav-item">
-      <a class="nav-link active" id="basic-tab" data-toggle="tab" href="#basic" role="tab" aria-controls="basic"
-        aria-selected="true">基本情報</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" id="book-tab" data-toggle="tab" href="#book" role="tab" aria-controls="book"
-        aria-selected="false">書籍管理</a>
-    </li>
-  </ul>
-</div>
+<ul class="nav nav-tabs" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="basic-tab" data-toggle="tab" href="#basic" role="tab" aria-controls="basic"
+      aria-selected="true">基本情報</a>
+  </li>
+  <li class="nav-item sm-hidden">
+    <a class="nav-link" id="book-tab" data-toggle="tab" href="#book" role="tab" aria-controls="book"
+      aria-selected="false">書籍管理</a>
+  </li>
+</ul>
 <div class="tab-content">
   <div class="tab-pane show active mt-2" id="basic" role="tabpanel" aria-labelledby="basic-tab">
     <p style="margin-top: 1rem;">登録メールアドレス：<%= @user.mail %></p>
@@ -24,9 +22,14 @@
     <div class="form-group row">
       <label for="apiKey" class="col-sm-2 col-form-label">APIキー：</label>
       <div class="col-sm-5">
-        <input type="text" id="apiKey" name="apiKey" class="form-control" value="<%= @user.api %>" disabled>
+        <div class="input-group">
+          <input type="text" id="apiKey" name="apiKey" class="form-control" value="<%= @user.api %>" readonly>
+          <div class="input-group-append">
+            <button type="button" class="btn btn-secondary" onclick="apiCopy()"><span class="oi oi-clipboard"></span></button>
+          </div>
+        </div>
       </div>
-      <button type="button" class="btn btn-primary" onclick="api_key_update()">更新</button>
+      <button type="button" class="btn btn-primary sm-hidden" onclick="api_key_update()">更新</button>
     </div>
     <hr>
     <form action="/user/setting/done" method="POST">

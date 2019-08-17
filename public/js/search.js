@@ -22,13 +22,15 @@ function viewChange() {
   disp_area.forEach(data => {
     $("#list").append(`
       <div class="media border p-2 result-row" onclick="location.href='/book/${data.id}'">
-        <img src="/images/cover/${data.cover}" height="100" class="mr-2" />
         <div class="media-body">
           <h5 class="mt-0">${data.title}</h5>
           <div style="color: #5f5f5f">
             <span>${data.authors[0].name}</span><br>
             <span>${data.circle.name}</span>
           </div>
+        </div>
+        <div style="text-align: right;">
+          <img src="/images/cover/${data.cover}" height="100" class="mr-2" />
         </div>
       </div>
     `)

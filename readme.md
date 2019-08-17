@@ -7,7 +7,7 @@
 
 ## 開発仕様
 Windows10 + WSL  
-Umi(CSS)  
+Honoka(CSS)  
 その他Gemfileに書いてあるもの
 
 ## kakasiのインストール

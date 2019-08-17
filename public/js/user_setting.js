@@ -1,6 +1,21 @@
 var site_list = {melon: "メロンブックス", tora: "とらのあな", lashin: "らしんばん"}
 var status_list = {wait: "待ち", ok: "OK", error: "NG", duplicate: "重複"}
 
+var getDevice = (function () {
+  var ua = navigator.userAgent;
+  if (ua.indexOf('iPhone') > 0 || ua.indexOf('iPod') > 0 || ua.indexOf('Android') > 0 && ua.indexOf('Mobile') > 0) {
+    return 'sp';
+  } else if (ua.indexOf('iPad') > 0 || ua.indexOf('Android') > 0) {
+    return 'tab';
+  } else {
+    return 'other';
+  }
+})();
+
+window.onload = () => {
+  if(getDevice != "other") $(".sm-hidden").hide();
+}
+
 // ファイル名表示
 $('.custom-file-input').on('change', function () {
   $(this).next('.custom-file-label').html($(this)[0].files[0].name);
@@ -8,6 +23,11 @@ $('.custom-file-input').on('change', function () {
 
 function api_key_update(){
   fetch("/user/api_update").then(res => res.text()).then(text => $("#apiKey").val(text));
+}
+
+function apiCopy(){
+  document.getElementById("apiKey").select();
+  document.execCommand("copy");
 }
 
 function url_list_add(){
