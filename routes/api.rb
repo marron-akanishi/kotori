@@ -74,7 +74,6 @@ class App < Sinatra::Base
     # マイナス検索はそれぞれで行う
     words = params["words"].split(/[[:blank:]]+/)
     all_ids = Book.all.pluck(:id)
-    p all_ids
     # タイトル
     title_ids = []
     title_del = []
@@ -200,7 +199,7 @@ class App < Sinatra::Base
     if params["words"] != "" && book_ids.length == all_ids.length then
       "[]"
     else
-      Book.where(id: book_ids).to_json()
+      Book.includes(:authors, :circle).where(id: book_ids).to_json(include: [:authors, :circle])
     end
   end
 

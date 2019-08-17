@@ -103,3 +103,11 @@ hr {
   text-align: center;
   margin: 0.5rem 0;
 }
+
+.result-row {
+  cursor: pointer;
+}
+
+.result-row:hover {
+  background-color: #b3b3b3;
+}

@@ -1,15 +1,38 @@
 var mode, orig_list, disp_list, current_page;
 var sortmode, reverse;
-const LIMIT = 100;
+const LIMIT = 20;
+
+window.onload = () =>{
+  if ($("#words").val() != "") {
+    orig_list = JSON.parse(sessionStorage.result)
+    $("#result").text(`結果：${orig_list.length}件`)
+    disp_list = orig_list
+    makePageNav(LIMIT);
+    current_page = 1;
+    viewChange();
+  } else {
+    sessionStorage.removeItem("result")
+  }
+}
 
 // リストビューの更新
 function viewChange() {
   $("#list").empty();
   disp_area = disp_list.slice((current_page - 1) * LIMIT, current_page * LIMIT)
-  $("#list").append("<tr><th>タイトル</th></tr>");
-  for (var i in disp_area) {
-    $("#list").append(`<tr><td><a href='/book/${disp_area[i].id}'>${disp_area[i].title}</a></td></tr>`)
-  }
+  disp_area.forEach(data => {
+    $("#list").append(`
+      <div class="media border p-2 result-row" onclick="location.href='/book/${data.id}'">
+        <img src="/images/cover/${data.cover}" height="100" class="mr-2" />
+        <div class="media-body">
+          <h5 class="mt-0">${data.title}</h5>
+          <div style="color: #5f5f5f">
+            <span>${data.authors[0].name}</span><br>
+            <span>${data.circle.name}</span>
+          </div>
+        </div>
+      </div>
+    `)
+  });
 }
 
 // フォームでEnterキーによる検索を有効化
@@ -26,6 +49,7 @@ function startSearch(){
       'words': $('#words').val()
     }
   }).done((data) => {
+    sessionStorage.setItem("result", data)
     orig_list = JSON.parse(data)
     $("#result").text(`結果：${orig_list.length}件`)
     disp_list = orig_list
