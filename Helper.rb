@@ -24,6 +24,7 @@ module Helper
   # カナ→ひら、半角化、スペース削除、大文字化
   # 読みの場合は!と?も削除する
   def normalize_str(str, is_yomi=false)
+    str = CGI.escapeHTML(str)
     str = str.tr('ァ-ン','ぁ-ん')
     str = str.tr('０-９ａ-ｚＡ-Ｚ','0-9a-zA-Z')
     str = str.gsub(/(\s|　)+/, '')

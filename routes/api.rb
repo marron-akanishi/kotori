@@ -69,7 +69,97 @@ class App < Sinatra::Base
   end
 
   # 指定された情報に対応する書籍を返す(条件複数)
-  get '/api/search' do
+  post '/api/search' do
+    # 書籍IDの一覧をそれぞれ作成して最後に合体させる
+    # マイナス検索はそれぞれで行う
+    words = params["words"].split(/[[:blank:]]+/)
+    include_ids = []
+    delete_ids = []
+    # タイトル
+    words.each do |word|
+      if word == "" then
+        next
+      end
+      if word[0] == "-" then
+        word = word[1..-1]
+        delete_ids = delete_ids | Book.where('title like ?',"%#{CGI.escapeHTML(word)}%").pluck(:id)
+      else
+        include_ids = include_ids | Book.where('title like ?',"%#{CGI.escapeHTML(word)}%").pluck(:id)
+      end
+    end
+    # 著者
+    words.each do |word|
+      if word == "" then
+        next
+      end
+      if word[0] == "-" then
+        word = word[1..-1]
+        delete_ids = delete_ids | BookAuthor.where(author_id: Author.where('name like ? or name_yomi like ?',
+          "%#{CGI.escapeHTML(word)}%", "%#{normalize_str(word)}%")).pluck(:book_id)
+      else
+        include_ids = include_ids | BookAuthor.where(author_id: Author.where('name like ? or name_yomi like ?',
+          "%#{CGI.escapeHTML(word)}%", "%#{normalize_str(word)}%")).pluck(:book_id)
+      end
+    end
+    # サークル
+    words.each do |word|
+      if word == "" then
+        next
+      end
+      if word[0] == "-" then
+        word = word[1..-1]
+        delete_ids = delete_ids | Book.where(circle_id: Circle.where('name like ? or name_yomi like ?',
+          "%#{CGI.escapeHTML(word)}%", "%#{normalize_str(word)}%")).pluck(:id)
+      else
+        include_ids = include_ids | Book.where(circle_id: Circle.where('name like ? or name_yomi like ?',
+          "%#{CGI.escapeHTML(word)}%", "%#{normalize_str(word)}%")).pluck(:id)
+      end
+    end
+    # ジャンル
+    words.each do |word|
+      if word == "" then
+        next
+      end
+      if word[0] == "-" then
+        word = word[1..-1]
+        delete_ids = delete_ids | BookGenre.where(genre_id: Genre.where('name like ? or name_yomi like ?',
+          "%#{CGI.escapeHTML(word)}%", "%#{normalize_str(word)}%")).pluck(:book_id)
+      else
+        include_ids = include_ids | BookGenre.where(genre_id: Genre.where('name like ? or name_yomi like ?',
+          "%#{CGI.escapeHTML(word)}%", "%#{normalize_str(word)}%")).pluck(:book_id)
+      end
+    end
+    # イベント
+    words.each do |word|
+      if word == "" then
+        next
+      end
+      if word[0] == "-" then
+        word = word[1..-1]
+        delete_ids = delete_ids | Book.where(event_id: Event.where('name like ? or name_yomi like ?',
+          "%#{CGI.escapeHTML(word)}%", "%#{normalize_str(word)}%")).pluck(:id)
+      else
+        include_ids = include_ids | Book.where(event_id: Event.where('name like ? or name_yomi like ?',
+          "%#{CGI.escapeHTML(word)}%", "%#{normalize_str(word)}%")).pluck(:id)
+      end
+    end
+    # タグ
+    words.each do |word|
+      if word == "" then
+        next
+      end
+      if word[0] == "-" then
+        word = word[1..-1]
+        delete_ids = delete_ids | BookTag.where(tag_id: Tag.where('name like ? or name_yomi like ?',
+          "%#{CGI.escapeHTML(word)}%", "%#{normalize_str(word)}%")).pluck(:book_id)
+      else
+        include_ids = include_ids | BookTag.where(tag_id: Tag.where('name like ? or name_yomi like ?',
+          "%#{CGI.escapeHTML(word)}%", "%#{normalize_str(word)}%")).pluck(:book_id)
+      end
+    end
+    # 書籍
+    book_ids = include_ids - delete_ids
+    Book.where(id: book_ids).to_json()
   end
 
   # APIキーを利用した所有書籍の取得

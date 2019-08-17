@@ -64,7 +64,7 @@ module SiteParser
 
   def tora(url)
     # URLチェック
-    if url.index("https://ec.toranoana.shop/tora/ec/item/") != 0 && url.index("https://ec.toranoana.shop/tora_r/ec/item/") != 0 then
+    if url.index("https://ec.toranoana.shop/tora/ec/item/") != 0 && url.index("https://ec.toranoana.jp/tora_r/ec/item/") != 0 then
       return nil
     end
     detail = {}
@@ -101,7 +101,11 @@ module SiteParser
     if detail_table[5].at('.//td[1]').text == "初出イベント" then
       detail[:event] = detail_table[5].at('.//td//span//a//span').text.split("　")[1].split("（")[0]
     else
-      detail[:event] = detail_table[6].at('.//td//span//a//span').text.split("　")[1].split("（")[0]
+      if detail_table[6].at('.//td[1]').text == "初出イベント"
+        detail[:event] = detail_table[6].at('.//td//span//a//span').text.split("　")[1].split("（")[0]
+      else
+        detail[:event] = detail_table[7].at('.//td//span//a//span').text.split("　")[1].split("（")[0]
+      end
     end
     detail[:url] = url
     return detail

@@ -65,13 +65,13 @@ class App < Sinatra::Base
     #when "book" then
     when "author" then
       if Author.exists?(name: CGI.escapeHTML(params["name"])) &&
-        Author.exists?(name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true)) then
+        Author.exists?(name_yomi: normalize_str(params["name_yomi"], true)) then
         author_id = Author.find_by(name: CGI.escapeHTML(params["name"])).id
       end
       # 完全に新しいか全く同じか
       if author_id == nil || author_id == params[:id].to_i then
         begin
-          Author.find(params[:id]).update(name: CGI.escapeHTML(params["name"]), name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true), detail: CGI.escapeHTML(params["detail"]),
+          Author.find(params[:id]).update(name: CGI.escapeHTML(params["name"]), name_yomi: normalize_str(params["name_yomi"], true), detail: CGI.escapeHTML(params["detail"]),
                                           twitter: CGI.escapeHTML(params["twitter"]), pixiv: CGI.escapeHTML(params["pixiv"]), web: CGI.escapeHTML(params["web"]), circle_id: params["circle"])
         rescue => exception
           redirect to('/error?code=422')
@@ -84,12 +84,12 @@ class App < Sinatra::Base
       end
     when "circle" then
       if Circle.exists?(name: CGI.escapeHTML(params["name"])) &&
-        Circle.exists?(name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true)) then
+        Circle.exists?(name_yomi: normalize_str(params["name_yomi"], true)) then
         circle_id = Circle.find_by(name: CGI.escapeHTML(params["name"])).id
       end
       if circle_id == nil || circle_id == params[:id].to_i then
         begin
-          Circle.find(params["id"]).update(name: CGI.escapeHTML(params["name"]), name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true),
+          Circle.find(params["id"]).update(name: CGI.escapeHTML(params["name"]), name_yomi: normalize_str(params["name_yomi"], true),
                                             detail: CGI.escapeHTML(params["detail"]), web: CGI.escapeHTML(params["web"]))
         rescue => exception
           redirect to('/error?code=422')
@@ -102,12 +102,12 @@ class App < Sinatra::Base
       end
     when "genre" then
       if Genre.exists?(name: CGI.escapeHTML(params["name"])) &&
-        Genre.exists?(name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true)) then
+        Genre.exists?(name_yomi: normalize_str(params["name_yomi"], true)) then
         genre_id = Genre.find_by(name: CGI.escapeHTML(params["name"])).id
       end
       if genre_id == nil || genre_id == params[:id].to_i then
         begin
-          Genre.find(params["id"]).update(name: CGI.escapeHTML(params["name"]), name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true))
+          Genre.find(params["id"]).update(name: CGI.escapeHTML(params["name"]), name_yomi: normalize_str(params["name_yomi"], true))
         rescue => exception
           redirect to('/error?code=422')
         end
@@ -119,12 +119,12 @@ class App < Sinatra::Base
       end
     when "event" then
       if Event.exists?(name: CGI.escapeHTML(params["name"])) &&
-        Event.exists?(name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true)) then
+        Event.exists?(name_yomi: normalize_str(params["name_yomi"], true)) then
         event_id = Event.find_by(name: CGI.escapeHTML(params["name"])).id
       end
       if event_id == nil || event_id == params[:id].to_i then
         begin
-          Event.find(params["id"]).update(name: CGI.escapeHTML(params["name"]), name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true),
+          Event.find(params["id"]).update(name: CGI.escapeHTML(params["name"]), name_yomi: normalize_str(params["name_yomi"], true),
                                           start_at: CGI.escapeHTML(params["start"]), end_at: CGI.escapeHTML(params["end"]))
         rescue => exception
           redirect to('/error?code=422')
@@ -137,12 +137,12 @@ class App < Sinatra::Base
       end
     when "tag" then
       if Tag.exists?(name: CGI.escapeHTML(params["name"])) &&
-        Tag.exists?(name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true)) then
+        Tag.exists?(name_yomi: normalize_str(params["name_yomi"], true)) then
         tag_id = Tag.find_by(name: CGI.escape(params["name"])).id
       end
       if tag_id == nil || tag_id == params[:id].to_i then
         begin
-          Tag.find(params["id"]).update(name: CGI.escapeHTML(params["name"]), name_yomi: normalize_str(CGI.escapeHTML(params["name_yomi"]), true))
+          Tag.find(params["id"]).update(name: CGI.escapeHTML(params["name"]), name_yomi: normalize_str(params["name_yomi"], true))
         rescue => exception
           redirect to('/error?code=422')
         end

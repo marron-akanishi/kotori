@@ -65,7 +65,7 @@ hr {
   background-color: #18bc9c;
 }
 
-/* 登録画面 */
+/* 書籍登録 */
 .exists {
   display: inline-block;
   margin-bottom: 1rem;
@@ -93,7 +93,13 @@ hr {
   padding: .25rem .5rem;
 }
 
-/* 書籍詳細画面 */
+/* 書籍詳細 */
 .row-name {
   width: 150px;
+}
+
+/* 書籍検索 */
+#result {
+  text-align: center;
+  margin: 0.5rem 0;
 }
