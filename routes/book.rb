@@ -36,6 +36,9 @@ class App < Sinatra::Base
       if prev[4] == "mypage" || prev[4] == "wishlist" || (prev[3] != "book" && prev[4] =~ /\A[0-9]+\z/)  then
         session[:prev_type] = prev[3]
         session[:prev_detail] = prev[4]
+      else
+        session[:prev_type] = nil
+        session[:prev_id] = nil
       end
     else
       session[:prev_type] = nil
