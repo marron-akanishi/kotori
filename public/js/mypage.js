@@ -6,18 +6,20 @@ var limit_config = {grid: 0, list: 0};
 // ロード
 $(function () {
   // 所有書籍一覧作成
-  var user_books
   $.ajaxSetup({ async: false });
   $.getJSON("/api/get_list?type=user_book", data => own_list = data);  
   $.ajaxSetup({ async: true });
   // 表示件数読み込み
   limit_config["grid"] = $.cookie("mypageGridLimit") || 30
   limit_config["list"] = $.cookie("mypageListLimit") || 50
-  // 表示モード切り替え
+  // ソートモード読み込み
+  sortmode = $.cookie("mypageSortMode") || "created_at"
+  reverse = $.cookie("mypageIsReverse") || "desc"
+  // 表示モード読み込み
   mode = ($.cookie("mypageListMode") || "grid").toLowerCase()
   $(`#${mode.toLowerCase()}button`).addClass("active")
   disp_list = own_list
-  selSortMode("created_at", true)
+  selSortMode(sortmode, reverse)
 });
 
 // リストモードの切り替え
@@ -94,8 +96,7 @@ function setSort(obj) {
   var idx = obj.selectedIndex;
   var value = obj.options[idx].value;
   var option = value.split(",")
-  var reverse = option[1] == "desc" ? true : false
-  selSortMode(option[0], reverse)
+  selSortMode(option[0], option[1])
 }
 
 // 表示件数選択
@@ -110,14 +111,17 @@ function setLimit(obj){
 // 並び替え実行
 function selSortMode(_sortmode, _reverse){
   sortmode = _sortmode, reverse = _reverse
+  var isReverse = (_reverse == "desc" ? true : false)
   switch (sortmode) {
     case "created_at":
-      disp_list.sort(sortJSON(sortmode, reverse))
+      disp_list.sort(sortJSON(sortmode, isReverse))
       break;
     case "title":
-      disp_list.sort(sortJSON("book", reverse, "title"))
+      disp_list.sort(sortJSON("book", isReverse, "title"))
       break;
   }
+  $.cookie("mypageSortMode", _sortmode, { expires: 30 });
+  $.cookie("mypageIsReverse", _reverse, { expires: 30 });
   makePageNav(limit_config[mode]);
   current_page = 1;
   viewChange();
@@ -168,4 +172,5 @@ function viewChange() {
       break;
   }
   $("#limit-sel").val(limit_config[mode])
+  $("#sort-sel").val(sortmode+","+reverse)
 }

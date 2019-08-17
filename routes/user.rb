@@ -119,13 +119,17 @@ class App < Sinatra::Base
 
   get '/user/api_update' do
     login_check
-    secret_key = SecureRandom.random_bytes(32)
-    iv = SecureRandom.random_bytes(12)
-    user = User.find(session[:id])
-    key = Encryptor.encrypt(value: user.mail, key: secret_key, iv: iv)
-    key = Digest::MD5.hexdigest(key)
-    user.update(api: key)
-    return key
+    while true do
+      secret_key = SecureRandom.random_bytes(32)
+      iv = SecureRandom.random_bytes(12)
+      user = User.find(session[:id])
+      key = Encryptor.encrypt(value: user.mail, key: secret_key, iv: iv)
+      key = Digest::MD5.hexdigest(key)
+      if !User.exists?(api: key) then
+        user.update(api: key)
+        return key
+      end
+    end
   end
 
   post '/user/add_books' do
