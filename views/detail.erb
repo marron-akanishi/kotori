@@ -13,7 +13,12 @@
 <% end %>
 <script>document.title = "<%= @type_name %>詳細 - Kotori"</script>
 <h2 style="text-align: center;"><%= @type_name %>詳細</h2>
-<p><%= @type_name %>名：<%= @detail.name %></p>
+<span><%= @type_name %>名：<%= @detail.name %></span>
+<% if ["genre", "event", "tag"].include?(@type) && session[:id] != nil then %>
+<br><button type="button" class="btn btn-link" data-toggle="modal" data-target="#modModal">読み：<%= @detail.name_yomi %></button>
+<% else %>
+<p>読み：<%= @detail.name_yomi %></p>
+<% end %>
 <div class="input-group mb-2">
   <div class="input-group-prepend">
     <span class="input-group-text">検索</span>
@@ -37,6 +42,32 @@
   <ul class="pagination justify-content-center" id="pagenav">
   </ul>
 </nav>
+
+<div class="modal fade" id="modModal" tabindex="-1" role="dialog" aria-labelledby="modModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modModalLabel">読み修正</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="/<%= @type %>/<%= @detail.id %>/mod_yomi" method="POST">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="mod-yomi" class="col-form-label">読み:</label>
+            <input type="text" class="form-control" id="mod-yomi" name="yomi" value="<%= @detail.name_yomi %>">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">キャンセル</button>
+          <input type="submit" class="btn btn-primary" value="修正"/>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
 <script src="/js/detail.js?ver=<%= $version %>"></script>
 <script>

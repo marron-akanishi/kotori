@@ -1,5 +1,9 @@
 class App < Sinatra::Base
   get '/book/search' do
+    @is_adult = false
+    if session[:id] != nil && User.find(session[:id]).is_adult then
+      @is_adult = true
+    end
     erb :book_search, :layout_options => { :views => settings.views }, :views => settings.views + '/book'
   end
 
@@ -180,7 +184,9 @@ class App < Sinatra::Base
 
   get '/book/:id/modify' do
     login_check
-    @from = params["from"]
+    if !UserBooks.exists?(user_id: session[:id], book_id: params["id"]) then
+      redirect to('/error?code=401')
+    end
     @book = Book.includes(:authors, :genres, :tags, :event, :circle).find(params["id"])
     @book.authors.each_with_index do |obj, i|
       if i == 0 then

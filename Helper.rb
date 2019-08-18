@@ -1,6 +1,7 @@
 require 'securerandom'
 require 'open-uri'
 require 'rmagick'
+require 'fileutils'
 
 module Helper
   def login_check
@@ -50,6 +51,9 @@ module Helper
       image.resize_to_fit!(1000, 300)
       image.write("./public/images/cover/"+filename)
       image.destroy!
+      if is_mod then
+        FileUtils.rm("./public/images/cover/"+params["orig-cover"])
+      end
     elsif params["image-url"] != "" && is_mod == false then
       filename = SecureRandom.uuid + ".jpg"
       image = Magick::ImageList.new

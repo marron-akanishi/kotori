@@ -1,3 +1,16 @@
+<% if !@is_adult %>
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+  R-18指定の書籍に関しては表紙が表示されません。
+  <% if session[:id] == nil %>
+  表示するにはログインしてください。
+  <% else %>
+  表示するには設定を行ってください。
+  <% end %>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<% end %>
 <script>document.title = "書籍検索 - Kotori"</script>
 <h2 style="text-align: center;">書籍検索</h2>
 <div class="row justify-content-center" >
@@ -21,4 +34,5 @@
   </ul>
 </nav>
 
+<script>var is_adult = Boolean(<%= @is_adult %>)</script>
 <script src="/js/search.js?ver=<%= $version %>"></script>

@@ -16,13 +16,4 @@ class App < Sinatra::Base
     end
     erb :detail
   end
-
-  post '/author/mod_yomi' do
-    begin
-      Author.find(params["id"]).update(name_yomi: normalize_str(params["yomi"]))
-    rescue => e
-      redirect to("/error?code=422")
-    end
-    redirect to("/author/#{params["id"]}")
-  end
 end

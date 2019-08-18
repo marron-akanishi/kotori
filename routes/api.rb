@@ -79,32 +79,26 @@ class App < Sinatra::Base
       if word == "" then
         next
       end
+      is_del = false
       if word[0] == "-" then
         word = word[1..-1]
-        delete_ids |= Book.where('title like ?',"%#{CGI.escapeHTML(word)}%").pluck(:id)
-        delete_ids |= BookAuthor.where(author_id: Author.where('name like ? or name_yomi like ?',
-          "#{CGI.escapeHTML(word)}%", "#{normalize_str(word)}%")).pluck(:book_id)
-        delete_ids |= Book.where(circle_id: Circle.where('name like ? or name_yomi like ?',
-          "#{CGI.escapeHTML(word)}%", "#{normalize_str(word)}%")).pluck(:id)
-        delete_ids |= BookGenre.where(genre_id: Genre.where('name like ? or name_yomi like ?',
-          "#{CGI.escapeHTML(word)}%", "#{normalize_str(word)}%")).pluck(:book_id)
-        delete_ids |= Book.where(event_id: Event.where('name like ? or name_yomi like ?',
-          "%#{CGI.escapeHTML(word)}%", "%#{normalize_str(word)}%")).pluck(:id)
-        delete_ids |= BookTag.where(tag_id: Tag.where('name like ? or name_yomi like ?',
-          "#{CGI.escapeHTML(word)}%", "#{normalize_str(word)}%")).pluck(:book_id)
+        is_del = true
+      end
+      find_ids = []
+      find_ids |= Book.where('title like ?',"%#{CGI.escapeHTML(word)}%").pluck(:id)
+      find_ids |= BookAuthor.where(author_id: Author.where('name like ? or name_yomi like ?',
+        "#{CGI.escapeHTML(word)}%", "#{normalize_str(word)}%")).pluck(:book_id)
+      find_ids |= Book.where(circle_id: Circle.where('name like ? or name_yomi like ?',
+        "#{CGI.escapeHTML(word)}%", "#{normalize_str(word)}%")).pluck(:id)
+      find_ids |= BookGenre.where(genre_id: Genre.where('name like ? or name_yomi like ?',
+        "#{CGI.escapeHTML(word)}%", "#{normalize_str(word)}%")).pluck(:book_id)
+      find_ids |= Book.where(event_id: Event.where('name like ? or name_yomi like ?',
+        "%#{CGI.escapeHTML(word)}%", "%#{normalize_str(word)}%")).pluck(:id)
+      find_ids |= BookTag.where(tag_id: Tag.where('name like ? or name_yomi like ?',
+        "#{CGI.escapeHTML(word)}%", "#{normalize_str(word)}%")).pluck(:book_id)
+      if is_del then
+        delete_ids |= find_ids
       else
-        find_ids = []
-        find_ids |= Book.where('title like ?',"%#{CGI.escapeHTML(word)}%").pluck(:id)
-        find_ids |= BookAuthor.where(author_id: Author.where('name like ? or name_yomi like ?',
-          "#{CGI.escapeHTML(word)}%", "#{normalize_str(word)}%")).pluck(:book_id)
-        find_ids |= Book.where(circle_id: Circle.where('name like ? or name_yomi like ?',
-          "#{CGI.escapeHTML(word)}%", "#{normalize_str(word)}%")).pluck(:id)
-        find_ids |= BookGenre.where(genre_id: Genre.where('name like ? or name_yomi like ?',
-          "#{CGI.escapeHTML(word)}%", "#{normalize_str(word)}%")).pluck(:book_id)
-        find_ids |= Book.where(event_id: Event.where('name like ? or name_yomi like ?',
-          "%#{CGI.escapeHTML(word)}%", "%#{normalize_str(word)}%")).pluck(:id)
-        find_ids |= BookTag.where(tag_id: Tag.where('name like ? or name_yomi like ?',
-          "#{CGI.escapeHTML(word)}%", "#{normalize_str(word)}%")).pluck(:book_id)
         book_ids &= find_ids
       end
     end
