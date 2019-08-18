@@ -4,7 +4,8 @@ require 'mechanize'
 module SiteParser
   def melon(url)
     # URLチェック
-    if url.index("https://www.melonbooks.co.jp/detail/detail.php?product_id=") != 0 then
+    if url.index("https://www.melonbooks.co.jp/detail/detail.php?product_id=") != 0 &&
+       url.index("https://www.melonbooks.co.jp/fromagee/detail/detail.php?product_id=") != 0 then
       return nil
     end
     detail = {}
@@ -57,14 +58,15 @@ module SiteParser
       detail[:event] = detail_table[7].at('.//td//a').text
       detail[:is_adult] = (detail_table[8].at('.//td').text == "18禁") ? true : false
     end
-    p detail
+    # p detail
     detail[:url] = url
     return detail
   end
 
   def tora(url)
     # URLチェック
-    if url.index("https://ec.toranoana.shop/tora/ec/item/") != 0 && url.index("https://ec.toranoana.jp/tora_r/ec/item/") != 0 then
+    if url.index("https://ec.toranoana.shop/tora/ec/item/") != 0 &&
+      url.index("https://ec.toranoana.jp/tora_r/ec/item/") != 0 then
       return nil
     end
     detail = {}

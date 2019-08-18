@@ -184,7 +184,7 @@ class App < Sinatra::Base
 
   get '/book/:id/modify' do
     login_check
-    if !UserBooks.exists?(user_id: session[:id], book_id: params["id"]) then
+    if !UserBook.exists?(user_id: session[:id], book_id: params["id"]) then
       redirect to('/error?code=401')
     end
     @book = Book.includes(:authors, :genres, :tags, :event, :circle).find(params["id"])
