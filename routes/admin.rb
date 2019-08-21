@@ -1,3 +1,5 @@
+require 'fileutils'
+
 class App < Sinatra::Base
   get '/admin' do
     admin_check
@@ -35,6 +37,8 @@ class App < Sinatra::Base
           end
         end
       end
+    when "db_backup" then
+      FileUtils.cp("./db/db.sqlite3", "./db/db.bak.sqlite3")
     end
     redirect to('/admin')
   end

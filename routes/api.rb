@@ -2,7 +2,7 @@
 # mod_userのメールアドレスが入ります。
 
 class App < Sinatra::Base
-  # 単純に全項目返す
+  # 全項目取得
   get '/api/get_list' do
     case params["type"]
       when "book" then
@@ -30,7 +30,7 @@ class App < Sinatra::Base
     end
   end
 
-  # 指定されたIDに対応する書籍を返す
+  # 各項目に対応する書籍一覧取得
   get '/api/find' do
     case params["type"]
       when "genre" then
@@ -68,9 +68,12 @@ class App < Sinatra::Base
     end
   end
 
-  # 指定された情報に対応する書籍を返す(条件複数)
+  # 書籍検索
   post '/api/search' do
     # 書籍IDの一覧をそれぞれ作成して最後に合体させる
+    if params["words"] == "" then
+      return "[]"
+    end
     words = params["words"].split(/[[:blank:]]+/)
     all_ids = Book.all.pluck(:id)
     book_ids = all_ids
@@ -103,7 +106,11 @@ class App < Sinatra::Base
       end
     end
     book_ids = book_ids - delete_ids
-    Book.includes(:authors, :circle).where(id: book_ids).to_json(include: [:authors, :circle])
+    if params["limit"] then
+      Book.includes(:authors, :circle).where(id: book_ids).limit(params["limit"]).to_json(include: [:authors, :circle])
+    else
+      Book.includes(:authors, :circle).where(id: book_ids).to_json(include: [:authors, :circle])
+    end
   end
 
   # APIキーを利用した所有書籍の取得
@@ -113,6 +120,41 @@ class App < Sinatra::Base
     else
       user_id = User.find_by(api: params["key"]).id
       Book.where(id: UserBook.where(user_id: user_id).select(:book_id)).to_json()
+    end
+  end
+
+  # APIキーを利用したほしい物リストの管理
+  get '/api/wishlist' do
+    if params["key"] == nil || !User.exists?(api: params["key"]) then
+      return "error"
+    end
+    user = User.find_by(api: params["key"]).id
+    case params["mode"]
+    when "get" then
+      Want.where(user_id: user).to_json()
+    when "del" then
+      want = Want.find(params["id"])
+      if want.user_id != user then
+        return "error"
+      else
+        want.delete
+      end
+      return Want.where(user_id: user).to_json()
+    end
+  end
+
+  post '/api/wishlist' do
+    if params["key"] == nil || !User.exists?(api: params["key"]) then
+      return "error"
+    end
+    user = User.find_by(api: params["key"]).id
+    case params["mode"]
+    when "add" then
+      if Want.where(user_id: user).count >= 50 then
+        return "max"
+      end
+      Want.create(user_id: user, title: CGI.escapeHTML(params["title"]))
+      return Want.where(user_id: user).to_json()
     end
   end
 end

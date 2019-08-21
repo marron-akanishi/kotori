@@ -43,7 +43,7 @@ class App < Sinatra::Base
     if Want.where(user_id: session[:id]).count >= 50 then
       redirect to('/user/wishlist?msg=max')
     end
-    Want.create(user_id: session[:id], title: params["title"])
+    Want.create(user_id: session[:id], title: CGI.escapeHTML(params["title"]))
     redirect to('/user/wishlist?msg=add')
   end
 
