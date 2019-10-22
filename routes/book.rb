@@ -60,27 +60,27 @@ class App < Sinatra::Base
   post '/book/add/detail' do
     login_check
     case params["mode"]
-      when "manual" then
-        @detail = {}
-        @title = params["title"]
-      when "melon" then
-        @detail = SiteParser.melon(params["url"])
-        if @detail == nil then
-          redirect to("/error?code=404")
-        end
-        @title = @detail[:title]
-      when "tora" then
-        @detail = SiteParser.tora(params["url"])
-        if @detail == nil then
-          redirect to("/error?code=404")
-        end
-        @title = @detail[:title]
-      when "lashin" then
-        @detail = SiteParser.lashin(params["url"])
-        if @detail == nil then
-          redirect to("/error?code=404")
-        end
-        @title = @detail[:title]
+    when "manual" then
+      @detail = {}
+      @title = params["title"]
+    when "melon" then
+      @detail = SiteParser.melon(params["url"])
+      if @detail == nil then
+        redirect to("/error?code=404")
+      end
+      @title = @detail[:title]
+    when "tora" then
+      @detail = SiteParser.tora(params["url"])
+      if @detail == nil then
+        redirect to("/error?code=404")
+      end
+      @title = @detail[:title]
+    when "lashin" then
+      @detail = SiteParser.lashin(params["url"])
+      if @detail == nil then
+        redirect to("/error?code=404")
+      end
+      @title = @detail[:title]
     end
     if @detail[:title] != nil then
       # 著者存在チェック

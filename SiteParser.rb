@@ -28,37 +28,43 @@ module SiteParser
     # 情報回収
     detail[:cover] = "https:" + doc.at('//div[@id="main"]//div[@class="clm clm_l thumb"]//a')["href"]
     detail_table = doc.xpath('//div[@id="description"]//table//tr')
-    detail[:title] = detail_table[0].at('.//td').text
-    detail[:circle] = detail_table[1].at('.//td//a').text
-    detail_table[2].xpath('.//td//a').each_with_index do |obj, i|
-      if obj.attr("href") == "#" then
-        next
-      end
-      if i == 0 then
-        detail[:author] = obj.text
-      else
-        detail[:author] += ","+obj.text
+    detail_table.each do |row|
+      case row.at('.//th').text.strip
+      when "タイトル" then
+        detail[:title] = row.at('.//td').text
+      when "サークル名" then
+        detail[:circle] = row.at('.//td//a').text
+      when "作家名" then
+        row.xpath('.//td//a').each_with_index do |obj, i|
+          if obj.attr("href") == "#" then
+            next
+          end
+          if i == 0 then
+            detail[:author] = obj.text
+          else
+            detail[:author] += ","+obj.text
+          end
+        end
+      when "ジャンル" then
+        row.xpath('.//td//a').each_with_index do |obj, i|
+          if obj.attr("href") == "#" then
+            next
+          end
+          if i == 0 then
+            detail[:genre] = obj.text
+          else
+            detail[:genre] += ","+obj.text
+          end
+        end
+      when "発行日" then
+        detail[:date] = row.at('.//td').text.tr("/","-")
+      when "イベント" then
+        detail[:event] = row.at('.//td//a').text
+      when "作品種別" then
+        detail[:is_adult] = (row.at('.//td').text == "18禁") ? true : false
       end
     end
-    detail_table[3].xpath('.//td//a').each_with_index do |obj, i|
-      if obj.attr("href") == "#" then
-        next
-      end
-      if i == 0 then
-        detail[:genre] = obj.text
-      else
-        detail[:genre] += ","+obj.text
-      end
-    end
-    detail[:date] = detail_table[4].at('.//td').text.tr("/","-")
-    if detail_table[6].at('.//th').text ==  "イベント" then
-      detail[:event] = detail_table[6].at('.//td//a').text
-      detail[:is_adult] = (detail_table[7].at('.//td').text == "18禁") ? true : false
-    else
-      detail[:event] = detail_table[7].at('.//td//a').text
-      detail[:is_adult] = (detail_table[8].at('.//td').text == "18禁") ? true : false
-    end
-    # p detail
+    #p detail
     detail[:url] = url
     return detail
   end
@@ -81,32 +87,48 @@ module SiteParser
     detail[:cover] = doc.at('//div[@id="preview"]//a//img')["src"]
     detail[:is_adult] = (doc.at('//*[@id="main"]//div//section//div[1]//div[2]//div//div[2]//span[@class="i-item mk-rating"]') != nil) ? true : false
     detail[:title] = doc.at('//*[@id="main"]//div//section//div[1]//div[2]//div//div[1]//h1//span').text
-    detail_table = doc.xpath('//*[@id="main"]//div//section//div[3]//div[4]//div//section//div//table//tr')
-    detail[:circle] = detail_table[0].at('.//td//span//a//span').text
-    detail[:author] = detail_table[1].at('.//td//span//a//span').text
-    detail[:genre] = detail_table[2].at('.//td//span//a//span').text
-    if detail_table[3].at('.//td[1]').text == "発行日" then
-      detail[:date] = detail_table[3].at('.//td//span//a//span').text.tr("/","-")
-    else
-      detail_table[3].xpath('.//td//span//a//span').each_with_index do |obj, i|
-        if obj.attr("href") == "#" then
-          next
+    detail_table = doc.xpath('//*[@id="main"]//div//section//div[3]//div[4]//div//section//div//table//tbody//tr')
+    detail_table.each do |row|
+      case row.at('.//td[1]').text.strip
+      when "サークル名" then
+        detail[:circle] = row.at('.//td[2]//span//a//span').text
+      when "作家" then
+        row.xpath('.//td[2]//span[@class="infoorder-p"]').each_with_index do |obj, i|
+          if obj.at(".//a").attr("href") == "#" then
+            next
+          end
+          if i == 0 then
+            detail[:author] = obj.at('.//a//span').text
+          else
+            detail[:author] += ","+obj.at('.//a//span').text
+          end
         end
-        if i == 0 then
-          detail[:tag] = obj.text
-        else
-          detail[:tag] += ","+obj.text
+      when "ジャンル/サブジャンル" then
+        row.xpath('.//td[2]//span[@class="infoorder-p"]').each_with_index do |obj, i|
+          if obj.at(".//a").attr("href") == "#" then
+            next
+          end
+          if i == 0 then
+            detail[:genre] = obj.at('.//a//span').text
+          else
+            detail[:genre] += ","+obj.at('.//a//span').text
+          end
         end
-      end
-      detail[:date] = detail_table[4].at('.//td//span//a//span').text.tr("/","-")
-    end
-    if detail_table[5].at('.//td[1]').text == "初出イベント" then
-      detail[:event] = detail_table[5].at('.//td//span//a//span').text.split("　")[1].split("（")[0]
-    else
-      if detail_table[6].at('.//td[1]').text == "初出イベント"
-        detail[:event] = detail_table[6].at('.//td//span//a//span').text.split("　")[1].split("（")[0]
-      else
-        detail[:event] = detail_table[7].at('.//td//span//a//span').text.split("　")[1].split("（")[0]
+      when "メインキャラ" then
+        row.xpath('.//td[2]//span[@class="infoorder-p"]').each_with_index do |obj, i|
+          if obj.at(".//a").attr("href") == "#" then
+            next
+          end
+          if i == 0 then
+            detail[:tag] = obj.at('.//a//span').text
+          else
+            detail[:tag] += ","+obj.at('.//a//span').text
+          end
+        end
+      when "発行日" then
+        detail[:date] = row.at('.//td[2]//span//a//span').text.tr("/","-")
+      when "初出イベント" then
+        detail[:event] = row.at('.//td[2]//span//a//span').text.split("　")[1].split("（")[0]
       end
     end
     detail[:url] = url
@@ -128,33 +150,46 @@ module SiteParser
     # 情報回収
     detail[:cover] = doc.at('//*[@id="zoom_03"]')["src"]
     detail_area = doc.xpath('//*[@id="item_data"]//div[1]//dl')
-    detail[:circle] = detail_area[0].at('.//dd//a').text
-    detail_area[1].xpath('.//dd//a').each_with_index do |obj, i|
-      if obj.attr("href") == "#" then
-        next
-      end
-      if i == 0 then
-        detail[:author] = obj.text
-      else
-        detail[:author] += ","+obj.text
-      end
-    end
-    detail_area[2].xpath('.//dd//a').each_with_index do |obj, i|
-      if obj.attr("href") == "#" then
-        next
-      end
-      if i == 0 then
-        detail[:genre] = obj.text
-      else
-        detail[:genre] += ","+obj.text
+    detail_area.each do |row|
+      case row.at('.//dt').text.strip
+      when "サークル：" then
+        detail[:circle] = row.at('.//dd//a').text
+      when "作家：" then
+        row.xpath('.//dd//a').each_with_index do |obj, i|
+          if obj.attr("href") == "#" then
+            next
+          end
+          if i == 0 then
+            detail[:author] = obj.text
+          else
+            detail[:author] += ","+obj.text
+          end
+        end
+      when "作品：" then
+        row.xpath('.//dd//a').each_with_index do |obj, i|
+          if obj.attr("href") == "#" then
+            next
+          end
+          if i == 0 then
+            detail[:genre] = obj.text
+          else
+            detail[:genre] += ","+obj.text
+          end
+        end
       end
     end
     title_area = doc.at('//*[@id="item_data"]//div[2]')
     detail[:is_adult] = (title_area.at('.//span').text == "18禁") ? true : false
     detail[:title] = title_area.at('.//h1').text
     detail_table = doc.xpath('//*[@id="item_data"]//table//tr')
-    detail[:date] = detail_table[2].at('.//td').text.tr("年月","-").tr("日","")
-    detail[:event] = detail_table[6].at('.//td//a').text.split('/')[0]
+    detail_table.each do |row|
+      case row.at('.//th').text.strip
+      when "発行日" then
+        detail[:date] = row.at('.//td').text.tr("年月","-").tr("日","")
+      when "発売イベント" then
+        detail[:event] = row.at('.//td//a').text.split('/')[0]
+      end
+    end
     detail[:url] = url
     return detail
   end
