@@ -145,7 +145,7 @@ function viewChange() {
         $("#owngrid").append(`
           <div class="cover">
             <img src="/images/cover/${disp_area[i].book.cover}" onclick="location.href='/book/${disp_area[i].book.id}'" onload="imgLoadEnd()"/>
-            <p>${disp_area[i].book.title}</p>
+            <p onclick="location.href='/book/${disp_area[i].book.id}'">${disp_area[i].book.title}</p>
           </div>
         `)
         $("#owngrid > .cover").hide();
