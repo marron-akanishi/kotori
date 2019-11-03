@@ -33,7 +33,7 @@ module SiteParser
       when "タイトル" then
         detail[:title] = row.at('.//td').text
       when "サークル名" then
-        detail[:circle] = row.at('.//td//a').text
+        detail[:circle] = row.at('.//td//a').text.split("(作品数")[0].strip
       when "作家名" then
         row.xpath('.//td//a').each_with_index do |obj, i|
           if obj.attr("href") == "#" then

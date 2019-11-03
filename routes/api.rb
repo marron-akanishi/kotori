@@ -79,13 +79,13 @@ class App < Sinatra::Base
     book_ids = all_ids
     delete_ids = []
     words.each do |word|
-      if word == "" then
-        next
-      end
       is_del = false
       if word[0] == "-" then
         word = word[1..-1]
         is_del = true
+      end
+      if word == "" then
+        next
       end
       find_ids = []
       find_ids |= Book.where('title like ?',"%#{CGI.escapeHTML(word)}%").pluck(:id)
