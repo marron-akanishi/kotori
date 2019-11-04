@@ -21,6 +21,11 @@ hr {
   border: 0.5px dashed #aaaaaa;
 }
 
+.page-item:not(.disabled) {
+  color: #007bff;
+  cursor: pointer;
+}
+
 /* マイページ */
 .cover {
   position: relative;
@@ -53,6 +58,11 @@ hr {
   padding: 5px 10px;
   word-break: break-all;
   cursor: pointer;
+}
+
+.cover > .icon {
+  top: 0 !important;
+  transform: translate(0, 0) !important;
 }
 
 .form-inline select{

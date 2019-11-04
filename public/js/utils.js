@@ -10,27 +10,27 @@ function makePageNav(page_limit) {
   if (disp_list.length % limit != 0) max_page++;
   $("#pagenav").append(`
     <li class="page-item" id="firstpage">
-      <a class="page-link" href="#" aria-label="First" onclick="setPage('first')">
+      <a class="page-link" aria-label="First" onclick="setPage('first')">
         <span aria-hidden="true">最初</span>
       </a>
     </li>
     <li class="page-item" id="prevpage">
-      <a class="page-link" href="#" aria-label="Previous" onclick="setPage('prev')">
+      <a class="page-link" aria-label="Previous" onclick="setPage('prev')">
         <span aria-hidden="true">&lt;</span>
       </a>
     </li>
   `)
   $("#pagenav").append(`
-    <li class="page-item disabled"><a class="page-link" href="#" id="pagenum">1/${max_page}</a></li>
+    <li class="page-item disabled"><a class="page-link" id="pagenum">1/${max_page}</a></li>
   `)
   $("#pagenav").append(`
     <li class="page-item" id="nextpage">
-      <a class="page-link" href="#" aria-label="Next" onclick="setPage('next')">
+      <a class="page-link" aria-label="Next" onclick="setPage('next')">
         <span aria-hidden="true">&gt;</span>
       </a>
     </li>
     <li class="page-item" id="lastpage">
-      <a class="page-link" href="#" aria-label="Last" onclick="setPage('last')">
+      <a class="page-link" aria-label="Last" onclick="setPage('last')">
         <span aria-hidden="true">最後</span>
       </a>
     </li>
@@ -59,24 +59,28 @@ function setPage(page) {
       current_page++;
       break;
     default:
-      current_page = page
+      current_page = parseInt(page)
+      if(!current_page) current_page = 1
       break;
   }
   if (current_page >= max_page) {
     $('#nextpage').addClass("disabled");
     $('#lastpage').addClass("disabled");
+    current_page = max_page
   } else {
     $('#nextpage').removeClass("disabled");
     $('#lastpage').removeClass("disabled");
   }
-  if (current_page == 1) {
+  if (current_page <= 1) {
     $('#prevpage').addClass("disabled");
     $('#firstpage').addClass("disabled");
+    current_page = 1
   } else {
     $('#prevpage').removeClass("disabled");
     $('#firstpage').removeClass("disabled");
   }
   $(`#pagenum`).text(`${current_page}/${max_page}`)
+  location.hash = "#" + current_page
   //scrollTo(0,0)
   viewChange();
 }
@@ -106,6 +110,28 @@ function sortJSON(field, reverse, second_field){
     if (a<b) return reverse * -1;
     if (a>b) return reverse * 1;
     return 0;
+  } 
+}
+
+// URLパラメータ取得
+function getURLParam(){
+  var arg = new Object;
+  var pair = location.search.substring(1).split('&');
+  for(var i=0;pair[i];i++) {
+    var kv = pair[i].split('=');
+    arg[kv[0]]=kv[1];
   }
-  
+  return arg;
+}
+
+// URLパラメータ変更
+function setURLParam(key, value){
+  var params = getURLParam()
+  params[key] = value
+  var resurl = location.href.replace(/\?.*$/,"");
+  for ( val in params ) {
+      resurl += (resurl.indexOf('?') == -1) ? '?':'&';
+      resurl += val + '=' + paramsArray[val];
+  }
+  location.href = resurl;
 }

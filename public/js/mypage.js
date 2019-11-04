@@ -20,6 +20,9 @@ $(function () {
   $(`#${mode.toLowerCase()}button`).addClass("active")
   disp_list = own_list
   selSortMode(sortmode, reverse)
+  // URLのアンカー取得
+  let url_hash = location.hash.split("#")[1]
+  if(url_hash) setPage(url_hash)
 });
 
 // リストモードの切り替え
