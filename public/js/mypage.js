@@ -31,6 +31,7 @@ $('input[name="listmode"]').change(function () {
   $.cookie("mypageListMode", mode, { expires: 30 });
   makePageNav(limit_config[mode]);
   current_page = 1;
+  location.hash = "#1"
   viewChange();
 });
 

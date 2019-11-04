@@ -34,7 +34,7 @@
   <% if @book.is_adult && !@is_adult %>
   <img src="/images/cover/r18.png" />
   <% else %>
-  <img src="/images/cover/<%= @book.cover %>" />
+  <img style="max-width: 100%;" src="/images/cover/<%= @book.cover %>" />
   <% end %>
 </div>
 <br>
