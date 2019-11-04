@@ -65,7 +65,7 @@ module SiteParser
       end
     end
     #p detail
-    detail[:url] = url
+    detail[:url] = url.split("&")[0]
     return detail
   end
 
