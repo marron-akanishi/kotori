@@ -103,7 +103,7 @@ class App < Sinatra::Base
       # サークル存在チェック
       value = CGI.escapeHTML(@detail[:circle])
       begin
-          yomi = Kakasi.kakasi('-JH -KH', value)
+        yomi = Kakasi.kakasi('-JH -KH', value)
       rescue => exception
         yomi = value
       end

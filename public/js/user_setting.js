@@ -39,16 +39,20 @@ function url_list_add(){
     console.log(url_list)
     reloadTable(url_list)
     url_list.forEach((data, i) => {
-      setTimeout(() => {
-        sendData(data).done(result => {
-          console.log(result)
-          url_list[i]["status"] = result
-          reloadTable(url_list)
-        }).fail(() => {
-          url_list[i]["status"] = "error"
-          reloadTable(url_list)
-        });
-      }, 2000*i)
+      if(site_list[data["type"]] && data["url"]){
+        setTimeout(() => {
+          sendData(data).done(result => {
+            console.log(result)
+            url_list[i]["status"] = result
+            reloadTable(url_list)
+          }).fail(() => {
+            url_list[i]["status"] = "error"
+            reloadTable(url_list)
+          });
+        }, 1500*i)
+      } else {
+        url_list[i]["status"] = "error"
+      }
     });
   }
   reader.readAsText(document.getElementById("urllist").files[0]);
@@ -62,7 +66,9 @@ function parseCSV(text){
     data["type"] = line.split(',')[0]
     data["url"] = line.split(',')[1]
     data["status"] = "wait"
-    result.push(data)
+    if(data["url"]){
+      result.push(data)
+    }
   });
   return result;
 }
