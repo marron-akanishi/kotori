@@ -46,6 +46,7 @@ function imgLoadEnd() {
 
 function setSearchType(obj, type){
   disp_list = own_list
+  location.hash = "#1"
   selSortMode(sortmode, reverse)
   $('#search').val("")
   search_type = type;
@@ -100,6 +101,7 @@ function setSort(obj) {
   var idx = obj.selectedIndex;
   var value = obj.options[idx].value;
   var option = value.split(",")
+  location.hash = "#1"
   selSortMode(option[0], option[1])
 }
 
@@ -109,6 +111,7 @@ function setLimit(obj){
   limit_config[mode] = obj.options[idx].value;
   var target = mode.charAt(0).toUpperCase() + mode.slice(1).toLowerCase();
   $.cookie("mypage" + target + "Limit", limit_config[mode], { expires: 30 });
+  location.hash = "#1"
   selSortMode(sortmode, reverse)
 }
 
@@ -128,7 +131,6 @@ function selSortMode(_sortmode, _reverse){
   $.cookie("mypageIsReverse", _reverse, { expires: 30 });
   makePageNav(limit_config[mode]);
   current_page = 1;
-  location.hash = "#1"
   viewChange();
 }
 

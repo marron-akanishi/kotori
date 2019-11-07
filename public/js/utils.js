@@ -81,8 +81,8 @@ function setPage(page) {
   }
   $(`#pagenum`).text(`${current_page}/${max_page}`)
   //scrollTo(0,0)
-  viewChange();
   location.hash = "#" + current_page
+  viewChange();
 }
 
 // カナ→ひら、全角→半角、スペース削除、小文字→大文字
