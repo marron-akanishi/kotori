@@ -165,7 +165,7 @@ class App < Sinatra::Base
     @exists = []
     # タイトル存在チェック
     Book.all.each do |obj|
-      if normalize_str(@title) == normalize_str(obj.title) then
+      if normalize_str(CGI.escapeHTML(@title)) == normalize_str(obj.title) then
         @exists.push(Book.includes(:authors).find(obj.id))
       end
     end

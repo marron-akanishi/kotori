@@ -28,7 +28,7 @@
   </button>
 </div>
 <% end %>
-<script>document.title = "<%= @book.title %> - 書籍詳細 - Kotori"</script>
+<script>document.title = "<%= CGI.unescapeHTML(@book.title) %> - 書籍詳細 - Kotori"</script>
 <h2 style="text-align: center;">書籍詳細</h2>
 <div style="text-align: center;">
   <% if @book.is_adult && !@is_adult %>
