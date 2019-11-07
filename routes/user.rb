@@ -92,6 +92,7 @@ class App < Sinatra::Base
     if UserBook.exists?(user_id: session[:id], book_id: params["id"]) then
       begin
         UserBook.where(user_id: session[:id], book_id: params["id"]).update(memo: CGI.escapeHTML(params["memoText"]))
+        UserBook.where(user_id: session[:id], book_id: params["id"]).update(is_digital: boolean_check(params["is-digital"]))
       rescue => e
         redirect to("/error?code=512")
       end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_16_150149) do
+ActiveRecord::Schema.define(version: 2019_11_07_052333) do
 
   create_table "authors", force: :cascade do |t|
     t.text "name", null: false
@@ -110,6 +110,7 @@ ActiveRecord::Schema.define(version: 2019_08_16_150149) do
     t.text "memo"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "is_digital", default: false
     t.index ["book_id"], name: "index_user_books_on_book_id"
     t.index ["user_id"], name: "index_user_books_on_user_id"
   end
@@ -128,7 +129,6 @@ ActiveRecord::Schema.define(version: 2019_08_16_150149) do
     t.boolean "is_admin", default: false
     t.string "latest_ip"
     t.text "api"
-    t.index ["api"], name: "index_users_on_api", unique: true
     t.index ["author_id"], name: "index_users_on_author_id"
     t.index ["circle_id"], name: "index_users_on_circle_id"
     t.index ["id"], name: "index_users_on_id", unique: true

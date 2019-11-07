@@ -8,7 +8,7 @@ class App < Sinatra::Base
   end
 
   get '/book/:id' do
-    @book = Book.includes(:authors, :genres, :tags, :user, :event, :circle).find(params["id"])
+    @book = Book.includes(:authors, :genres, :tags, :event, :circle).find(params["id"])
     if session[:id] == nil then
       @is_adult = false
     else
@@ -19,6 +19,7 @@ class App < Sinatra::Base
         @owned = true;
         @is_adult = true;
         @memo = UserBook.find_by(user_id: session[:id], book_id: params["id"]).memo
+        @is_digital = UserBook.find_by(user_id: session[:id], book_id: params["id"]).is_digital
       else
         @owned = false;
         @is_want = Want.exists?(user_id: session[:id], book_id: params["id"])

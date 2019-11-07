@@ -31,7 +31,6 @@ $('input[name="listmode"]').change(function () {
   $.cookie("mypageListMode", mode, { expires: 30 });
   makePageNav(limit_config[mode]);
   current_page = 1;
-  location.hash = "#1"
   viewChange();
 });
 
@@ -147,11 +146,16 @@ function viewChange() {
       else $("#loading-gif").hide();
       for (var i in disp_area) {
         $("#owngrid").append(`
-          <div class="cover">
+          <div id='book-${disp_area[i].book.id}' class="cover">
             <img src="/images/cover/${disp_area[i].book.cover}" onclick="location.href='/book/${disp_area[i].book.id}'" onload="imgLoadEnd()"/>
             <p onclick="location.href='/book/${disp_area[i].book.id}'">${disp_area[i].book.title}</p>
           </div>
         `)
+        if (disp_area[i].is_digital) {
+          $(`#book-${disp_area[i].book.id}`).append(`
+            <p class="icon" onclick="location.href='/book/${disp_area[i].book.id}'"><span class="oi oi-phone"></span></p>
+          `)
+        }
         $("#owngrid > .cover").hide();
       }
       $("#limit-sel").append(`
@@ -177,4 +181,5 @@ function viewChange() {
   }
   $("#limit-sel").val(limit_config[mode])
   $("#sort-sel").val(sortmode+","+reverse)
+  location.hash = "#1"
 }
