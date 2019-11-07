@@ -31,6 +31,7 @@ $('input[name="listmode"]').change(function () {
   $.cookie("mypageListMode", mode, { expires: 30 });
   makePageNav(limit_config[mode]);
   current_page = 1;
+  location.hash = "#1"
   viewChange();
 });
 
@@ -127,6 +128,7 @@ function selSortMode(_sortmode, _reverse){
   $.cookie("mypageIsReverse", _reverse, { expires: 30 });
   makePageNav(limit_config[mode]);
   current_page = 1;
+  location.hash = "#1"
   viewChange();
 }
 
@@ -181,5 +183,4 @@ function viewChange() {
   }
   $("#limit-sel").val(limit_config[mode])
   $("#sort-sel").val(sortmode+","+reverse)
-  location.hash = "#1"
 }

@@ -80,9 +80,9 @@ function setPage(page) {
     $('#firstpage').removeClass("disabled");
   }
   $(`#pagenum`).text(`${current_page}/${max_page}`)
-  location.hash = "#" + current_page
   //scrollTo(0,0)
   viewChange();
+  location.hash = "#" + current_page
 }
 
 // カナ→ひら、全角→半角、スペース削除、小文字→大文字
