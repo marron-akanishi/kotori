@@ -10,7 +10,7 @@
   <button class="btn btn-danger" style="margin-bottom: 1rem" data-toggle="modal" data-target="#delModal">削除</button>
 </div>
 <h2 style="text-align: center;">書籍詳細</h2>
-<p>ID：<%= @detail[:id] %></p>
+<p>ID：<a href="/book/<%= @detail[:id] %>"><%= @detail[:id] %></a></p>
 <p>登録日時：<%= @detail[:created_at] %></p>
 <p>最終更新日時：<%= @detail[:updated_at] %></p>
 <p>タイトル：<%= @detail[:title] %></p>
