@@ -129,6 +129,7 @@ ActiveRecord::Schema.define(version: 2019_11_07_052333) do
     t.boolean "is_admin", default: false
     t.string "latest_ip"
     t.text "api"
+    t.index ["api"], name: "index_users_on_api", unique: true
     t.index ["author_id"], name: "index_users_on_author_id"
     t.index ["circle_id"], name: "index_users_on_circle_id"
     t.index ["id"], name: "index_users_on_id", unique: true
