@@ -83,9 +83,14 @@ class App < Sinatra::Base
       end
       @title = @detail[:title]
     end
+    # スクレイピング情報の修正
     if @detail[:title] != nil then
       # 著者存在チェック
-      author_list = @detail[:author].split(",")
+      begin
+        author_list = @detail[:author].split(",")
+      rescue => exception
+        author_list = []
+      end
       author_list.each do |value|
         if value == "" then
           next
@@ -113,7 +118,11 @@ class App < Sinatra::Base
         @detail[:circle] = name
       end
       # ジャンル存在チェック
-      genre_list = @detail[:genre].split(",")
+      begin
+        genre_list = @detail[:genre].split(",")
+      rescue => exception
+        genre_list = []
+      end
       genre_list.each do |value|
         if value == "" then
           next
