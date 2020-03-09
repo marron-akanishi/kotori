@@ -14,7 +14,57 @@ var getDevice = (function () {
 
 window.onload = () => {
   if(getDevice != "other") $(".sm-hidden").hide();
+  var nobeer = $('#list-form').Nobeer({
+    domList:[
+      "#site-name",
+      "#url-input",
+      "#import-status"
+    ],
+    show:function(){
+      this.slideDown()
+    },
+    hide:function(del){
+      this.slideUp(del)
+    },
+    pipe:function(i){
+      this.attr('class','form-row mt-1')
+      this.find('input').attr('name',`input${i}`);
+    },
+    idx: 1
+  })
+  $('#form-add').click(nobeer.add);
+  $('#form-del').click(nobeer.remove);
 }
+
+$('#export-btn').on('click',function(){
+  // データの用意
+  var book_list, export_data;
+  $.ajaxSetup({ async: false });
+  $.getJSON("/api/get_list?type=user_book", data => book_list = data);  
+  $.ajaxSetup({ async: true });
+  export_data = book_list.map((value) => {
+    return [
+      value.book.title,
+      value.book.authors[0].name,
+      value.book.circle.name,
+      value.book.published_at,
+      value.book.is_adult,
+      value.memo,
+      value.is_digital
+    ]
+  })
+  // CSVの作成
+  //var bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
+  var title = ["タイトル", "著者", "サークル", "発売日", "18禁", "メモ", "電子書籍版", "\r\n"]
+  var csv_data = export_data.map(function(l){return l.join(',')}).join('\r\n');
+  var blob = new Blob([title, csv_data], { type: 'text/csv' });
+  var url = window.URL.createObjectURL(blob);
+  // ダウンロードリンク生成
+  var a = document.getElementById('download-link');
+  a.download = 'export.csv';
+  a.href = url;
+  $('#download-link')[0].click();
+});
 
 // ファイル名表示
 $('.custom-file-input').on('change', function () {
@@ -23,11 +73,13 @@ $('.custom-file-input').on('change', function () {
 
 function api_key_update(){
   fetch("/user/api_update").then(res => res.text()).then(text => $("#apiKey").val(text));
+  document.querySelector("#api-msg").innerText = "APIキーを更新しました";
 }
 
 function apiCopy(){
   document.getElementById("apiKey").select();
   document.execCommand("copy");
+  document.querySelector("#api-msg").innerText = "APIキーをコピーしました";
 }
 
 function url_list_add(){
