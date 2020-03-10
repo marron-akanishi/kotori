@@ -54,10 +54,10 @@ $('#export-btn').on('click',function(){
     ]
   })
   // CSVの作成
-  //var bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
+  var bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
   var title = ["タイトル", "著者", "サークル", "発売日", "18禁", "メモ", "電子書籍版", "\r\n"]
   var csv_data = export_data.map(function(l){return l.join(',')}).join('\r\n');
-  var blob = new Blob([title, csv_data], { type: 'text/csv' });
+  var blob = new Blob([bom, title, csv_data], { type: 'text/csv' });
   var url = window.URL.createObjectURL(blob);
   // ダウンロードリンク生成
   var a = document.getElementById('download-link');
