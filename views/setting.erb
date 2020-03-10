@@ -24,16 +24,16 @@
     <p style="margin-top: 1rem;">登録メールアドレス：<%= @user.mail %></p>
     <hr>
     <div class="form-group row">
-      <label for="apiKey" class="col-sm-2 col-form-label">APIキー：</label>
+      <label for="api-key" class="col-sm-2 col-form-label">APIキー：</label>
       <div class="col-sm-5">
         <div class="input-group">
-          <input type="text" id="apiKey" name="apiKey" class="form-control" value="<%= @user.api %>" readonly>
+          <input type="text" id="api-key" name="api-key" class="form-control" value="<%= @user.api %>" readonly>
           <div class="input-group-append">
-            <button type="button" class="btn btn-secondary" onclick="apiCopy()"><span class="oi oi-clipboard"></span></button>
+            <button type="button" class="btn btn-secondary" onclick="copyApiKey()"><span class="oi oi-clipboard"></span></button>
           </div>
         </div>
       </div>
-      <button type="button" class="btn btn-primary sm-hidden" onclick="api_key_update()">更新</button>
+      <button type="button" class="btn btn-primary sm-hidden" onclick="updateApiKey()">更新</button>
       <div id="api-msg" class="ml-2 mt-2"></div>
     </div>
     <hr>
@@ -83,7 +83,7 @@
                 <input type="file" class="custom-file-input" id="urllist" name="urllist" accept=".csv">
                 <label class="custom-file-label" for="urllist">ファイルを選択</label>
               </div>
-              <button type="button" class="btn btn-primary" onclick="url_list_add()">インポート</button>
+              <button type="button" class="btn btn-primary" onclick="addUrlList()">インポート</button>
             </div>
             CSVファイルを利用せずに下のフォームを使っても一括追加が出来ます。
             <div id="list-form" class="mt-1">
@@ -107,7 +107,7 @@
               <button id="form-add" class="btn btn-outline-dark">＋</button>
               <button id="form-del" class="btn btn-outline-danger">ー</button>
               <button id="form-clear" class="btn btn-outline-warning">クリア</button>
-              <button id="form-done" class="btn btn-primary">インポート</button>
+              <button id="form-submit" class="btn btn-primary" onclick="importListForm()">インポート</button>
             </div>
             <table id="urladd-status" class="table"></table>
           </div>

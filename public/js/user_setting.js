@@ -34,9 +34,14 @@ window.onload = () => {
   })
   $('#form-add').click(nobeer.add);
   $('#form-del').click(nobeer.remove);
+  $('#form-clear').click(() => {
+    nobeer.reset();
+    document.querySelector("#list-form > div > #url-input > #site-url").value = "";
+    document.querySelector("#list-form > div > #import-status").innerHTML = "待ち";
+  });
 }
 
-$('#export-btn').on('click',function(){
+function exportListCsv(){
   // データの用意
   var book_list, export_data;
   $.ajaxSetup({ async: false });
@@ -64,30 +69,50 @@ $('#export-btn').on('click',function(){
   a.download = 'export.csv';
   a.href = url;
   $('#download-link')[0].click();
-});
+}
 
 // ファイル名表示
 $('.custom-file-input').on('change', function () {
   $(this).next('.custom-file-label').html($(this)[0].files[0].name);
 })
 
-function api_key_update(){
+function updateApiKey(){
   fetch("/user/api_update").then(res => res.text()).then(text => $("#apiKey").val(text));
   document.querySelector("#api-msg").innerText = "APIキーを更新しました";
 }
 
-function apiCopy(){
-  document.getElementById("apiKey").select();
+function copyApiKey(){
+  document.getElementById("api-key").select();
   document.execCommand("copy");
   document.querySelector("#api-msg").innerText = "APIキーをコピーしました";
 }
 
-function url_list_add(){
+function importListForm(){
+  document.querySelectorAll("#list-form > div").forEach((node) => {
+    let data = {};
+    data["type"] = node.querySelector("#site-name > #site-sel").value;
+    data["url"] = node.querySelector("#url-input > #site-url").value;
+    if (data["type"] && data["url"]) {
+      setTimeout(() => {
+        sendData(data).done(result => {
+          console.log(result)
+          node.querySelector("#import-status").innerHTML = status_list[result]
+        }).fail(() => {
+          node.querySelector("#import-status").innerHTML = status_list["error"]
+        });
+      }, 1500 * node.dataset.idx)
+    } else {
+      node.querySelector("#import-status").innerHTML = status_list["error"]
+    }
+  })
+}
+
+function addUrlList(){
   if (document.getElementById("urllist").files.length == 0) return;
   // CSVロード
   var reader = new FileReader();
   reader.onload = function (e) {
-    const url_list = parseCSV(e.target.result)
+    const url_list = parseCsv(e.target.result)
     console.log(url_list)
     reloadTable(url_list)
     url_list.forEach((data, i) => {
@@ -110,7 +135,7 @@ function url_list_add(){
   reader.readAsText(document.getElementById("urllist").files[0]);
 }
 
-function parseCSV(text){
+function parseCsv(text){
   var result = [];
   var tmp = text.split(/\r?\n/g)
   tmp.forEach(line => {

@@ -2,6 +2,7 @@
   $.fn.Nobeer = function(_option) {
 	var wrapper = this;
 	var idx = _option.idx || 0;
+	var limit = idx;
 	_option = Object.assign({
 		domList:[],
 		show:function(){
@@ -29,11 +30,18 @@
 			idx++;
 		},
 		remove:function(){
+			if(idx == limit) return;
 			var els = wrapper.find(`[data-idx=${idx-1}]`)
 			_option.hide.call(els,function(){
 				els.remove();
 			});
 			idx--;
+		},
+		reset:function(){
+			for(;idx > limit;idx--){
+				var els = wrapper.find(`[data-idx=${idx - 1}]`)
+				els.remove();
+			}
 		}
 	}
   };
