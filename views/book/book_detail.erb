@@ -8,7 +8,6 @@
       <li class="breadcrumb-item"><a href="/user/wishlist">ほしい物リスト</a></li>
       <% end %>
     <% else %>
-    <li class="breadcrumb-item"><a href="/<%= session[:prev_type] %>"><%= @type %>一覧</a></li>
     <li class="breadcrumb-item"><a href="/<%= session[:prev_type] %>/<%= session[:prev_detail] %>"><%= @type %>詳細</a></li>
     <% end %>
   <% end %>

@@ -80,7 +80,7 @@ function setPage(page) {
     $('#firstpage').removeClass("disabled");
   }
   $(`#pagenum`).text(`${current_page}/${max_page}`)
-  //scrollTo(0,0)
+  scrollTo(0,0)
   location.hash = "#" + current_page
   viewChange();
 }

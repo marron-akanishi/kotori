@@ -40,13 +40,21 @@
     <select id="limit-sel" class="form-control" onchange="setLimit(this)">
     </select>
   </div>
-  <div class="form-inline">
+  <div class="form-inline mr-2">
     <label for="sort-sel">表示順：</label>
     <select id="sort-sel" class="form-control" onchange="setSort(this)">
       <option value="created_at,desc" selected>所有登録日(降順)</option>
       <option value="created_at,asc">所有登録日(昇順)</option>
       <option value="title,desc">タイトル(降順)</option>
       <option value="title,asc">タイトル(昇順)</option>
+    </select>
+  </div>
+  <div class="form-inline">
+    <label for="r18-sel">表示設定：</label>
+    <select id="r18-sel" class="form-control" onchange="setR18(this)">
+      <option value="unlimit" selected>すべて表示</option>
+      <option value="r18">18禁のみ</option>
+      <option value="all">全年齢のみ</option>
     </select>
   </div>
 </div>

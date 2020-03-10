@@ -14,6 +14,10 @@
     <a class="nav-link" id="book-tab" data-toggle="tab" href="#book" role="tab" aria-controls="book"
       aria-selected="false">書籍管理</a>
   </li>
+  <li class="nav-item sm-hidden">
+    <a class="nav-link" id="tag-tab" data-toggle="tab" href="#tag" role="tab" aria-controls="tag"
+      aria-selected="false">タグ管理</a>
+  </li>
 </ul>
 <div class="tab-content">
   <div class="tab-pane show active mt-2" id="basic" role="tabpanel" aria-labelledby="basic-tab">
@@ -30,6 +34,7 @@
         </div>
       </div>
       <button type="button" class="btn btn-primary sm-hidden" onclick="api_key_update()">更新</button>
+      <div id="api-msg" class="ml-2 mt-2"></div>
     </div>
     <hr>
     <form action="/user/setting/done" method="POST">
@@ -73,12 +78,36 @@
           <div class="card-body">
             この機能では対応サイトのURLを一覧にしたCSVファイルをインポートすることで書籍の一括登録が出来ます。<br>
             同じ名前の書籍がDB上に存在した場合はスキップされます。
-            <div class="form-group row">
+            <div class="form-group row mt-1">
               <div class="custom-file col-sm-6" style="margin: 0 1rem">
                 <input type="file" class="custom-file-input" id="urllist" name="urllist" accept=".csv">
                 <label class="custom-file-label" for="urllist">ファイルを選択</label>
               </div>
               <button type="button" class="btn btn-primary" onclick="url_list_add()">インポート</button>
+            </div>
+            CSVファイルを利用せずに下のフォームを使っても一括追加が出来ます。
+            <div id="list-form" class="mt-1">
+              <div data-idx="0" class="form-row">
+                <div id="site-name" class="col-2">
+                  <select id="site-sel" class="form-control">
+                    <option value="melon" selected>メロンブックス</option>
+                    <option value="tora">とらのあな</option>
+                    <option value="lashin">らしんばん</option>
+                  </select>
+                </div>
+                <div id="url-input" class="col">
+                  <input id="site-url" class="form-control form-inline" placeholder="URL">
+                </div>
+                <div id="import-status" class="col-1 mt-2 ml-1">
+                  待ち
+                </div>
+              </div>
+            </div>
+            <div class="float-right mt-1">
+              <button id="form-add" class="btn btn-outline-dark">＋</button>
+              <button id="form-del" class="btn btn-outline-danger">ー</button>
+              <button id="form-clear" class="btn btn-outline-warning">クリア</button>
+              <button id="form-done" class="btn btn-primary">インポート</button>
             </div>
             <table id="urladd-status" class="table"></table>
           </div>
@@ -117,13 +146,55 @@
         </div>
         <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
           <div class="card-body">
-            この機能では所有書籍を一覧で出力します。<br>
-            <button type="button" class="btn btn-primary" disabled>エクスポート</button>
+            この機能では所有書籍情報をCSVファイルで出力します。<br>
+            <button id="export-btn" type="button" class="btn btn-primary">エクスポート</button>
+            <a style="display:none;" id="download-link" href="#"></a>
+            <br>
+            出力するファイルには以下のような条件が付きます。<br>
+            <ul>
+              <li>表紙画像情報は含まれません。</li>
+              <li>著者はメインの1人のみ出力されます。</li>
+              <li>タグ、ジャンルは含まれません。</li>
+            </ul>
           </div>
         </div>
       </div>
     </div>
   </div>
+  <div class="tab-pane mt-2" id="tag" role="tabpanel" aria-labelledby="tag-tab">
+    <div>個人管理用タグの名前を変更出来ます</div>
+    <table class="mt-2">
+      <tr>
+        <td><svg class="mr-2" width="20" height="20"><circle fill="red" cx="10" cy="10" r="10"/></svg></td>
+        <td><input type="text" class="form-control tag-name" value="あか"></td>
+      </tr>
+      <tr>
+        <td><svg class="mr-2" width="20" height="20"><circle fill="orange" cx="10" cy="10" r="10"/></svg></td>
+        <td><input type="text" class="form-control tag-name" value="おれんじ"></td>
+      </tr>
+      <tr>
+        <td><svg class="mr-2" width="20" height="20"><circle fill="green" cx="10" cy="10" r="10"/></svg></td>
+        <td><input type="text" class="form-control tag-name" value="みどり"></td>
+      </tr>
+      <tr>
+        <td><svg class="mr-2" width="20" height="20"><circle fill="blue" cx="10" cy="10" r="10"/></svg></td>
+        <td><input type="text" class="form-control tag-name" value="あお"></td>
+      </tr>
+      <tr>
+        <td><svg class="mr-2" width="20" height="20"><circle fill="purple" cx="10" cy="10" r="10"/></svg></td>
+        <td><input type="text" class="form-control tag-name" value="むらさき"></td>
+      </tr>
+      <tr>
+        <td><svg class="mr-2" width="20" height="20"><circle fill="gray" cx="10" cy="10" r="10"/></svg></td>
+        <td><input type="text" class="form-control tag-name" value="ぐれー"></td>
+      </tr>
+    </table>
+    <hr>
+    <div class="d-flex justify-content-center">
+        <input type="submit" class="btn btn-primary" value="保存" />
+      </div>
+  </div>
 </div>
 
+<script src="/js/Nobeer.js"></script>
 <script src="/js/user_setting.js?ver=<%= $version %>"></script>

@@ -1,4 +1,4 @@
-var own_list, disp_list, mode, current_page;
+var org_list, own_list, disp_list, mode, current_page;
 var search_type = "title", load_count, load_num;
 var sortmode, reverse;
 var limit_config = {grid: 0, list: 0};
@@ -7,8 +7,9 @@ var limit_config = {grid: 0, list: 0};
 $(function () {
   // 所有書籍一覧作成
   $.ajaxSetup({ async: false });
-  $.getJSON("/api/get_list?type=user_book", data => own_list = data);  
+  $.getJSON("/api/get_list?type=user_book", data => org_list = data);  
   $.ajaxSetup({ async: true });
+  own_list = org_list
   // 表示件数読み込み
   limit_config["grid"] = $.cookie("mypageGridLimit") || 30
   limit_config["list"] = $.cookie("mypageListLimit") || 50
@@ -111,6 +112,32 @@ function setLimit(obj){
   limit_config[mode] = obj.options[idx].value;
   var target = mode.charAt(0).toUpperCase() + mode.slice(1).toLowerCase();
   $.cookie("mypage" + target + "Limit", limit_config[mode], { expires: 30 });
+  location.hash = "#1"
+  selSortMode(sortmode, reverse)
+}
+
+// 表示項目選択
+function setR18(obj){
+  var idx = obj.selectedIndex;
+  var value = obj.options[idx].value;
+  switch(value){
+    case "unlimit":
+      own_list = org_list;
+      disp_list = own_list;
+      break;
+    case "r18":
+      own_list = org_list.filter(function (item, index){
+        return item.book.is_adult;
+      })
+      disp_list = own_list;
+      break;
+    case "all":
+      own_list = org_list.filter(function (item, index){
+        return !item.book.is_adult;
+      })
+      disp_list = own_list;
+      break;
+  }
   location.hash = "#1"
   selSortMode(sortmode, reverse)
 }
