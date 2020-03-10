@@ -20,15 +20,16 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="/js/utils.js?ver=<%= $version %>"></script>
     <% if request.path =~ /\A\/book\/[0-9]+\z/ %>
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://kotori.marron.work/book/<%= @book.id %>">
-    <meta name="twitter:title" content="<%= @book.title %>">
-    <meta name="twitter:description" content="<%= @book.circle.name %>">
+    <!-- OGP -->
+    <meta name="twitter:site" content="@marron_general" />
+    <meta name="twitter:card" content="summary">
+    <meta name="og:url" content="https://kotori.marron.work/book/<%= @book.id %>">
+    <meta name="og:title" content="<%= @book.title %>">
+    <meta name="og:description" content="<%= @book.circle.name %>">
     <% if @book.is_adult %>
-    <meta name="twitter:image" content="https://kotori.marron.work/images/cover/r18.png">
+    <meta name="og:image" content="https://kotori.marron.work/images/cover/r18.png">
     <% else %>
-    <meta name="twitter:image" content="https://kotori.marron.work/images/cover/<%= @book.cover %>">
+    <meta name="og:image" content="https://kotori.marron.work/images/cover/<%= @book.cover %>">
     <% end %>
     <% end %>
   </head>

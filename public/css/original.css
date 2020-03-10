@@ -26,6 +26,10 @@ hr {
   cursor: pointer;
 }
 
+#pagenav {
+  margin: 1rem 0 0 0;
+}
+
 /* マイページ */
 .cover {
   position: relative;
