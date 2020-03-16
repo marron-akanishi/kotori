@@ -14,7 +14,7 @@
 <script>document.title = "<%= @type_name %>詳細 - Kotori"</script>
 <h2 style="text-align: center;"><%= @type_name %>詳細</h2>
 <span><%= @type_name %>名：<%= @detail.name %></span>
-<% if ["genre", "event", "tag"].include?(@type) && session[:id] != nil then %>
+<% session[:id] != nil then %>
 <br><button type="button" class="btn btn-link" data-toggle="modal" data-target="#modModal">読み：<%= @detail.name_yomi %></button>
 <% else %>
 <p>読み：<%= @detail.name_yomi %></p>
