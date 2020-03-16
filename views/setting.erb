@@ -147,14 +147,14 @@
         <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
           <div class="card-body">
             この機能では所有書籍情報をCSVファイルで出力します。<br>
-            <button id="export-btn" type="button" class="btn btn-primary">エクスポート</button>
+            <button id="export-btn" type="button" class="btn btn-primary" onclick="exportListCsv()">エクスポート</button>
             <a style="display:none;" id="download-link" href="#"></a>
             <br>
             出力するファイルには以下のような条件が付きます。<br>
             <ul>
               <li>表紙画像情報は含まれません。</li>
               <li>著者はメインの1人のみ出力されます。</li>
-              <li>タグ、ジャンルは含まれません。</li>
+              <li>タグ、ジャンル、URLは含まれません。</li>
             </ul>
           </div>
         </div>
@@ -191,7 +191,7 @@
     </table>
     <hr>
     <div class="d-flex justify-content-center">
-        <input type="submit" class="btn btn-primary" value="保存" />
+        <input type="submit" class="btn btn-primary" value="保存" disabled/>
       </div>
   </div>
 </div>

@@ -29,18 +29,18 @@
       <a class="dropdown-item" onclick="setSearchType(this, 'genre')">ジャンル</a>
     </div>
   </div>
-  <input type="text" class="form-control" id="search">
+  <input type="text" class="form-control" id="search" placeholder="検索">
   <div class="input-group-append">
     <span class="input-group-text" id="listcount"></span>
   </div>
 </div>
-<div class="d-flex justify-content-end mb-2">
-  <div class="form-inline mr-2">
+<div class="d-flex flex-column flex-md-row justify-content-end">
+  <div class="form-inline mr-2 mb-2">
     <label for="limit-sel">表示件数：</label>
     <select id="limit-sel" class="form-control" onchange="setLimit(this)">
     </select>
   </div>
-  <div class="form-inline mr-2">
+  <div class="form-inline mr-2 mb-2">
     <label for="sort-sel">表示順：</label>
     <select id="sort-sel" class="form-control" onchange="setSort(this)">
       <option value="created_at,desc" selected>所有登録日(降順)</option>
@@ -49,7 +49,7 @@
       <option value="title,asc">タイトル(昇順)</option>
     </select>
   </div>
-  <div class="form-inline">
+  <div class="form-inline mb-2">
     <label for="r18-sel">表示設定：</label>
     <select id="r18-sel" class="form-control" onchange="setR18(this)">
       <option value="unlimit" selected>すべて表示</option>
