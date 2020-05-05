@@ -26,7 +26,11 @@ module SiteParser
       doc = Nokogiri::HTML.parse(html, nil, charset)
     end
     # 情報回収
-    detail[:cover] = "https:" + doc.at('//div[@id="main"]//div[@class="clm clm_l thumb"]//a')["href"]
+    begin
+      detail[:cover] = "https:" + doc.at('//div[@id="main_new"]//div[@class="image"]//a')["href"]
+    rescue => exception
+      detail[:cover] = "https:" + doc.at('//div[@id="special_main"]//div[@class="thumb"]//a')["href"]
+    end
     detail_table = doc.xpath('//div[@id="description"]//table//tr')
     detail_table.each do |row|
       case row.at('.//th').text.strip

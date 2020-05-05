@@ -108,7 +108,7 @@
   </tr>
 </table>
 
-<div class="d-flex justify-content-between">
+<div class="d-flex justify-content-between align-items-center">
   <div>
     <a href="https://twitter.com/share" class="twitter-share-button" data-size="large" 
     data-text="<%= @book.title %>(<%= @book.circle.name %>) - Kotori" data-url="https://kotori.marron.work/book/<%= @book.id %>">ツイート</a>
@@ -132,6 +132,7 @@
 </div>
 
 <% if @owned %>
+<hr>
 <form action="/user/memo/<%= @book.id %>" method="POST">
   <div class="form-group">
     <input type="hidden" name="from" value="<%= @from %>">
