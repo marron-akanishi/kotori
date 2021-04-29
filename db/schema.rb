@@ -2,11 +2,11 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# Note that this schema.rb definition is the authoritative source for your
-# database schema. If you need to create the application database on another
-# system, you should be using db:schema:load, not running all the migrations
-# from scratch. The latter is a flawed and unsustainable approach (the more migrations
-# you'll amass, the slower it'll run and the greater likelihood for issues).
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
+# be faster and is potentially less error prone than running all of your
+# migrations from scratch. Old migrations may fail to apply correctly if those
+# migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
@@ -144,4 +144,20 @@ ActiveRecord::Schema.define(version: 2019_11_07_052333) do
     t.index ["book_id"], name: "index_wants_on_book_id"
   end
 
+  add_foreign_key "authors", "circles"
+  add_foreign_key "book_authors", "authors"
+  add_foreign_key "book_authors", "books"
+  add_foreign_key "book_genres", "books"
+  add_foreign_key "book_genres", "genres"
+  add_foreign_key "book_tags", "books"
+  add_foreign_key "book_tags", "tags"
+  add_foreign_key "books", "circles"
+  add_foreign_key "books", "events"
+  add_foreign_key "books", "users", column: "mod_user"
+  add_foreign_key "user_books", "books"
+  add_foreign_key "user_books", "users"
+  add_foreign_key "user_books", "users"
+  add_foreign_key "users", "authors"
+  add_foreign_key "users", "circles"
+  add_foreign_key "wants", "books"
 end

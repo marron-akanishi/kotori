@@ -7,6 +7,11 @@
   </p>
   <hr class="my-4">
   <div style="text-align: center;">
-    <img src="/images/signin.png" onclick="location.href='/auth/google_oauth2'" width="300px" style="cursor: pointer;" />
+    <form method='post' action='/auth/google_oauth2'>
+      <input type="hidden" name="authenticity_token" value='<%= request.env["rack.session"]["csrf"] %>'>
+      <button class="btn btn-link" type='submit' style="padding: 0">
+        <img src="/images/signin.png" width="300px" />
+      </button>
+    </form>
   </div>
 </div>

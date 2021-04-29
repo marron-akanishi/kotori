@@ -1,31 +1,5 @@
 class CreateTables < ActiveRecord::Migration[5.2]
   def change
-    create_table :users, id: false do |t|
-      t.text :id, null: false
-      t.text :mail, null: false
-      t.datetime :latest_at, null: false
-      t.datetime :deleted_at
-      t.text :name, null: false
-      t.boolean :is_adult, null: false
-      t.references :circle, foreign_key: true
-      t.references :author, foreign_key: true
-      t.timestamps
-    end
-    add_index :users, :id, unique: true
-
-    create_table :books do |t|
-      t.text :title, null: false
-      t.text :cover, null: false
-      t.date :published_at
-      t.text :detail
-      t.boolean :is_adult, null: false
-      t.text :mod_user, null: false
-      t.references :circle, foreign_key: true, null: false
-      t.references :event, foreign_key: true
-      t.timestamps
-    end
-    add_foreign_key :books, :users, column: :mod_user
-
     create_table :tags do |t|
       t.text :name, null: false
       t.timestamps
@@ -59,5 +33,31 @@ class CreateTables < ActiveRecord::Migration[5.2]
       t.text :web
       t.timestamps
     end
+
+    create_table :users, id: false do |t|
+      t.text :id, null: false
+      t.text :mail, null: false
+      t.datetime :latest_at, null: false
+      t.datetime :deleted_at
+      t.text :name, null: false
+      t.boolean :is_adult, null: false
+      t.references :circle, foreign_key: true
+      t.references :author, foreign_key: true
+      t.timestamps
+    end
+    add_index :users, :id, unique: true
+
+    create_table :books do |t|
+      t.text :title, null: false
+      t.text :cover, null: false
+      t.date :published_at
+      t.text :detail
+      t.boolean :is_adult, null: false
+      t.text :mod_user, null: false
+      t.references :circle, foreign_key: true, null: false
+      t.references :event, foreign_key: true
+      t.timestamps
+    end
+    add_foreign_key :books, :users, column: :mod_user
   end
 end

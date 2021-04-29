@@ -25,6 +25,8 @@ class App < Sinatra::Base
   end
   Time.zone = "Tokyo"
   ActiveRecord::Base.default_timezone = :local
+  ActiveRecord::Base.configurations = YAML.load_file('./database.yml')
+  ActiveRecord::Base.establish_connection(:development)
 
   # config
   configure do
@@ -34,6 +36,8 @@ class App < Sinatra::Base
     set :public_dir, File.dirname(__FILE__) + '/public'
   end
 
+  OmniAuth.config.full_host = @@env["DOMEIN"]
+  use OmniAuth::Strategies::Developer
   use OmniAuth::Builder do
     provider :google_oauth2, @@env["GOOGLE_APP_ID"], @@env["GOOGLE_APP_SECRET"], { :skip_jwt => true }
   end

@@ -31,14 +31,15 @@ class App < Sinatra::Base
     erb :help
   end
 
-  get '/login' do
-    if request.referrer.index(@@env["DOMAIN"]) == 0 then
+  post '/login' do
+    referrer = request.referrer
+    if referrer && referrer.index(@@env["DOMAIN"]) == 0 then
       session[:redirect] = request.referrer
     end
     redirect to('/auth/google_oauth2')
   end
 
-  get "/auth/:provider/callback" do
+  post "/auth/:provider/callback" do
     result = request.env["omniauth.auth"]
     session[:id] = result["uid"]
     if User.exists?(id: session[:id]) then

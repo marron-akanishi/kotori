@@ -67,9 +67,12 @@
               </li>
               <% else %>
               <li class="nav-item">
-                <button type="button" class="btn btn-primary" onClick="location.href='/login'">
-                  <span class="oi oi-account-login"> ログイン</span>
-                </button>
+                <form method='post' action='/auth/google_oauth2'>
+                  <input type="hidden" name="authenticity_token" value='<%= request.env["rack.session"]["csrf"] %>'>
+                  <button type="submit" class="btn btn-primary">
+                    <span class="oi oi-account-login"> ログイン</span>
+                  </button>
+                </form>
               </li>
               <% end %>
             </ul>

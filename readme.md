@@ -26,6 +26,7 @@ sudo nano /etc/ld.so.conf
 # /usr/local/libを追記
 sudo ldconfig
 ```
+以上のことを書いてあるのが`kakasi.sh`
 
 ## Unicornの操作
 起動  
