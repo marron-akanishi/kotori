@@ -11,42 +11,33 @@ module SiteParser
     detail = {}
     # アクセス
     charset = nil
-    html = open(url) do |f|
+    html = open(url + "&adult_view=1") do |f|
         charset = f.charset
         f.read
     end
     doc = Nokogiri::HTML.parse(html, nil, charset)
-    # 年齢認証確認
-    if doc.at('//div[@id="main"]//div') == nil then
-      url += "&adult_view=1"
-      html = open(url) do |f|
-        charset = f.charset
-        f.read
-      end
-      doc = Nokogiri::HTML.parse(html, nil, charset)
-    end
     # 情報回収
-    begin
-      detail[:cover] = "https:" + doc.at('//div[@id="main_new"]//div[@class="image"]//a')["href"]
-    rescue => exception
-      detail[:cover] = "https:" + doc.at('//div[@id="special_main"]//div[@class="thumb"]//a')["href"]
+    cover_img_path = doc.at('//div[@class="item-body-wrap"]//div[@class="item-img"]//figure//a')
+    if cover_img_path != nil then
+      detail[:cover] = "https:" + cover_img_path["href"]
+    else
+      detail[:cover] = nil
     end
-    detail_table = doc.xpath('//div[@id="description"]//table//tr')
+    detail[:title] = doc.at('//h1[@class="page-header"]').text
+    detail_table = doc.xpath('//div[@class="item-detail __light"]//table//tr')
     detail_table.each do |row|
       case row.at('.//th').text.strip
-      when "タイトル" then
-        detail[:title] = row.at('.//td').text
       when "サークル名" then
-        detail[:circle] = row.at('.//td//a').text.split("(作品数")[0].chop
+        detail[:circle] = row.at('.//td//a').text.split("(作品数")[0].chop.strip
       when "作家名" then
         row.xpath('.//td//a').each_with_index do |obj, i|
           if obj.attr("href") == "#" then
             next
           end
           if i == 0 then
-            detail[:author] = obj.text
+            detail[:author] = obj.text.strip
           else
-            detail[:author] += ","+obj.text
+            detail[:author] += ","+obj.text.strip
           end
         end
       when "ジャンル" then
@@ -55,20 +46,19 @@ module SiteParser
             next
           end
           if i == 0 then
-            detail[:genre] = obj.text
+            detail[:genre] = obj.text.strip
           else
-            detail[:genre] += ","+obj.text
+            detail[:genre] += ","+obj.text.strip
           end
         end
       when "発行日" then
-        detail[:date] = row.at('.//td').text.tr("/","-")
+        detail[:date] = row.at('.//td').text.strip.tr("/","-")
       when "イベント" then
-        detail[:event] = row.at('.//td//a').text
+        detail[:event] = row.at('.//td//a').text.strip
       when "作品種別" then
-        detail[:is_adult] = (row.at('.//td').text == "18禁") ? true : false
+        detail[:is_adult] = (row.at('.//td').text.strip == "18禁") ? true : false
       end
     end
-    #p detail
     detail[:url] = url.split("&")[0]
     return detail
   end
