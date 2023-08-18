@@ -139,7 +139,7 @@ module SiteParser
     agent = Mechanize.new
     agent.user_agent = 'Linux Firefox'
     agent.get('https://shop.lashinbang.com/age_check')
-    html = agent.get(url).content.toutf8
+    html = agent.get(url).content
     doc = Nokogiri::HTML(html, nil, 'utf-8')
     # 情報回収
     detail[:cover] = doc.at('//*[@id="zoom_03"]')["src"]
@@ -174,7 +174,7 @@ module SiteParser
     end
     title_area = doc.at('//*[@id="item_data"]//div[2]')
     detail[:is_adult] = (title_area.at('.//span').text == "18禁") ? true : false
-    detail[:title] = title_area.at('.//h1').text
+    detail[:title] = title_area.at('.//h1').text.split('【')[0]
     detail_table = doc.xpath('//*[@id="item_data"]//table//tr')
     detail_table.each do |row|
       case row.at('.//th').text.strip
