@@ -51,7 +51,7 @@ module Helper
       image.resize_to_fit!(1000, 300)
       image.write("./public/images/cover/"+filename)
       image.destroy!
-      if is_mod then
+      if is_mod && params["orig-cover"] != "noimage.png" then
         FileUtils.rm("./public/images/cover/"+params["orig-cover"])
       end
     elsif params["image-url"] != "" && is_mod == false then
