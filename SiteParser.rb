@@ -65,7 +65,7 @@ module SiteParser
 
   def tora(url)
     # URLチェック
-    if url.index("https://ec.toranoana.shop/tora/ec/item/") != 0 &&
+    if url.index("https://ecs.toranoana.jp/tora/ec/item/") != 0 &&
       url.index("https://ec.toranoana.jp/tora_r/ec/item/") != 0 then
       return nil
     end
@@ -79,50 +79,50 @@ module SiteParser
     doc = Nokogiri::HTML.parse(html, nil, charset)
     # 情報回収
     detail[:cover] = doc.at('//div[@id="preview"]//a//img')["src"]
-    detail[:is_adult] = (doc.at('//*[@id="main"]//div//section//div[1]//div[2]//div//div[2]//span[@class="i-item mk-rating"]') != nil) ? true : false
-    detail[:title] = doc.at('//*[@id="main"]//div//section//div[1]//div[2]//div//div[1]//h1//span').text
-    detail_table = doc.xpath('//*[@id="main"]//div//section//div[3]//div[4]//div//section//div//table//tbody//tr')
+    detail[:is_adult] = doc.at('//span[@class="product-detail-label-item mk-rating"]') ? true : false
+    detail[:title] = doc.at('//h1[@class="product-detail-desc-title"]//span').text
+    detail_table = doc.xpath('//table[@class="product-detail-spec-table"]//tr')
     detail_table.each do |row|
       case row.at('.//td[1]').text.strip
       when "サークル名" then
-        detail[:circle] = row.at('.//td[2]//span//a//span').text
+        detail[:circle] = row.at('.//a[1]//span').text
       when "作家" then
-        row.xpath('.//td[2]//span[@class="infoorder-p"]').each_with_index do |obj, i|
-          if obj.at(".//a").attr("href") == "#" then
+        row.xpath('.//td[2]//a').each_with_index do |obj, i|
+          if obj.attr("href") == "#" then
             next
           end
           if i == 0 then
-            detail[:author] = obj.at('.//a//span').text
+            detail[:author] = obj.at('.//span').text
           else
-            detail[:author] += ","+obj.at('.//a//span').text
+            detail[:author] += ","+obj.at('.//span').text
           end
         end
       when "ジャンル/サブジャンル" then
-        row.xpath('.//td[2]//span[@class="infoorder-p"]').each_with_index do |obj, i|
-          if obj.at(".//a").attr("href") == "#" then
+        row.xpath('.//td[2]//a').each_with_index do |obj, i|
+          if obj.attr("href") == "#" then
             next
           end
           if i == 0 then
-            detail[:genre] = obj.at('.//a//span').text
+            detail[:genre] = obj.at('.//span').text
           else
-            detail[:genre] += ","+obj.at('.//a//span').text
+            detail[:genre] += ","+obj.at('.//span').text
           end
         end
       when "メインキャラ" then
-        row.xpath('.//td[2]//span[@class="infoorder-p"]').each_with_index do |obj, i|
-          if obj.at(".//a").attr("href") == "#" then
+        row.xpath('.//td[2]//a').each_with_index do |obj, i|
+          if obj.attr("href") == "#" then
             next
           end
           if i == 0 then
-            detail[:tag] = obj.at('.//a//span').text
+            detail[:tag] = obj.at('.//span').text
           else
-            detail[:tag] += ","+obj.at('.//a//span').text
+            detail[:tag] += ","+obj.at('.//span').text
           end
         end
       when "発行日" then
-        detail[:date] = row.at('.//td[2]//span//a//span').text.tr("/","-")
+        detail[:date] = row.at('.//td[2]//a//span').text.tr("/","-")
       when "初出イベント" then
-        detail[:event] = row.at('.//td[2]//span//a//span').text.split("　")[1].split("（")[0]
+        detail[:event] = row.at('.//td[2]//a//span').text.split("　")[1].split("（")[0]
       end
     end
     detail[:url] = url
